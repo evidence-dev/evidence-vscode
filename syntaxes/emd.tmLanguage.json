@@ -12,9 +12,15 @@
 	"repository": {
 		"svelte": {
 			"patterns": [
-				{ "include": "#svelte-tag" },
-				{ "include": "#svelte-template" },
-				{ "include": "#svelte-js-expression" }
+				{
+					"include": "#svelte-tag"
+				},
+				{
+					"include": "#svelte-template"
+				},
+				{
+					"include": "#svelte-js-expression"
+				}
 			],
 			"repository": {
 				"svelte-tag": {
