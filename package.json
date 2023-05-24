@@ -2,7 +2,7 @@
   "name": "evidence-vscode",
   "displayName": "Evidence",
   "description": "Evidence language support for VS Code",
-  "version": "0.0.9",
+  "version": "1.0.0",
   "private": true,
   "engines": {
     "vscode": "^1.52.0"
@@ -30,12 +30,55 @@
     "url": "https://github.com/evidence-dev/evidence/issues"
   },
   "homepage": "https://evidence.dev",
-  "activationEvents": [
-    "onLanguage:emd"
-  ],
-  "main": "./dist/extension.js",
   "icon": "icons/evidence-logo.png",
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onLanguage:emd",
+    "onCommand:evidence.createProjectFromTemplate",
+    "onCommand:evidence.openSettings",
+    "onCommand:evidence.clearCache",
+    "onCommand:evidence.startServer",
+    "onCommand:evidence.stopServer",
+    "onCommand:evidence.build"
+  ],
   "contributes": {
+    "commands": [
+      {
+        "command": "evidence.createProjectFromTemplate",
+        "title": "Create Project from Template",
+        "category": "Evidence"
+      },
+      {
+        "command": "evidence.openSettings",
+        "title": "Open Settings File",
+        "category": "Evidence"
+      },
+      {
+        "command": "evidence.startServer",
+        "title": "Start Server",
+        "category": "Evidence"
+      },
+      {
+        "command": "evidence.stopServer",
+        "title": "Stop Server",
+        "category": "Evidence"
+      },
+      {
+        "command": "evidence.preview",
+        "title": "Preview",
+        "category": "Evidence"
+      },
+      {
+        "command": "evidence.clearCache",
+        "title": "Clear Cache",
+        "category": "Evidence"
+      },
+      {
+        "command": "evidence.build",
+        "title": "Build",
+        "category": "Evidence"
+      }
+    ],
     "languages": [
       {
         "id": "emd",

@@ -7,14 +7,28 @@ import {
   Uri
 } from 'vscode';
 
+import { createProjectFromTemplate } from './template';
+import { openSettingsFile } from './settings';
+import { startServer, stopServer} from './server';
+import { preview } from './preview';
+import { clearCache} from './cache';
+import { buildProject } from './build';
+
 /**
  * VSCode and Evidence extension commands.
  */
 export const enum Commands {
   Open = 'vscode.open',
   ReloadWindow = 'workbench.action.reloadWindow',
+  ShowSimpleBrowser = 'simpleBrowser.show',
   SetContext = 'setContext',
-  CreateProjectFromTemplate = 'evidence.createProjectFromTemplate'
+  CreateProjectFromTemplate = 'evidence.createProjectFromTemplate',
+  OpenProjectSettings = 'evidence.openSettings',
+  StartServer = 'evidence.startServer',
+  StopServer = 'evidence.stopServer',
+  PreviewApp = 'evidence.preview',
+  ClearCache = 'evidence.clearCache',
+  BuildProject = 'evidence.build'
 }
 
 let _context: ExtensionContext;
@@ -27,7 +41,14 @@ let _context: ExtensionContext;
 export function registerCommands(context: ExtensionContext) {
   _context = context;
 
-  // TODO: regiester Evidence extension commands here
+  // regiester Evidence extension commands
+  registerCommand(Commands.CreateProjectFromTemplate, createProjectFromTemplate);
+  registerCommand(Commands.OpenProjectSettings, openSettingsFile);
+  registerCommand(Commands.StartServer, startServer);
+  registerCommand(Commands.StopServer, stopServer);
+  registerCommand(Commands.PreviewApp, preview);
+  registerCommand(Commands.ClearCache, clearCache);
+  registerCommand(Commands.BuildProject, buildProject);
 }
 
 /**
