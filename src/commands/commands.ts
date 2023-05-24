@@ -12,7 +12,7 @@ import { openSettingsFile } from './settings';
 import { startServer, stopServer} from './server';
 import { preview } from './preview';
 import { clearCache} from './cache';
-import { buildProject } from './build';
+import { buildProject, buildProjectStrict } from './build';
 
 /**
  * VSCode and Evidence extension commands.
@@ -28,7 +28,8 @@ export const enum Commands {
   StopServer = 'evidence.stopServer',
   PreviewApp = 'evidence.preview',
   ClearCache = 'evidence.clearCache',
-  BuildProject = 'evidence.build'
+  BuildProject = 'evidence.build',
+  BuildProjectStrict = 'evidence.buildStrict'
 }
 
 let _context: ExtensionContext;
@@ -49,6 +50,7 @@ export function registerCommands(context: ExtensionContext) {
   registerCommand(Commands.PreviewApp, preview);
   registerCommand(Commands.ClearCache, clearCache);
   registerCommand(Commands.BuildProject, buildProject);
+  registerCommand(Commands.BuildProjectStrict, buildProjectStrict);
 }
 
 /**

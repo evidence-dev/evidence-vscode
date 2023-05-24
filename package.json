@@ -77,6 +77,11 @@
         "command": "evidence.build",
         "title": "Build",
         "category": "Evidence"
+      },
+      {
+        "command": "evidence.buildStrict",
+        "title": "Build Strict",
+        "category": "Evidence"
       }
     ],
     "languages": [
