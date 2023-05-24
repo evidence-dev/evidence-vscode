@@ -11,7 +11,7 @@ export function openSettingsFile() {
     window.showErrorMessage('This command is only available when you have an Evidence project workspace open.');
   }
   else {
-    const settingsPath = Uri.joinPath(workspace.workspaceFolders[0].uri, settingsFilePath);
-    window.showTextDocument(settingsPath);
+    const settingsFileUri: Uri = Uri.joinPath(workspace.workspaceFolders[0].uri, settingsFilePath);
+    window.showTextDocument(settingsFileUri);
   }
 }
