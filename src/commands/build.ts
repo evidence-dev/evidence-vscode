@@ -1,6 +1,15 @@
 import { sendCommand } from '../terminal';
 
 /**
+ * Installs Evidence app NodeJS dependencies.
+ *
+ * @see https://docs.evidence.dev/getting-started/install-evidence
+ */
+export function installDependencies() {
+  sendCommand('npm install');
+}
+
+/**
  * Builds Evidence project for deployment.
  *
  * @see https://docs.evidence.dev/deployment/overview#build-process

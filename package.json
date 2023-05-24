@@ -54,6 +54,11 @@
         "category": "Evidence"
       },
       {
+        "command": "evidence.installDependencies",
+        "title": "Install Dependencies",
+        "category": "Evidence"
+      },
+      {
         "command": "evidence.startServer",
         "title": "Start Server",
         "category": "Evidence"
