@@ -9,6 +9,7 @@ import {
 import { setExtensionContext } from './extensionContext';
 import { registerCommands } from './commands/commands';
 import { statusBar } from './statusBar';
+import { closeTerminal } from './terminal';
 
 /**
  * Activates Evidence vscode extension.
@@ -26,4 +27,5 @@ export function activate(context: ExtensionContext) {
  */
 export function deactivate() {
   statusBar?.dispose();
+  closeTerminal();
 }
