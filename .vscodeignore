@@ -5,6 +5,8 @@ out/**
 node_modules/**
 src/**
 
+docs/images/**
+
 .gitignore
 .yarnrc
 webpack.config.js
