@@ -1,18 +1,40 @@
 import { executeCommand } from './build';
-import { sendCommand } from '../terminal';
+import { closeTerminal, sendCommand } from '../terminal';
+import { preview } from './preview';
+
+let _running: boolean = false;
 
 /**
  * Starts Evidence app dev server.
  */
-export function startServer() {
+export async function startServer() {
   executeCommand('npm run dev');
+  _running = true;
+
+  // wait for the server to start
+  await timeout(3000);
+
+  // open app preview
+  preview();
 }
 
 /**
- * Stops running app dev server.
+ * Stops running app dev server,
+ * and closes Evidence app terminal.
  */
 export function stopServer() {
-  // send ctrl+c to stop running dev server
-  sendCommand('\x03', '', false); // shift focus to terminal
-  //sendCommand('q', '', false);
+  if (_running) {
+    sendCommand('q', '', false);
+  }
+  closeTerminal();
+  _running = false;
+}
+
+/**
+ * Sets timeout for the given number of milliseconds.
+ *
+ * @param ms Millisends to use for the timeout
+ */
+export function timeout(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
