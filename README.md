@@ -30,6 +30,19 @@ This extension provides a number of custom VS Code shortcut commands to help you
 
 ![Evidence Extension Commands](./docs/images/evidence-vscode-commands.png?raw=true)
 
+| Command | Name | Description |
+| --- | --- | --- |
+| `createProjectFromTemplate` | Create Project from Template | Create new Evidence app project from [template](https://github.com/evidence-dev/template). |
+| `openSettings` | Open Settings File | Open Evidence app settings file in VS Code JSON editor. |
+| `installDependencies` | Install Dependencies | Install Evidence app NodeJS modules. |
+| `startServer` | Start Server | Start Evidence app dev server. |
+| `stopServer` | Stop Server | Stop Evidence app dev server. |
+| `preview` | Preview | Preview Evidence app using built-in VS Code Simpler Browser. |
+| `viewSettings` | View Settings | View Evidence app settings page in the built-in browser. |
+| `clearCache` | Clear Cache | Clear Evidence application data and queries cache. |
+| `build` | Build | Build Evidence app for deployment to production. |
+| `buildStrict` | Build Strict | Build Evidence app for deployment to production in a strict mode. |
+
 ## Support
 
 If you run into any issues setting up the extension, please reach out:
