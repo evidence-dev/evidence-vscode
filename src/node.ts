@@ -12,8 +12,10 @@ export async function getNodeVersion() {
 /**
  * Executes command using node child_process.exec.
  *
+ * @see https://nodejs.org/api/child_process.html#child_processexeccommand-options-callback
+ *
  * @param command The node command to execute.
- * @returns
+ * @returns The stdout of the executed command.
  */
 export function executeCommand(command: string): Promise<string> {
   return new Promise((resolve, reject) => {
