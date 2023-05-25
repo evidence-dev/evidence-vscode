@@ -1,15 +1,27 @@
 import {
+  env,
+  window,
   Disposable,
   ExtensionContext,
   Terminal,
-  window
+  Uri
 } from 'vscode';
 
 import { getExtensionContext } from './extensionContext';
+import { getNodeVersion, isSupportedNodeVersion } from './node';
 
+/**
+ * Evidence terminal title.
+ */
 const terminalName = 'Evidence';
+const downloadNodeJs = 'Download NodeJS';
+const downloadNodeJsUrl = 'https://nodejs.org/en/download';
 
+/**
+ * Evidence terminal instance.
+ */
 let _terminal: Terminal | undefined;
+let _nodeVersion: string | undefined;
 let _currentDirectory: string | undefined;
 let _disposable: Disposable | undefined;
 
@@ -20,11 +32,12 @@ let _disposable: Disposable | undefined;
  * @param workingDirectory Optional working directory path to cd to.
  * @returns VScode Terminal instance.
  */
-function getTerminal(context: ExtensionContext, workingDirectory?: string): Terminal {
+async function getTerminal(context: ExtensionContext, workingDirectory?: string): Promise<Terminal> {
   if (_terminal === undefined) {
     _terminal = window.createTerminal(terminalName);
     _terminal.show(false);
     _terminal.sendText('node -v');
+    _nodeVersion = await getNodeVersion();
     _disposable = window.onDidCloseTerminal((e: Terminal) => {
       if (e.name === terminalName) {
         _terminal = undefined;
@@ -53,13 +66,32 @@ function getTerminal(context: ExtensionContext, workingDirectory?: string): Term
  * @param workingDirectory Optional working directory path to cd to.
  * @param preserveFocus Preserve current window focus.
  */
-export function sendCommand(command: string,
+export async function sendCommand(command: string,
   workingDirectory?: string,
-  preserveFocus?: boolean): void {
+  preserveFocus?: boolean): Promise<void> {
 
-  const terminal = getTerminal(getExtensionContext(), workingDirectory);
+  const terminal = await getTerminal(getExtensionContext(), workingDirectory);
   terminal.show(preserveFocus);
-  terminal.sendText(command, true); // add new line
+
+  // check node version
+  // @see https://docs.evidence.dev/getting-started/install-evidence#system-requirements
+  if (isSupportedNodeVersion(_nodeVersion!, 16, 14)) {
+    // execute terminal command
+    terminal.sendText(command, true); // add new line
+  }
+  else {
+    // prompt to download and install the required NodeJS version
+    const downloadNodeNotification = window.showInformationMessage(
+      'Evidence application requires NodeJS v16.14 or greater.', {
+        title: downloadNodeJs
+      });
+
+    downloadNodeNotification.then(async (result) => {
+      if (result?.title === downloadNodeJs) {
+        env.openExternal(Uri.parse(downloadNodeJsUrl));
+      }
+    });
+  }
 }
 
 /**
