@@ -24,6 +24,12 @@ This extension provides language support, basic commands and autocomplete for Ev
 
 Evidence VS Code requires the Svelte for VS Code extension. This will be installed automatically when you install Evidence VS Code.
 
+## Commands
+
+This extension provides a number of custom VS Code shortcut commands to help you get started with Evidence. You can access them from `View -> Command Palette...` menu (`ctrl/cmd+shift+p`) by typing `Evidence` in the command search box:
+
+![Evidence Extension Commands](./docs/images/evidence-vscode-commands.png?raw=true)
+
 ## Support
 
 If you run into any issues setting up the extension, please reach out:
