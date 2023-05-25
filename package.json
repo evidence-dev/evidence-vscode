@@ -74,6 +74,11 @@
         "category": "Evidence"
       },
       {
+        "command": "evidence.viewSettings",
+        "title": "View Settings",
+        "category": "Evidence"
+      },
+      {
         "command": "evidence.clearCache",
         "title": "Clear Cache",
         "category": "Evidence"

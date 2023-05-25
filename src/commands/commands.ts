@@ -4,13 +4,12 @@ import {
   window,
   Disposable,
   ExtensionContext,
-  Uri
 } from 'vscode';
 
 import { createProjectFromTemplate } from './template';
-import { openSettingsFile } from './settings';
 import { startServer, stopServer} from './server';
 import { preview } from './preview';
+import { openSettingsFile, viewAppSettings } from './settings';
 import { clearCache} from './cache';
 import { installDependencies, buildProject, buildProjectStrict } from './build';
 
@@ -28,6 +27,7 @@ export const enum Commands {
   StartServer = 'evidence.startServer',
   StopServer = 'evidence.stopServer',
   PreviewApp = 'evidence.preview',
+  ViewAppSettings = 'evidence.viewSettings',
   ClearCache = 'evidence.clearCache',
   BuildProject = 'evidence.build',
   BuildProjectStrict = 'evidence.buildStrict'
@@ -50,6 +50,7 @@ export function registerCommands(context: ExtensionContext) {
   registerCommand(Commands.StartServer, startServer);
   registerCommand(Commands.StopServer, stopServer);
   registerCommand(Commands.PreviewApp, preview);
+  registerCommand(Commands.ViewAppSettings, viewAppSettings);
   registerCommand(Commands.ClearCache, clearCache);
   registerCommand(Commands.BuildProject, buildProject);
   registerCommand(Commands.BuildProjectStrict, buildProjectStrict);
