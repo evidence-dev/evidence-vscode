@@ -23,6 +23,8 @@ let _disposable: Disposable | undefined;
 function getTerminal(context: ExtensionContext, workingDirectory?: string): Terminal {
   if (_terminal === undefined) {
     _terminal = window.createTerminal(terminalName);
+    _terminal.show(false);
+    _terminal.sendText('node -v');
     _disposable = window.onDidCloseTerminal((e: Terminal) => {
       if (e.name === terminalName) {
         _terminal = undefined;
@@ -58,4 +60,16 @@ export function sendCommand(command: string,
   const terminal = getTerminal(getExtensionContext(), workingDirectory);
   terminal.show(preserveFocus);
   terminal.sendText(command, true); // add new line
+}
+
+/**
+ * Closes active Evidence app terminal.
+ */
+export function closeTerminal() {
+  if (_terminal) {
+    _terminal.show(false);
+    _terminal.sendText(`\x03`);
+    _terminal.dispose();
+    _terminal = undefined;
+  }
 }
