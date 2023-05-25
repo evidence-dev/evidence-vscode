@@ -2,6 +2,7 @@ import {
   commands,
   window,
   workspace,
+  ProgressLocation,
   OutputChannel
 } from 'vscode';
 
@@ -47,7 +48,7 @@ export async function createProjectFromTemplate() {
   }
 
   const projectFolderPath: string = workspace.workspaceFolders[0].uri.fsPath;
-  cloneTemplateRepository(templateRepository, projectFolderPath);
+  await cloneTemplateRepository(templateRepository, projectFolderPath);
 }
 
 /**
@@ -61,7 +62,7 @@ async function projectHasFiles(): Promise<boolean> {
   const files = await workspace.findFiles('**/*.*');
   if (files.length > 0) {
     const newProjectNotification = window.showInformationMessage(
-      `Create new empty project for an Evidence app from a template.`, {
+      `Create new empty project for an Evidence app from template.`, {
       title: 'Create new project',
       isCloseAffordance: true
     },
@@ -70,7 +71,7 @@ async function projectHasFiles(): Promise<boolean> {
       });
 
     newProjectNotification.then(async (result) => {
-      if (result?.title === 'Create new project') {
+      if (result?.title === 'Create New Project') {
         await commands.executeCommand(Commands.NewWindow);
       }
     });
@@ -86,37 +87,56 @@ async function projectHasFiles(): Promise<boolean> {
  * @param templateRepository Template github repository with user and repository name.
  * @param projectFolderPath Destination project folder to clone template content to.
  */
-function cloneTemplateRepository(templateRepository: string, projectFolderPath: string) {
+async function cloneTemplateRepository(templateRepository: string, projectFolderPath: string) {
   const outputChannel: OutputChannel = window.createOutputChannel('Evidence');
   outputChannel.show();
 
-  const emitter = tiged(templateRepository, {
-    disableCache: true,
-    force: true,
-    verbose: true,
-  });
-
-  emitter.on('error', (error: any) => {
-    outputChannel.appendLine(error);
-    window.showErrorMessage(error);
-  });
-
-  emitter.on('info', (info: any) => {
-    outputChannel.appendLine(info.message);
-  });
-
-  emitter.clone(projectFolderPath)
-    .then(() => {
-      outputChannel.appendLine(`finiished cloning ${templateRepository} to ${projectFolderPath}`);
-    })
-    .catch((error: any) => {
-      window.showErrorMessage(error);
-      outputChannel.appendLine(error);
+  await window.withProgress({
+    location: ProgressLocation.Notification,
+    title: 'Creating Evidence project from a template ...',
+    cancellable: false
+  }, async (progress, token) => {
+    token.onCancellationRequested(() => {
+      outputChannel.appendLine('Canceled cloning Evidence app template.');
     });
 
-  /*
-  await window.withProgress({
-    location: window.ProgressLocation.Notification,
-    title: 'Creating Evidence app from a template''
-  });*/
+    let progressIncrement = 0;
+    progress.report({increment: 0});
+
+    const emitter = tiged(templateRepository, {
+      disableCache: true,
+      force: true,
+      verbose: true,
+    });
+
+    emitter.on('error', (error: any) => {
+      outputChannel.appendLine(error);
+      progress.report({
+        message: `Error while cloning Evidence app template repository. ${error.message}`
+      });
+    });
+
+    emitter.on('info', (info: any) => {
+      progressIncrement += 5;
+      progress.report({increment: progressIncrement});
+      outputChannel.appendLine(info.message);
+    });
+
+    emitter.clone(projectFolderPath)
+      .then(() => {
+        outputChannel.appendLine(`finished cloning ${templateRepository} to ${projectFolderPath}`);
+        progress.report({
+          increment: 100,
+          message: 'Finished cloning Evidence project template.'
+        });
+      })
+      .catch((error: any) => {
+        outputChannel.appendLine(error);
+        progress.report({
+          message: `Error cloning Evidence app template repository. ${error.message}`
+        });
+      });
+
+    await new Promise(resolve => setTimeout(resolve, 15000));
+  });
 }
