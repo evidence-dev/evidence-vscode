@@ -1,6 +1,7 @@
 import { executeCommand } from './build';
 import { closeTerminal, sendCommand } from '../terminal';
 import { preview } from './preview';
+import { getNodeVersion, isSupportedNodeVersion } from '../node';
 
 let _running: boolean = false;
 
@@ -9,13 +10,16 @@ let _running: boolean = false;
  */
 export async function startServer() {
   executeCommand('npm run dev');
-  _running = true;
+  const nodeVersion = await getNodeVersion();
+  if (isSupportedNodeVersion(nodeVersion, 16, 14)) {
+    _running = true;
 
-  // wait for the server to start
-  await timeout(3000);
+    // wait for the server to start
+    await timeout(3000);
 
-  // open app preview
-  preview();
+    // open app preview
+    preview();
+  }
 }
 
 /**
