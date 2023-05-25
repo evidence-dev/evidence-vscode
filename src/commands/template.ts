@@ -1,7 +1,8 @@
 import {
   commands,
   window,
-  workspace
+  workspace,
+  OutputChannel
 } from 'vscode';
 
 import { Commands } from './commands';
@@ -22,25 +23,12 @@ const templateProjectUrl = 'https://github.com/evidence-dev/template';
  * @see https://github.com/evidence-dev/template
  */
 export async function createProjectFromTemplate() {
-  const files = await workspace.findFiles('**/*.*');
-  if (files.length > 0) {
-    const newProjectNotification = window.showInformationMessage(
-      `Use new empty project folder to create Evidence app from a template.`, {
-        title: 'Create new project',
-        isCloseAffordance: true
-      },
-      {
-        title: "Cancel"
-      });
-
-    newProjectNotification.then(async (result) => {
-      if (result?.title === 'Create new project') {
-        await commands.executeCommand(Commands.NewWindow);
-      }
-    });
+  if (await projectHasFiles()) {
+    // don't overwrite it
     return;
   }
 
+  // show project template github repository Url input box
   const templateGithubUrl = await window.showInputBox({
     prompt: 'Evidence app template github repository Url',
     value: templateProjectUrl,
@@ -59,6 +47,49 @@ export async function createProjectFromTemplate() {
   }
 
   const projectFolderPath: string = workspace.workspaceFolders[0].uri.fsPath;
+  cloneTemplateRepository(templateRepository, projectFolderPath);
+}
+
+/**
+ * Checks open project workspace for files,
+ * and prompts to start new vscode project window.
+ *
+ * @returns True if open project workspace has files, and false otherwise.
+ */
+async function projectHasFiles(): Promise<boolean> {
+  // check open project workspace for any files
+  const files = await workspace.findFiles('**/*.*');
+  if (files.length > 0) {
+    const newProjectNotification = window.showInformationMessage(
+      `Create new empty project for an Evidence app from a template.`, {
+      title: 'Create new project',
+      isCloseAffordance: true
+    },
+      {
+        title: "Cancel"
+      });
+
+    newProjectNotification.then(async (result) => {
+      if (result?.title === 'Create new project') {
+        await commands.executeCommand(Commands.NewWindow);
+      }
+    });
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Clones github repository to the destination project folder.
+ *
+ * @param templateRepository Template github repository with user and repository name.
+ * @param projectFolderPath Destination project folder to clone template content to.
+ */
+function cloneTemplateRepository(templateRepository: string, projectFolderPath: string) {
+  const outputChannel: OutputChannel = window.createOutputChannel('Evidence');
+  outputChannel.show();
+
   const emitter = tiged(templateRepository, {
     disableCache: true,
     force: true,
@@ -66,19 +97,21 @@ export async function createProjectFromTemplate() {
   });
 
   emitter.on('error', (error: any) => {
+    outputChannel.appendLine(error);
     window.showErrorMessage(error);
   });
 
   emitter.on('info', (info: any) => {
-    console.log(info.message);
+    outputChannel.appendLine(info.message);
   });
 
   emitter.clone(projectFolderPath)
     .then(() => {
-      console.log('done');
+      outputChannel.appendLine(`finiished cloning ${templateRepository} to ${projectFolderPath}`);
     })
     .catch((error: any) => {
-      console.error(error);
+      window.showErrorMessage(error);
+      outputChannel.appendLine(error);
     });
 
   /*
