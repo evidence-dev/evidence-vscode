@@ -18,6 +18,7 @@ import { installDependencies, buildProject, buildProjectStrict } from './build';
  */
 export const enum Commands {
   Open = 'vscode.open',
+  NewWindow = 'workbench.action.newWindow',
   ReloadWindow = 'workbench.action.reloadWindow',
   ShowSimpleBrowser = 'simpleBrowser.show',
   SetContext = 'setContext',
