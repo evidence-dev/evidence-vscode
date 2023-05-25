@@ -11,7 +11,12 @@ import { startServer, stopServer} from './server';
 import { preview } from './preview';
 import { openSettingsFile, viewAppSettings } from './settings';
 import { clearCache} from './cache';
-import { installDependencies, buildProject, buildProjectStrict } from './build';
+import {
+  installDependencies,
+  updateDependencies,
+  buildProject,
+  buildProjectStrict
+} from './build';
 
 /**
  * VSCode and Evidence extension commands.
@@ -24,7 +29,8 @@ export const enum Commands {
   SetContext = 'setContext',
   CreateProjectFromTemplate = 'evidence.createProjectFromTemplate',
   OpenProjectSettings = 'evidence.openSettings',
-  installDependencies = 'evidence.installDependencies',
+  InstallDependencies = 'evidence.installDependencies',
+  UpdateDependencies = 'evidence.updateDependencies',
   StartServer = 'evidence.startServer',
   StopServer = 'evidence.stopServer',
   PreviewApp = 'evidence.preview',
@@ -47,7 +53,8 @@ export function registerCommands(context: ExtensionContext) {
   // regiester Evidence extension commands
   registerCommand(Commands.CreateProjectFromTemplate, createProjectFromTemplate);
   registerCommand(Commands.OpenProjectSettings, openSettingsFile);
-  registerCommand(Commands.installDependencies, installDependencies);
+  registerCommand(Commands.InstallDependencies, installDependencies);
+  registerCommand(Commands.UpdateDependencies, updateDependencies);
   registerCommand(Commands.StartServer, startServer);
   registerCommand(Commands.StopServer, stopServer);
   registerCommand(Commands.PreviewApp, preview);

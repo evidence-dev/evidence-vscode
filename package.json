@@ -59,6 +59,11 @@
         "category": "Evidence"
       },
       {
+        "command": "evidence.updateDependencies",
+        "title": "Update to Latest Version",
+        "category": "Evidence"
+      },
+      {
         "command": "evidence.startServer",
         "title": "Start Server",
         "category": "Evidence"

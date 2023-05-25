@@ -16,12 +16,28 @@ import { sendCommand } from '../terminal';
 const nodeModules = `node_modules`;
 
 /**
+ * Evidence node modules to update to the latest version.
+ */
+const evidencePackages: string[] = [
+  '@evidence-dev/evidence@latest',
+  '@evidence-dev/preprocess@latest',
+  '@evidence-dev/components@latest'
+];
+
+/**
  * Installs Evidence app NodeJS dependencies.
  *
  * @see https://docs.evidence.dev/getting-started/install-evidence
  */
 export function installDependencies() {
   sendCommand('npm install');
+}
+
+/**
+ * Updates all Evidence app librarires to the latest versions.
+ */
+export function updateDependencies() {
+  sendCommand(`npm install ${evidencePackages.join(' ')}`);
 }
 
 /**

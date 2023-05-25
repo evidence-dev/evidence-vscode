@@ -35,6 +35,7 @@ This extension provides a number of custom VS Code shortcut commands to help you
 | `createProjectFromTemplate` | Create Project from Template | Create new Evidence app project from [template](https://github.com/evidence-dev/template). |
 | `openSettings` | Open Settings File | Open Evidence app settings file in VS Code JSON editor. |
 | `installDependencies` | Install Dependencies | Install Evidence app NodeJS modules. |
+| `updateDependencies` | Update to Latest Version | Updates all Evidence app NodeJS libraries to the latest version. |
 | `startServer` | Start Server | Start Evidence app dev server. |
 | `stopServer` | Stop Server | Stop Evidence app dev server. |
 | `preview` | Preview | Preview Evidence app using built-in VS Code Simpler Browser. |
