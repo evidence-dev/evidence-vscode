@@ -4,6 +4,8 @@ import {
   StatusBarItem
 } from 'vscode';
 
+import { Commands } from './commands/commands';
+
 /**
  * Status bar UI component for Evidence app status updates.
  */
@@ -11,7 +13,6 @@ class StatusBar {
 
   private statusBarItem: StatusBarItem;
   private readonly statusBarItemName: string = 'Evidence';
-  private loadingWasHidden = false;
 
   /**
    * Creates new Evidence app status bar item instance.
@@ -20,30 +21,42 @@ class StatusBar {
     this.statusBarItem = window.createStatusBarItem(
       this.statusBarItemName,
       StatusBarAlignment.Left,
-      -1e10,// align to the right
+      3, // align priority
     );
-    this.statusBarItem.text = '$(sync~spin) Evidence';
+    this.statusBarItem.text = '$(debug-start) Evidence';
+    this.statusBarItem.command = Commands.StartServer;
   }
 
   /**
-   * Starts Evidence app status display.
+   * Sets app server status display to running.
    */
-  startLoading(): void {
-    if (this.loadingWasHidden) {
-      return;
-    }
+  showStart(): void {
+    this.statusBarItem.text = '$(debug-start) Evidence';
+    this.statusBarItem.command = Commands.StartServer;
     this.statusBarItem.show();
   }
 
   /**
-   * Stops Evidence app status display.
+   * Sets app server status display to running.
    */
-  stopLoading(): void {
-    this.loadingWasHidden = true;
-    this.statusBarItem.hide();
-    this.statusBarItem.dispose();
+  showRunning(): void {
+    this.statusBarItem.text = '$(sync~spin) Evidence';
+    this.statusBarItem.command = Commands.StopServer;
+    this.statusBarItem.show();
   }
 
+  /**
+   * Sets app server status display to stop.
+   */
+  showStop(): void {
+    this.statusBarItem.text = '$(debug-disconnect) Evidence';
+    this.statusBarItem.command = Commands.StopServer;
+    this.statusBarItem.show();
+  }
+
+  /**
+   * Disposes status bar item.
+   */
   dispose() {
     this.statusBarItem.dispose();
   }
