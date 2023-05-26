@@ -23,6 +23,7 @@ import {
  */
 export const enum Commands {
   Open = 'vscode.open',
+  FocusActiveEditorGroup = 'workbench.action.focusActiveEditorGroup',
   NewWindow = 'workbench.action.newWindow',
   ReloadWindow = 'workbench.action.reloadWindow',
   ShowSimpleBrowser = 'simpleBrowser.show',
