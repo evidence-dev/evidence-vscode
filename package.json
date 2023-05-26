@@ -41,7 +41,8 @@
     "onCommand:evidence.clearCache",
     "onCommand:evidence.startServer",
     "onCommand:evidence.stopServer",
-    "onCommand:evidence.build"
+    "onCommand:evidence.build",
+    "onCommand:evidence.buildStrict"
   ],
   "contributes": {
     "commands": [
