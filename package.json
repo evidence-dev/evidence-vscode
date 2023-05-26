@@ -41,6 +41,7 @@
     "onCommand:evidence.clearCache",
     "onCommand:evidence.startServer",
     "onCommand:evidence.stopServer",
+    "onCommand:evidence.viewSettings",
     "onCommand:evidence.build",
     "onCommand:evidence.buildStrict"
   ],
