@@ -6,6 +6,7 @@ import {
 } from 'vscode';
 
 import { sendCommand } from '../terminal';
+import { timeout } from '../utils/timer';
 
 /**
  * Node modules folder name to check in the open project workspace
@@ -29,8 +30,9 @@ const evidencePackages: string[] = [
  *
  * @see https://docs.evidence.dev/getting-started/install-evidence
  */
-export function installDependencies() {
+export async function installDependencies() {
   sendCommand('npm install');
+  await timeout(15000);
 }
 
 /**
@@ -68,7 +70,7 @@ export function buildProjectStrict() {
  */
 export async function executeCommand(command: string) {
   if (!(await hasDependencies())) {
-    installDependencies();
+    await installDependencies();
   }
   sendCommand(command);
 }
