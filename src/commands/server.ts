@@ -5,6 +5,7 @@ import { closeTerminal, sendCommand } from '../terminal';
 import { preview } from './preview';
 import { getNodeVersion, isSupportedNodeVersion } from '../node';
 import { timeout } from '../utils/timer';
+import { statusBar } from '../statusBar';
 
 let _running: boolean = false;
 
@@ -15,6 +16,7 @@ export async function startServer() {
   executeCommand('npm exec evidence dev');
   const nodeVersion = await getNodeVersion();
   if (isSupportedNodeVersion(nodeVersion, 16, 14)) {
+    statusBar.showRunning();
 
     // wait for the dev server to start
     await timeout(5000);
@@ -28,7 +30,17 @@ export async function startServer() {
 
     // open app preview
     preview();
+    statusBar.showStop();
   }
+}
+
+/**
+ * Gets running server status.
+ *
+ * @returns True if Evidence dev server is running, and false otherwise.
+ */
+export function isServerRunning() {
+  return _running;
 }
 
 /**
@@ -42,4 +54,5 @@ export function stopServer() {
 
   closeTerminal();
   _running = false;
+  statusBar.showStart();
 }
