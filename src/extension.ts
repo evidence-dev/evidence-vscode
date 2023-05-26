@@ -1,9 +1,6 @@
 import {
-  commands,
-  window,
   workspace,
   ExtensionContext,
-  ExtensionMode
 } from 'vscode';
 
 import { setExtensionContext } from './extensionContext';
@@ -16,9 +13,15 @@ import { closeTerminal } from './terminal';
  *
  * @param context Extension context.
  */
-export function activate(context: ExtensionContext) {
+export async function activate(context: ExtensionContext) {
   setExtensionContext(context);
   registerCommands(context);
+
+  // check for evidence app files
+  const evidenceFiles = await workspace.findFiles('**/.evidence/template/*.*');
+  if (evidenceFiles.length > 0) {
+    statusBar.showStart();
+  }
 }
 
 /**
