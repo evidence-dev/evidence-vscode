@@ -11,7 +11,7 @@ let _running: boolean = false;
  * Starts Evidence app dev server.
  */
 export async function startServer() {
-  executeCommand('npm run dev');
+  executeCommand('npm exec evidence dev');
   const nodeVersion = await getNodeVersion();
   if (isSupportedNodeVersion(nodeVersion, 16, 14)) {
 
