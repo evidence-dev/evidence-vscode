@@ -36,6 +36,8 @@
     "onLanguage:emd",
     "onCommand:evidence.createProjectFromTemplate",
     "onCommand:evidence.openSettings",
+    "onCommand:evidence.installDependencies",
+    "onCommand:evidence.updateDependencies",
     "onCommand:evidence.clearCache",
     "onCommand:evidence.startServer",
     "onCommand:evidence.stopServer",
