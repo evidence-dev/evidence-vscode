@@ -18,13 +18,13 @@ export async function startServer() {
 
     // wait for the dev server to start
     await timeout(5000);
-
-    // set focus back to the active vscode editor group
-    commands.executeCommand(Commands.FocusActiveEditorGroup);
     _running = true;
 
     // wait for the server to process pages
     await timeout(20000);
+
+    // set focus back to the active vscode editor group
+    commands.executeCommand(Commands.FocusActiveEditorGroup);
 
     // open app preview
     preview();
