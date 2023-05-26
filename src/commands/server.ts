@@ -15,7 +15,7 @@ export async function startServer() {
     _running = true;
 
     // wait for the server to start
-    await timeout(3000);
+    await timeout(20000);
 
     // open app preview
     preview();
