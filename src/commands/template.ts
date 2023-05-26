@@ -19,6 +19,11 @@ const tiged = require('tiged');
 const templateProjectUrl = 'https://github.com/evidence-dev/template';
 
 /**
+ * Create new project prompt button title.
+ */
+const creteNewProject = 'Create New Project';
+
+/**
  * Creates new Evidence app project from a github repository template.
  *
  * @see https://github.com/evidence-dev/template
@@ -63,15 +68,15 @@ async function projectHasFiles(): Promise<boolean> {
   if (files.length > 0) {
     const newProjectNotification = window.showInformationMessage(
       `Create new empty project for an Evidence app from template.`, {
-      title: 'Create new project',
+      title: creteNewProject,
       isCloseAffordance: true
     },
-      {
-        title: "Cancel"
-      });
+    {
+      title: 'Cancel'
+    });
 
     newProjectNotification.then(async (result) => {
-      if (result?.title === 'Create New Project') {
+      if (result?.title === creteNewProject) {
         await commands.executeCommand(Commands.NewWindow);
       }
     });
