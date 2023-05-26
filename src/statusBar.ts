@@ -23,8 +23,6 @@ class StatusBar {
       StatusBarAlignment.Left,
       3, // align priority
     );
-    this.statusBarItem.text = '$(debug-start) Evidence';
-    this.statusBarItem.command = Commands.StartServer;
   }
 
   /**
@@ -32,6 +30,7 @@ class StatusBar {
    */
   showStart(): void {
     this.statusBarItem.text = '$(debug-start) Evidence';
+    this.statusBarItem.tooltip = 'Start dev server';
     this.statusBarItem.command = Commands.StartServer;
     this.statusBarItem.show();
   }
@@ -41,6 +40,7 @@ class StatusBar {
    */
   showRunning(): void {
     this.statusBarItem.text = '$(sync~spin) Evidence';
+    this.statusBarItem.tooltip = 'Starting dev server ...';
     this.statusBarItem.command = Commands.StopServer;
     this.statusBarItem.show();
   }
@@ -50,6 +50,7 @@ class StatusBar {
    */
   showStop(): void {
     this.statusBarItem.text = '$(debug-disconnect) Evidence';
+    this.statusBarItem.tooltip = 'Stop dev server';
     this.statusBarItem.command = Commands.StopServer;
     this.statusBarItem.show();
   }
