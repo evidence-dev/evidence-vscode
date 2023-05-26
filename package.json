@@ -81,7 +81,8 @@
       {
         "command": "evidence.preview",
         "title": "Preview",
-        "category": "Evidence"
+        "category": "Evidence",
+        "icon": "$(preivew)"
       },
       {
         "command": "evidence.viewSettings",
@@ -104,6 +105,29 @@
         "category": "Evidence"
       }
     ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "evidence.preview",
+          "when": "resourceLangId == emd",
+          "group": "navigation"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "evidence.preview",
+          "when": "resourceLangId == emd",
+          "group": "navigation"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "evidence.preview",
+          "when": "resourceLangId == emd",
+          "group": "navigation"
+        }
+      ]
+    },
     "languages": [
       {
         "id": "emd",
