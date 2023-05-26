@@ -82,7 +82,7 @@
         "command": "evidence.preview",
         "title": "Preview",
         "category": "Evidence",
-        "icon": "$(preivew)"
+        "icon": "$(preview)"
       },
       {
         "command": "evidence.viewSettings",
