@@ -20,12 +20,15 @@ const settingsFilePath = '.evidence/template/evidence.settings.json';
  */
 const settingsPageUrl = `${localAppUrl}/settings`;
 
+/**
+ * Opens Evidence app settings page in the built-in vscode simple browser webview.
+ */
 export function viewAppSettings() {
   commands.executeCommand(Commands.ShowSimpleBrowser, settingsPageUrl);
 }
 
 /**
- * Opens Evidence settings file for editing.
+ * Opens Evidence settings file in JSON editor for editing.
  */
 export function openSettingsFile() {
   if (!workspace.workspaceFolders) {
