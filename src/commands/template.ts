@@ -8,6 +8,7 @@ import {
 
 import { Commands } from './commands';
 import { timeout } from '../utils/timer';
+import { statusBar } from '../statusBar';
 
 /**
  * @see https://github.com/tiged/tiged#javascript-api
@@ -135,6 +136,7 @@ async function cloneTemplateRepository(templateRepository: string, projectFolder
           increment: 100,
           message: 'Finished cloning Evidence project template.'
         });
+        statusBar.showStart();
       })
       .catch((error: any) => {
         outputChannel.appendLine(error);
