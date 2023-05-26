@@ -23,7 +23,7 @@ export async function getNodeVersion() {
 export function isSupportedNodeVersion(nodeVersion: string,
   majorVersion: number, minorVersion: number): boolean {
   // check node version
-  if (nodeVersion.startsWith('v')) {
+  if (nodeVersion && nodeVersion.startsWith('v')) {
     const nodeVersionNumbers = nodeVersion.replace('v', '').split('.');
     const majorVersionNumber = parseInt(nodeVersionNumbers[0]);
     const minorVersionNumber = parseInt(nodeVersionNumbers[1]);
