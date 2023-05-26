@@ -7,6 +7,7 @@ import {
 } from 'vscode';
 
 import { Commands } from './commands';
+import { timeout } from '../utils/timer';
 
 /**
  * @see https://github.com/tiged/tiged#javascript-api
@@ -142,6 +143,6 @@ async function cloneTemplateRepository(templateRepository: string, projectFolder
         });
       });
 
-    await new Promise(resolve => setTimeout(resolve, 15000));
+    await timeout(15000);
   });
 }
