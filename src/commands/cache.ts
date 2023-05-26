@@ -1,8 +1,6 @@
 
 import {
   window,
-  workspace,
-  Uri
 } from 'vscode';
 
 import { deleteFolder } from '../utils/fsUtils';
@@ -17,9 +15,9 @@ const cachePath = '.evidence/template/.evidence-queries';
  */
 export async function clearCache() {
   if (await deleteFolder(cachePath)) {
-    window.showInformationMessage('Cleared Evidence application cache.');
+    window.showInformationMessage('Cache cleared.');
   }
   else {
-    window.showWarningMessage('There is no Evidence application cache directory to delete.');
+    window.showInformationMessage('Cache is already empty.');
   }
 }
