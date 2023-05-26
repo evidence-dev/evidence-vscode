@@ -1,5 +1,7 @@
 import {
-  commands
+  commands,
+  workspace,
+  Uri
 } from 'vscode';
 
 import { Commands } from './commands';
@@ -10,8 +12,19 @@ import { Commands } from './commands';
 export const localAppUrl = 'http://localhost:3000';
 
 /**
- * Opens Evidence app preview in a Simple Browser built-in VSCode webview.
+ * Opens Evidence app or markdown page preview
+ * in the built-in VSCode Simple Browser webview.
+ *
+ * @param uri Optional Uri of the page to preview.
  */
-export function preview() {
-  commands.executeCommand(Commands.ShowSimpleBrowser, localAppUrl);
+export function preview(uri?: Uri) {
+  let pageUrl: string = localAppUrl;
+  if (uri && workspace.workspaceFolders) {
+    const workspaceFolderPath: string = workspace.workspaceFolders[0].uri.fsPath;
+    let pagePath: string = uri.fsPath.replace(workspaceFolderPath, '')
+      .split('\\').join('/').replace('/pages/', '')
+      .replace('index.md', '').replace('.md', '');
+    pageUrl = `${localAppUrl}/${pagePath}`;
+  }
+  commands.executeCommand(Commands.ShowSimpleBrowser, pageUrl);
 }
