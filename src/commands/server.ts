@@ -1,4 +1,4 @@
-import { commands } from 'vscode';
+import { commands, Uri } from 'vscode';
 import { Commands } from './commands';
 import { executeCommand } from './build';
 import { closeTerminal, sendCommand } from '../terminal';
@@ -10,9 +10,12 @@ import { statusBar } from '../statusBar';
 let _running: boolean = false;
 
 /**
- * Starts Evidence app dev server.
+ * Starts Evidence app dev server, and opens Evidence app preview
+ * in the built-in vscode simple browser.
+ *
+ * @param pageFileUri Optional Uri of the starting page to load in preview.
  */
-export async function startServer() {
+export async function startServer(pageUri?: Uri) {
   executeCommand('npm exec evidence dev');
   const nodeVersion = await getNodeVersion();
   if (isSupportedNodeVersion(nodeVersion, 16, 14)) {
@@ -29,7 +32,7 @@ export async function startServer() {
     commands.executeCommand(Commands.FocusActiveEditorGroup);
 
     // open app preview
-    preview();
+    preview(pageUri);
     statusBar.showStop();
   }
 }
