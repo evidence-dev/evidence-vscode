@@ -32,6 +32,10 @@ const evidencePackages: string[] = [
  * @see https://docs.evidence.dev/getting-started/install-evidence
  */
 export async function installDependencies() {
+  if (isServerRunning()) {
+    stopServer();
+    await timeout(1000);
+  }
   sendCommand('npm install');
   await timeout(15000);
 }
