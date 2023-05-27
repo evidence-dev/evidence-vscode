@@ -34,6 +34,9 @@
   "main": "./dist/extension.js",
   "activationEvents": [
     "onLanguage:emd",
+    "onLanguage:javascript",
+    "onLanguage:json",
+    "onLanguage:svelte",
     "onCommand:evidence.createProjectFromTemplate",
     "onCommand:evidence.openSettings",
     "onCommand:evidence.installDependencies",
@@ -56,53 +59,63 @@
       {
         "command": "evidence.openSettings",
         "title": "Open Settings File",
-        "category": "Evidence"
+        "category": "Evidence",
+        "enablement": "evidence.hasProject"
       },
       {
         "command": "evidence.installDependencies",
         "title": "Install Dependencies",
-        "category": "Evidence"
+        "category": "Evidence",
+        "enablement": "evidence.hasProject"
       },
       {
         "command": "evidence.updateDependencies",
         "title": "Update to Latest Version",
-        "category": "Evidence"
+        "category": "Evidence",
+        "enablement": "evidence.hasProject"
       },
       {
         "command": "evidence.startServer",
         "title": "Start Server",
-        "category": "Evidence"
+        "category": "Evidence",
+        "enablement": "evidence.hasProject"
       },
       {
         "command": "evidence.stopServer",
         "title": "Stop Server",
-        "category": "Evidence"
+        "category": "Evidence",
+        "enablement": "evidence.hasProject"
       },
       {
         "command": "evidence.preview",
         "title": "Preview",
         "category": "Evidence",
-        "icon": "$(preview)"
+        "icon": "$(preview)",
+        "enablement": "evidence.hasProject"
       },
       {
         "command": "evidence.viewSettings",
         "title": "View Settings",
-        "category": "Evidence"
+        "category": "Evidence",
+        "enablement": "evidence.hasProject"
       },
       {
         "command": "evidence.clearCache",
         "title": "Clear Cache",
-        "category": "Evidence"
+        "category": "Evidence",
+        "enablement": "evidence.hasProject"
       },
       {
         "command": "evidence.build",
         "title": "Build",
-        "category": "Evidence"
+        "category": "Evidence",
+        "enablement": "evidence.hasProject"
       },
       {
         "command": "evidence.buildStrict",
         "title": "Build Strict",
-        "category": "Evidence"
+        "category": "Evidence",
+        "enablement": "evidence.hasProject"
       }
     ],
     "menus": {
