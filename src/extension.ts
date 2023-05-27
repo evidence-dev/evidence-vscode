@@ -1,10 +1,12 @@
 import {
+  commands,
   workspace,
   ExtensionContext,
 } from 'vscode';
 
 import { setExtensionContext } from './extensionContext';
 import { registerCommands } from './commands/commands';
+import { updateProjectContext } from './config';
 import { statusBar } from './statusBar';
 import { closeTerminal } from './terminal';
 
@@ -19,7 +21,8 @@ export async function activate(context: ExtensionContext) {
 
   // check for evidence app files
   const evidenceFiles = await workspace.findFiles('**/.evidence/template/*.*');
-  if (evidenceFiles.length > 0) {
+  if (workspace.workspaceFolders && evidenceFiles.length > 0) {
+    updateProjectContext();
     statusBar.showStart();
   }
 }
