@@ -52,7 +52,11 @@ export async function updateDependencies() {
  *
  * @see https://docs.evidence.dev/deployment/overview#build-process
  */
-export function buildProject() {
+export async function buildProject() {
+  if (isServerRunning()) {
+    stopServer();
+    await timeout(1000);
+  }
   executeCommand('npm run build');
 }
 
@@ -61,7 +65,11 @@ export function buildProject() {
  *
  * @see https://docs.evidence.dev/deployment/overview#buildstrict
  */
-export function buildProjectStrict() {
+export async function buildProjectStrict() {
+  if (isServerRunning()) {
+    stopServer();
+    await timeout(1000);
+  }
   executeCommand('npm run build:strict');
 }
 
