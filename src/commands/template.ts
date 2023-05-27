@@ -7,6 +7,7 @@ import {
 } from 'vscode';
 
 import { Commands } from './commands';
+import { updateProjectContext } from '../config';
 import { timeout } from '../utils/timer';
 import { statusBar } from '../statusBar';
 
@@ -136,6 +137,7 @@ async function cloneTemplateRepository(templateRepository: string, projectFolder
           increment: 100,
           message: 'Finished cloning Evidence project template.'
         });
+        updateProjectContext();
         statusBar.showStart();
       })
       .catch((error: any) => {
