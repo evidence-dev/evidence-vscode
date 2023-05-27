@@ -5,6 +5,7 @@ import {
 } from 'vscode';
 
 import { Commands } from './commands';
+import { isServerRunning, startServer } from './server';
 
 /**
  * Local Evidence app url with a port.
@@ -39,6 +40,11 @@ export function preview(uri?: Uri) {
     pageUrl = `${localAppUrl}/${pagePath}`;
   }
 
-  // open web page in the built-in simple browser webview
-  commands.executeCommand(Commands.ShowSimpleBrowser, pageUrl);
+  if (!isServerRunning()) {
+    startServer(Uri.parse(pageUrl));
+  }
+  else {
+    // open web page in the built-in simple browser webview
+    commands.executeCommand(Commands.ShowSimpleBrowser, pageUrl);
+  }
 }
