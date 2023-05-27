@@ -7,6 +7,7 @@ import {
 
 import { sendCommand } from '../terminal';
 import { timeout } from '../utils/timer';
+import { isServerRunning, stopServer } from './server';
 
 /**
  * Node modules folder name to check in the open project workspace
@@ -38,7 +39,11 @@ export async function installDependencies() {
 /**
  * Updates all Evidence app librarires to the latest versions.
  */
-export function updateDependencies() {
+export async function updateDependencies() {
+  if (isServerRunning()) {
+    stopServer();
+    await timeout(1000);
+  }
   sendCommand(`npm install ${evidencePackages.join(' ')}`);
 }
 
