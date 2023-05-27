@@ -16,9 +16,16 @@ let _running: boolean = false;
  * @param pageFileUri Optional Uri of the starting page to load in preview.
  */
 export async function startServer(pageUri?: Uri) {
-  executeCommand('npm exec evidence dev');
+  // check supported node version prior to server start
   const nodeVersion = await getNodeVersion();
   if (isSupportedNodeVersion(nodeVersion, 16, 14)) {
+
+    if (!_running) {
+      // start dev server via terminal command
+      executeCommand('npm exec evidence dev');
+    }
+
+    // update server status and show running status bar icon
     statusBar.showRunning();
 
     // wait for the dev server to start
