@@ -1,5 +1,58 @@
 # Change Log
 
+
+## 1.0.0
+
+### Major Changes
+
+- Import evidence.dev VSCode extension code from evidence monorepo
+([#1](https://github.com/evidence-dev/vscode/issues/1))
+
+- Add Evidence: Create Project from Template command
+([#2](https://github.com/evidence-dev/vscode/issues/2))
+
+- Create Evidence app Preview and render app content in VSCode IDE
+([#3](https://github.com/evidence-dev/vscode/issues/3))
+
+- Create Terminal API to run Evidence app dev server
+([#4](https://github.com/evidence-dev/vscode/issues/4))
+
+- Add Evidence: Open Settings File shortcut command
+([#5](https://github.com/evidence-dev/vscode/issues/5))
+
+- Create Evidence app status bar
+([#6](https://github.com/evidence-dev/vscode/issues/6))
+
+- Add Evidence: Clear Cache shortcut command
+([#7](https://github.com/evidence-dev/vscode/issues/7))
+
+- Add Evidence: Build shortcut commands
+([#8](https://github.com/evidence-dev/vscode/issues/8))
+
+- Document new Evidence extension commands
+([#12](https://github.com/evidence-dev/vscode/issues/12))
+
+- Add Evidence: Install Dependencies shortcut command
+([#13](https://github.com/evidence-dev/vscode/issues/13))
+
+- Add Evidence: View Settings shortcut command
+([#14](https://github.com/evidence-dev/vscode/issues/14))
+
+- Add local NodeJS version check prior to running Evidence app commands in terminal
+([#15](https://github.com/evidence-dev/vscode/issues/15))
+
+- Add Evidence extension demo gif to the intro section in readme.md
+([#16](https://github.com/evidence-dev/vscode/issues/16))
+
+- Add Evidence: Update to Latest Version shortcut command
+([#17](https://github.com/evidence-dev/vscode/issues/17))
+
+- Enable custom Evidence project commands only when ./evidence/template files are present
+([#18](https://github.com/evidence-dev/vscode/issues/18))
+
+- Package and publish Evidence extension v1.0.0 release
+([#11](https://github.com/evidence-dev/vscode/issues/11))
+
 ## 0.0.9
 
 ### Patch Changes
