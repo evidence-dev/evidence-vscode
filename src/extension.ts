@@ -20,7 +20,7 @@ export async function activate(context: ExtensionContext) {
   registerCommands(context);
 
   // check for evidence app files
-  const evidenceFiles = await workspace.findFiles('**/.evidence/template/*.*');
+  const evidenceFiles = await workspace.findFiles('**/.evidence/**/*.*');
   if (workspace.workspaceFolders && evidenceFiles.length > 0) {
     updateProjectContext();
     statusBar.showStart();
