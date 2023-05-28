@@ -63,6 +63,6 @@ This extension provides a number of custom VS Code shortcut commands to help you
 
 If you run into any issues setting up the extension, please reach out:
 
-- [Open an issue on GitHub](https://github.com/evidence-dev/evidence/issues)
+- [Open an issue on GitHub](https://github.com/evidence-dev/vscode/issues)
 - Post in our [Slack community](https://join.slack.com/t/evidencedev/shared_invite/zt-uda6wp6a-hP6Qyz0LUOddwpXW5qG03Q)
 - Email <support@evidence.dev>
