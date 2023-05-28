@@ -19,6 +19,15 @@ This extension provides language support, basic commands and autocomplete for Ev
   - Components (Charts, Tables, Text Components)
   - SQL Query Blocks
   - Templating (Loops, Conditionals)
+- Evidence commands to:
+  - Create new project from a template
+  - Install dependencies
+  - Start and stop dev server
+  - Update to latest version
+  - View settings page and file
+  - Clear app data and queries cache
+  - Build app for deployment to production
+  - Preview app and markdown files in built-in browser
 
 ## Requirements
 
