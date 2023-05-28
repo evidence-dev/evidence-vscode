@@ -41,9 +41,27 @@ You can install Evidence extension from the [VS Code Marketplace](https://market
 
 ![Evidence Extension Installation](./docs/images/evidence-vscode-installation.png?raw=true)
 
+## Getting Started
+
+To get started with Evidence BI using Evidence VS Code extension:
+
+1. Create new project folder and open it in VS Code from the command line:
+
+```
+mkdir evidence-bi
+cd evidence-bi
+code .
+```
+
+2. Use `Evidence: Create Project from Template` command in VS Code to initialize new Evidence project from a [template](https://github.com/evidence-dev/template).
+
+![Create Evidence Project from Template](./docs/images/evidence-project-from-template.gif?raw=true)
+
+3. Use `Evidence:` VS Code commands described below to install dependencies, start and stop dev server, and preview Evidence BI app content.
+
 ## Commands
 
-This extension provides a number of custom VS Code shortcut commands to help you get started with Evidence. You can access them from `View -> Command Palette...` menu (`ctrl/cmd+shift+p`) by typing `Evidence` in the command search box:
+Evidence extension provides a number of custom VS Code shortcut commands for Evidence projects. You can access them from `View -> Command Palette...` menu (`ctrl/cmd+shift+p`) by typing `Evidence` in the command search box:
 
 ![Evidence Extension Commands](./docs/images/evidence-vscode-commands.png?raw=true)
 
