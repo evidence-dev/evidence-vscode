@@ -31,7 +31,13 @@ This extension provides language support, basic commands and autocomplete for Ev
 
 ## Requirements
 
-Evidence VS Code requires the Svelte for VS Code extension. This will be installed automatically when you install Evidence VS Code.
+Evidence dev server and this extension require **Node.js** `version 16.14` or higher. You can download and install the latest version from [nodejs.org](https://nodejs.org/en/download/).
+
+This extension also depends on [Svelte for VS Code](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) that provides syntax highlighting and rich intellisense for Svelte components in VS Code. Svelte for VS Code will be installed automatically when you install Evidence extension.
+
+## Installation
+
+You can install Evidence extension from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=evidence-dev.evidence-vscode), or by searching for `Evidence` in the VS Code Extensions tab.
 
 ## Commands
 
