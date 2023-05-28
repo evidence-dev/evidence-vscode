@@ -45,7 +45,7 @@ This extension provides a number of custom VS Code shortcut commands to help you
 
 ![Evidence Extension Commands](./docs/images/evidence-vscode-commands.png?raw=true)
 
-| Command | Name | Description |
+| Command | Title | Description |
 | --- | --- | --- |
 | `createProjectFromTemplate` | Create Project from Template | Create new Evidence app project from [template](https://github.com/evidence-dev/template). |
 | `openSettings` | Open Settings File | Open Evidence app settings file in VS Code JSON editor. |
