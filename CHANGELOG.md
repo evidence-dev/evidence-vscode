@@ -35,6 +35,8 @@
 ([#17](https://github.com/evidence-dev/vscode/issues/17))
 - Enable custom Evidence project commands only when ./evidence/template files are present
 ([#18](https://github.com/evidence-dev/vscode/issues/18))
+- Add Getting Started section to README.md
+([#19](https://github.com/evidence-dev/vscode/issues/19))
 - Update Requirements and add Installation section to README.md
 ([#20](https://github.com/evidence-dev/vscode/issues/20))
 - Package and publish Evidence extension v1.0.0 release
