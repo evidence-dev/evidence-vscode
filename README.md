@@ -39,6 +39,8 @@ This extension also depends on [Svelte for VS Code](https://marketplace.visualst
 
 You can install Evidence extension from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=evidence-dev.evidence-vscode), or by searching for `Evidence` in the VS Code Extensions tab.
 
+![Evidence Extension Installation](./docs/images/evidence-vscode-installation.png?raw=true)
+
 ## Commands
 
 This extension provides a number of custom VS Code shortcut commands to help you get started with Evidence. You can access them from `View -> Command Palette...` menu (`ctrl/cmd+shift+p`) by typing `Evidence` in the command search box:
