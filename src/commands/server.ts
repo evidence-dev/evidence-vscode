@@ -35,11 +35,11 @@ export async function startServer(pageUri?: Uri) {
     statusBar.showRunning();
 
     // wait for the dev server to start
-    await timeout(5000);
+    await timeout(1000);
     _running = true;
 
     // wait for the server to process pages
-    await timeout(5000);
+    await timeout(1000);
 
     // set focus back to the active vscode editor group
     commands.executeCommand(Commands.FocusActiveEditorGroup);
