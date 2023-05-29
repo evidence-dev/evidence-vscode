@@ -132,7 +132,7 @@ async function cloneTemplateRepository(templateRepository: string, projectFolder
 
     emitter.clone(projectFolderPath)
       .then(() => {
-        outputChannel.appendLine(`finished cloning ${templateRepository} to ${projectFolderPath}`);
+        outputChannel.appendLine(`✔ Finished creating Evidence project from ${templateRepository}.`);
         progress.report({
           increment: 100,
           message: 'Finished cloning Evidence project template.'
