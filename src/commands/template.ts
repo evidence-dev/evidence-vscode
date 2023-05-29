@@ -51,7 +51,7 @@ export async function createProjectFromTemplate() {
   const templateRepository = templateGithubUrl.replace('https://github.com/', '');
 
   if (!workspace.workspaceFolders) {
-    window.showErrorMessage('This command is only available when you have an Evidence project workspace open.');
+    window.showInformationMessage('Create or open new empty project folder to use this command.');
     return;
   }
 
