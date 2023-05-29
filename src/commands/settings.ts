@@ -1,5 +1,6 @@
 import {
   commands,
+  env,
   window,
   workspace,
   Uri
@@ -24,13 +25,15 @@ const settingsPageUrl = `${localAppUrl}/settings`;
 /**
  * Opens Evidence app settings page in the built-in vscode simple browser webview.
  */
-export function viewAppSettings() {
+export async function viewAppSettings() {
+  const settingsPageUri: Uri = await env.asExternalUri(Uri.parse(settingsPageUrl));
   if (!isServerRunning()) {
-    startServer(Uri.parse(settingsPageUrl));
+    startServer(settingsPageUri);
   }
   else {
     // show app settings page in simple browser webview
-    commands.executeCommand(Commands.ShowSimpleBrowser, settingsPageUrl);
+    commands.executeCommand(Commands.ShowSimpleBrowser,
+      settingsPageUri.toString(true)); // skip encoding
   }
 }
 

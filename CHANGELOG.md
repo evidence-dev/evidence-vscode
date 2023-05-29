@@ -39,6 +39,8 @@
 ([#19](https://github.com/evidence-dev/vscode/issues/19))
 - Update Requirements and add Installation section to README.md
 ([#20](https://github.com/evidence-dev/vscode/issues/20))
+- Extend new Evidence app Preview in VS Code to support GitHub Codespaces in a browser
+([#21](https://github.com/evidence-dev/vscode/issues/21))
 - Package and publish Evidence extension v1.0.0 release
 ([#11](https://github.com/evidence-dev/vscode/issues/11))
 

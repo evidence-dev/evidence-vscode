@@ -1,5 +1,6 @@
 import {
   commands,
+  env,
   workspace,
   Uri
 } from 'vscode';
@@ -21,7 +22,7 @@ export const localAppUrl = 'http://localhost:3000';
  * @see Simple browser extension implementation:
  *  https://github.com/microsoft/vscode/pull/109276
  */
-export function preview(uri?: Uri) {
+export async function preview(uri?: Uri) {
   // default page url
   let pageUrl: string = localAppUrl;
 
@@ -40,11 +41,14 @@ export function preview(uri?: Uri) {
     pageUrl = `${localAppUrl}/${pagePath}`;
   }
 
+  // create external Uri from page url
+  const pageUri: Uri = await env.asExternalUri(Uri.parse(pageUrl));
   if (!isServerRunning()) {
-    startServer(Uri.parse(pageUrl));
+    startServer(pageUri);
   }
   else {
     // open web page in the built-in simple browser webview
-    commands.executeCommand(Commands.ShowSimpleBrowser, pageUrl);
+    commands.executeCommand(Commands.ShowSimpleBrowser,
+      pageUri.toString(true)); // skip encoding
   }
 }

@@ -1,8 +1,8 @@
-import { commands, Uri } from 'vscode';
+import { commands, env, Uri } from 'vscode';
 import { Commands } from './commands';
 import { executeCommand } from './build';
 import { closeTerminal, sendCommand } from '../terminal';
-import { preview } from './preview';
+import { localAppUrl, preview } from './preview';
 import { getNodeVersion, isSupportedNodeVersion } from '../node';
 import { timeout } from '../utils/timer';
 import { statusBar } from '../statusBar';
@@ -21,8 +21,14 @@ export async function startServer(pageUri?: Uri) {
   if (isSupportedNodeVersion(nodeVersion, 16, 14)) {
 
     if (!_running) {
+      let devServerHostParameter: string = '';
+      const appUri: Uri = await env.asExternalUri(Uri.parse(localAppUrl));
+      if (appUri.authority !== 'localhost:3000') {
+        // use remote host parameter to start dev server on codespaces
+        devServerHostParameter = '-- --host 0.0.0.0';
+      }
       // start dev server via terminal command
-      executeCommand('npm exec evidence dev');
+      executeCommand(`npm exec evidence dev ${devServerHostParameter}`);
     }
 
     // update server status and show running status bar icon
@@ -33,7 +39,7 @@ export async function startServer(pageUri?: Uri) {
     _running = true;
 
     // wait for the server to process pages
-    await timeout(20000);
+    await timeout(5000);
 
     // set focus back to the active vscode editor group
     commands.executeCommand(Commands.FocusActiveEditorGroup);
