@@ -16,7 +16,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/evidence-dev/vscode.git"
+    "url": "https://github.com/evidence-dev/evidence-vscode.git"
   },
   "keywords": [
     "evidence",
@@ -27,7 +27,7 @@
     "markdown"
   ],
   "bugs": {
-    "url": "https://github.com/evidence-dev/vscode/issues"
+    "url": "https://github.com/evidence-dev/evidence-vscode/issues"
   },
   "homepage": "https://evidence.dev",
   "icon": "icons/evidence-logo.png",
