@@ -43,7 +43,7 @@ You can install Evidence extension from the [VS Code Marketplace](https://market
 
 ## Getting Started
 
-To get started with Evidence BI using Evidence VS Code extension:
+To get started with Evidence BI application development using VS Code desktop version, follow these steps:
 
 1. Create new project folder and open it in VS Code from the command line:
 
@@ -58,6 +58,17 @@ code .
 ![Create Evidence Project from Template](./docs/images/evidence-project-from-template.gif?raw=true)
 
 3. Use `Evidence:` VS Code commands described below to install dependencies, start and stop dev server, and preview Evidence BI app content.
+
+## Running Evidence app in GitHub Codespaces
+
+You can use Evidence VS Code extension with [GitHub Codespaces](https://github.com/features/codespaces).
+
+1. Open Evidence [template](https://github.com/evidence-dev/template) project github repository in a browser.
+2. Click the green `Use this template` button, and select `Open in a codespace`.
+3. Install Evidence extension in the Codespace when prompted.
+4. Use new Evidence status bar and commands to run and Preview `template` Evidence app.
+
+![Running Evidence App Template in GitHub Codespaces](./docs/images/vscode-evidence-app-run-in-codespaces.gif?raw=true)
 
 ## Commands
 
@@ -83,6 +94,6 @@ Evidence extension provides a number of custom VS Code shortcut commands for Evi
 
 If you run into any issues setting up the extension, please reach out:
 
-- [Open an issue on GitHub](https://github.com/evidence-dev/vscode/issues)
+- [Open an issue on GitHub](https://github.com/evidence-dev/evidence-vscode/issues)
 - Post in our [Slack community](https://join.slack.com/t/evidencedev/shared_invite/zt-uda6wp6a-hP6Qyz0LUOddwpXW5qG03Q)
 - Email <support@evidence.dev>
