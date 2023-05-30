@@ -125,6 +125,16 @@
           "command": "evidence.preview",
           "when": "resourceLangId == emd",
           "group": "navigation"
+        },
+        {
+          "command": "markdown.showPreview",
+          "when": "resourceLangId == emd",
+          "group": "navigation"
+        },
+        {
+          "command": "markdown.showPreviewToSide",
+          "when": "resourceLangId == emd",
+          "group": "navigation"
         }
       ],
       "editor/title": [
@@ -137,6 +147,11 @@
       "editor/title/context": [
         {
           "command": "evidence.preview",
+          "when": "resourceLangId == emd",
+          "group": "navigation"
+        },
+        {
+          "command": "markdown.showPreview",
           "when": "resourceLangId == emd",
           "group": "navigation"
         }
