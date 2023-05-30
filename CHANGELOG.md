@@ -3,7 +3,9 @@
 
 ## 1.0.0
 
-Evidence extension v1.0.0 adds new interactive command features to streamline Evidence BI applications developement in VS Code and enhance new users onboarding experience. Main new features include Evidence app and pages Preview using built-in simple browser extension, new Terminal API, Evidence dev server status bar, and custom Evidence commands to create, update, develop and build Evidance BI applications using built-in file, editor, terminal and context menus VS Code features and public extension APIs.
+Evidence extension v1.0.0 adds new interactive command features to streamline Evidence BI applications developement in VS Code and enhance new users onboarding experience.
+
+Main new features include Evidence app and pages Preview using built-in simple browser extension, new Terminal API, Evidence dev server status bar, and custom Evidence commands to create, update, develop and build Evidance BI applications using built-in file, editor, terminal and context menus VS Code features and public extension APIs.
 
 ### Major Changes
 
@@ -43,6 +45,8 @@ Evidence extension v1.0.0 adds new interactive command features to streamline Ev
 ([#20](https://github.com/evidence-dev/vscode/issues/20))
 - Extend new Evidence app Preview in VS Code to support GitHub Codespaces in a browser
 ([#21](https://github.com/evidence-dev/vscode/issues/21))
+- Split Install Dependencies and Start Server into two actions in Evidence dev server status bar
+([#27](https://github.com/evidence-dev/vscode/issues/27))
 - Package and publish Evidence extension v1.0.0 release
 ([#11](https://github.com/evidence-dev/vscode/issues/11))
 
