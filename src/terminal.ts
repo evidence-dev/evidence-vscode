@@ -3,6 +3,7 @@ import {
   window,
   Disposable,
   ExtensionContext,
+  OutputChannel,
   Terminal,
   Uri
 } from 'vscode';
@@ -21,6 +22,7 @@ const downloadNodeJsUrl = 'https://nodejs.org/en/download';
  * Evidence terminal instance.
  */
 let _terminal: Terminal | undefined;
+let _outputChannel: OutputChannel | undefined;
 let _nodeVersion: string | undefined;
 let _currentDirectory: string | undefined;
 let _disposable: Disposable | undefined;
@@ -36,6 +38,7 @@ async function getTerminal(context: ExtensionContext, workingDirectory?: string)
   if (_terminal === undefined) {
     _terminal = window.createTerminal(terminalName);
     _terminal.show(false);
+    _outputChannel = window.createOutputChannel('Evidence');
     _terminal.sendText('node -v');
     _nodeVersion = await getNodeVersion();
     _disposable = window.onDidCloseTerminal((e: Terminal) => {
@@ -78,6 +81,13 @@ export async function sendCommand(command: string,
   if (isSupportedNodeVersion(_nodeVersion!, 16, 14)) {
     // execute terminal command
     terminal.sendText(command, true); // add new line
+
+    // get running terminal command process id
+    const processId = await terminal.processId;
+    if (processId) {
+      _outputChannel?.appendLine(`Running command: ${command}`);
+      _outputChannel?.appendLine(`- Process Id: ${processId}`);
+    }
   }
   else {
     // prompt to download and install the required NodeJS version

@@ -47,6 +47,8 @@ Main new features include Evidence app and pages Preview using built-in simple b
 ([#21](https://github.com/evidence-dev/vscode/issues/21))
 - Split Install Dependencies and Start Server into two actions in Evidence dev server status bar
 ([#27](https://github.com/evidence-dev/vscode/issues/27))
+- Log commands sent to terminal in Evidence Output panel
+([#28](https://github.com/evidence-dev/vscode/issues/28))
 - Package and publish Evidence extension v1.0.0 release
 ([#11](https://github.com/evidence-dev/vscode/issues/11))
 
