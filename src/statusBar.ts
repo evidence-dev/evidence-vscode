@@ -26,6 +26,26 @@ class StatusBar {
   }
 
   /**
+   * Sets app server status display to install dependencies.
+   */
+  showInstall(): void {
+    this.statusBarItem.text = '$(debug-start) Evidence';
+    this.statusBarItem.tooltip = 'Install dependencies';
+    this.statusBarItem.command = Commands.InstallDependencies;
+    this.statusBarItem.show();
+  }
+
+  /**
+   * Sets installing dependencies app server status.
+   */
+  showInstalling(): void {
+    this.statusBarItem.text = '$(sync~spin) Evidence';
+    this.statusBarItem.tooltip = 'Installing dependencies ...';
+    this.statusBarItem.command = Commands.InstallDependencies;
+    this.statusBarItem.show();
+  }
+
+  /**
    * Sets app server status display to running.
    */
   showStart(): void {
