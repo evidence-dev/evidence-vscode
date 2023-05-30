@@ -6,7 +6,7 @@ Evidence is a Markdown-based business intelligence tool. Connect to your databas
 
 This extension provides language support, basic commands and autocomplete for Evidence Markdown files. This is an early version of the extension and will serve as the starting point for deeper VS Code support for Evidence in the future.
 
-![Evidence App Run](./docs/images/vscode-evidence-app-run.gif?raw=true)
+![Evidence App Run](https://raw.githubusercontent.com/evidence-dev/evidence-vscode/main/docs/images/vscode-evidence-app-run.gif?raw=true)
 
 ## Features
 
@@ -39,7 +39,7 @@ This extension also depends on [Svelte for VS Code](https://marketplace.visualst
 
 You can install Evidence extension from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=evidence-dev.evidence-vscode), or by searching for `Evidence` in the VS Code Extensions tab.
 
-![Evidence Extension Installation](./docs/images/evidence-vscode-installation.png?raw=true)
+![Evidence Extension Installation](https://raw.githubusercontent.com/evidence-dev/evidence-vscode/main/docs/images/evidence-vscode-installation.png?raw=true)
 
 ## Getting Started
 
@@ -55,7 +55,7 @@ code .
 
 2. Use `Evidence: Create Project from Template` command in VS Code to initialize new Evidence project from a [template](https://github.com/evidence-dev/template).
 
-![Create Evidence Project from Template](./docs/images/evidence-project-from-template.gif?raw=true)
+![Create Evidence Project from Template](https://raw.githubusercontent.com/evidence-dev/evidence-vscode/main/docs/images/evidence-project-from-template.gif?raw=true)
 
 3. Use `Evidence:` VS Code commands described below to install dependencies, start and stop dev server, and preview Evidence BI app content.
 
@@ -68,13 +68,13 @@ You can use Evidence VS Code extension with [GitHub Codespaces](https://github.c
 3. Install Evidence extension in the Codespace when prompted.
 4. Use new Evidence status bar and commands to run and Preview `template` Evidence app.
 
-![Running Evidence App Template in GitHub Codespaces](./docs/images/vscode-evidence-app-run-in-codespaces.gif?raw=true)
+![Running Evidence App Template in GitHub Codespaces](https://raw.githubusercontent.com/evidence-dev/evidence-vscode/main/docs/images/vscode-evidence-app-run-in-codespaces.gif?raw=true)
 
 ## Commands
 
 Evidence extension provides a number of custom VS Code shortcut commands for Evidence projects. You can access them from `View -> Command Palette...` menu (`ctrl/cmd+shift+p`) by typing `Evidence` in the command search box:
 
-![Evidence Extension Commands](./docs/images/evidence-vscode-commands.png?raw=true)
+![Evidence Extension Commands](https://raw.githubusercontent.com/evidence-dev/evidence-vscode/main/docs/images/evidence-vscode-commands.png?raw=true)
 
 | Command | Title | Description |
 | --- | --- | --- |
