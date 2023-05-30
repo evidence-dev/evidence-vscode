@@ -41,6 +41,9 @@ async function getTerminal(context: ExtensionContext, workingDirectory?: string)
     _outputChannel = window.createOutputChannel('Evidence');
     _terminal.sendText('node -v');
     _nodeVersion = await getNodeVersion();
+    _outputChannel.appendLine(`Using node ${_nodeVersion}`);
+
+    // dispose this terminal when terminal panel is closed
     _disposable = window.onDidCloseTerminal((e: Terminal) => {
       if (e.name === terminalName) {
         _terminal = undefined;
