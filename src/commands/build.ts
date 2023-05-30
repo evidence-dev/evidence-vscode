@@ -8,6 +8,7 @@ import {
 import { sendCommand } from '../terminal';
 import { timeout } from '../utils/timer';
 import { isServerRunning, stopServer } from './server';
+import { statusBar } from '../statusBar';
 
 /**
  * Node modules folder name to check in the open project workspace
@@ -37,7 +38,10 @@ export async function installDependencies() {
     await timeout(1000);
   }
   sendCommand('npm install');
-  await timeout(15000);
+  await timeout(1000);
+  statusBar.showInstalling();
+  await timeout(20000);
+  statusBar.showStart();
 }
 
 /**
@@ -49,6 +53,8 @@ export async function updateDependencies() {
     await timeout(1000);
   }
   sendCommand(`npm install ${evidencePackages.join(' ')}`);
+  await timeout(5000);
+  statusBar.showStart();
 }
 
 /**
