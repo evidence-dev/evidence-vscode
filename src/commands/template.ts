@@ -10,6 +10,7 @@ import { Commands } from './commands';
 import { updateProjectContext } from '../config';
 import { timeout } from '../utils/timer';
 import { statusBar } from '../statusBar';
+import { deleteFile, deleteFolder } from '../utils/fsUtils';
 
 /**
  * @see https://github.com/tiged/tiged#javascript-api
@@ -98,6 +99,7 @@ async function projectHasFiles(): Promise<boolean> {
 async function cloneTemplateRepository(templateRepository: string, projectFolderPath: string) {
   const outputChannel: OutputChannel = window.createOutputChannel('Evidence');
   outputChannel.show();
+  outputChannel.appendLine(`Cloning ${templateRepository} to ${projectFolderPath}:`);
 
   await window.withProgress({
     location: ProgressLocation.Notification,
@@ -127,16 +129,23 @@ async function cloneTemplateRepository(templateRepository: string, projectFolder
     emitter.on('info', (info: any) => {
       progressIncrement += 5;
       progress.report({increment: progressIncrement});
-      outputChannel.appendLine(info.message);
+      const infoMessage: string = info.message?.replaceAll('[1m', '').replaceAll('[22m', '');
+      outputChannel.appendLine(`- ${infoMessage}`);
     });
 
     emitter.clone(projectFolderPath)
-      .then(() => {
-        outputChannel.appendLine(`✔ Finished creating Evidence project from ${templateRepository}.`);
+      .then(async () => {
+        outputChannel.appendLine(`✔ Finished creating Evidence project from ${templateRepository}`);
         progress.report({
           increment: 100,
           message: 'Finished cloning Evidence project template.'
         });
+
+        // delete cloned template repository github files
+        await deleteFolder('.github');
+        await deleteFile('degit.json');
+
+        // update Evidence project context and status bar
         updateProjectContext();
         statusBar.showStart();
       })
