@@ -152,7 +152,12 @@
         },
         {
           "command": "markdown.showPreview",
-          "when": "resourceLangId == emd",
+          "when": "!notebookEditorFocused && resourceLangId == emd",
+          "group": "navigation"
+        },
+        {
+          "command": "markdown.showPreviewToSide",
+          "when": "!notebookEditorFocused && resourceLangId == emd",
           "group": "navigation"
         }
       ]
@@ -225,20 +230,6 @@
       {
         "language": "javascript",
         "path": "./snippets/js.code-snippets"
-      }
-    ],
-    "keybindings": [
-      {
-        "command": "markdown.showPreview",
-        "key": "shift+ctrl+v",
-        "mac": "shift+cmd+v",
-        "when": "!notebookEditorFocused && editorLangId == 'emd'"
-      },
-      {
-        "command": "markdown.showPreviewToSide",
-        "key": "ctrl+k v",
-        "mac": "cmd+k v",
-        "when": "!notebookEditorFocused && editorLangId == 'emd'"
       }
     ]
   },
