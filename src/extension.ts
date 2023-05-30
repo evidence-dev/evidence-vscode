@@ -23,7 +23,15 @@ export async function activate(context: ExtensionContext) {
   const evidenceFiles = await workspace.findFiles('**/.evidence/**/*.*');
   if (workspace.workspaceFolders && evidenceFiles.length > 0) {
     updateProjectContext();
-    statusBar.showStart();
+
+    // check for node modules
+    const nodeModules = await workspace.findFiles('**/node_modules/**/*.*');
+    if (nodeModules.length > 0) {
+      statusBar.showStart();
+    }
+    else {
+      statusBar.showInstall();
+    }
   }
 }
 
