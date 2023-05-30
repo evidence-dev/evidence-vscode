@@ -147,7 +147,7 @@ async function cloneTemplateRepository(templateRepository: string, projectFolder
 
         // update Evidence project context and status bar
         updateProjectContext();
-        statusBar.showStart();
+        statusBar.showInstall();
       })
       .catch((error: any) => {
         outputChannel.appendLine(error);
