@@ -49,6 +49,8 @@ Main new features include Evidence app and pages Preview using built-in simple b
 ([#27](https://github.com/evidence-dev/vscode/issues/27))
 - Log commands sent to terminal in Evidence Output panel
 ([#28](https://github.com/evidence-dev/vscode/issues/28))
+- Restore built-in markdown.showPreview and markdown.showPreviewToSide commands mapping for all markdown documents
+([#29](https://github.com/evidence-dev/vscode/issues/29))
 - Package and publish Evidence extension v1.0.0 release
 ([#11](https://github.com/evidence-dev/vscode/issues/11))
 
