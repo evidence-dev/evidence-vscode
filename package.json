@@ -160,6 +160,12 @@
           "when": "!notebookEditorFocused && resourceLangId == emd",
           "group": "navigation"
         }
+      ],
+      "commandPalette": [
+        {
+          "command": "evidence.preview",
+          "when": "never"
+        }
       ]
     },
     "languages": [
