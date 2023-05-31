@@ -94,6 +94,22 @@ Evidence extension provides a number of custom VS Code shortcut commands for Evi
 | `build` | Build | Build Evidence app for deployment to production. |
 | `buildStrict` | Build Strict | Build Evidence app for deployment to production in a strict mode. |
 
+## Dev Build
+
+To build the latest version of Evidence VS Code extension from source, clone this github repository and run the following commands from the command line:
+
+```
+$ git clone https://github.com/evidence-dev/evidence-vscode
+$ cd evidence-vscode
+$ npm install
+$ npm run compile
+$ code .
+```
+
+Press `F5` to start debugging Evidence VS Code extension, and attach it to the running extension host.
+
+**Note**: disable Evidence extension installed from marketpace to see your code changes reflected in the running host extension window during debug.
+
 ## Support
 
 If you run into any issues setting up the extension, please reach out:
