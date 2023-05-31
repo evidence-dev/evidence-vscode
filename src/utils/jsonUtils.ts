@@ -30,6 +30,7 @@ export async function loadPackageJson() {
  *
  * @param packageJson Package json content.
  * @param dependencyName Dependency name to check.
+ *
  * @returns True if dependency exists and false otherwise.
  */
 export function hasDependency(packageJson: any, dependencyName: string): boolean {
