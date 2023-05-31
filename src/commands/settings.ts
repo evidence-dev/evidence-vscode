@@ -7,6 +7,7 @@ import {
 } from 'vscode';
 
 import { Commands } from './commands';
+import { getWorkspaceFolder } from '../config';
 import { localAppUrl } from './preview';
 import { isServerRunning, startServer } from './server';
 
@@ -45,7 +46,7 @@ export function openSettingsFile() {
     window.showErrorMessage('This command is only available when you have an Evidence project workspace open.');
   }
   else {
-    const settingsFileUri: Uri = Uri.joinPath(workspace.workspaceFolders[0].uri, settingsFilePath);
+    const settingsFileUri: Uri = Uri.joinPath(getWorkspaceFolder()!.uri, settingsFilePath);
     window.showTextDocument(settingsFileUri);
   }
 }

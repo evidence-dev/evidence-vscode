@@ -6,6 +6,7 @@ import {
 } from 'vscode';
 
 import { Commands } from './commands';
+import { getWorkspaceFolder } from '../config';
 import { isServerRunning, startServer } from './server';
 
 /**
@@ -32,7 +33,7 @@ export async function preview(uri?: Uri) {
   }
   else if (uri && uri.scheme === 'file' && workspace.workspaceFolders) {
     // get project folder root path
-    const workspaceFolderPath: string = workspace.workspaceFolders[0].uri.fsPath;
+    const workspaceFolderPath: string = getWorkspaceFolder()!.uri.fsPath;
 
     // create web page url from file Uri by converting .md path to app page path
     let pagePath: string = uri.fsPath.replace(workspaceFolderPath, '')

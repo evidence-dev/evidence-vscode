@@ -2,13 +2,15 @@ import {
   workspace,
   FileStat,
   FileType,
-  Uri
+  Uri,
+  WorkspaceFolder
 } from 'vscode';
 
 import { sendCommand } from '../terminal';
 import { timeout } from '../utils/timer';
 import { isServerRunning, stopServer } from './server';
 import { statusBar } from '../statusBar';
+import { getWorkspaceFolder } from '../config';
 
 /**
  * Node modules folder name to check in the open project workspace
@@ -105,11 +107,12 @@ export async function executeCommand(command: string) {
  * @see https://docs.evidence.dev/getting-started/install-evidence
  */
 export async function hasDependencies(): Promise<boolean> {
-  if (workspace.workspaceFolders) {
-    const nodeModulesUri: Uri = Uri.joinPath(workspace.workspaceFolders[0].uri, nodeModules);
+  const workspaceFolder: WorkspaceFolder | undefined = getWorkspaceFolder();
+  if (workspaceFolder) {
+    const nodeModulesUri: Uri = Uri.joinPath(workspaceFolder.uri, nodeModules);
     try {
       const nodeModulesStat: FileStat = await workspace.fs.stat(nodeModulesUri);
-      return nodeModulesStat.type === FileType.Directory;
+      return (nodeModulesStat.type === FileType.Directory);
     }
     catch (error) {
       return false;

@@ -7,7 +7,7 @@ import {
 } from 'vscode';
 
 import { Commands } from './commands';
-import { updateProjectContext } from '../config';
+import { getWorkspaceFolder, updateProjectContext } from '../config';
 import { timeout } from '../utils/timer';
 import { statusBar } from '../statusBar';
 import { deleteFile, deleteFolder } from '../utils/fsUtils';
