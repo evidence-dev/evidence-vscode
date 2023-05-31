@@ -96,8 +96,9 @@ Evidence extension provides a number of custom VS Code shortcut commands for Evi
 
 ## Dev Build
 
-To build the latest version of Evidence VS Code extension from source, clone this github repository and run the following commands from the command line:
+To build the latest version of Evidence VS Code extension from source:
 
+1. Clone this github repository and run the following commands from the command line:
 ```
 $ git clone https://github.com/evidence-dev/evidence-vscode
 $ cd evidence-vscode
@@ -105,10 +106,12 @@ $ npm install
 $ npm run compile
 $ code .
 ```
+2. Press `F5` to start debugging Evidence VS Code extension.
+3. Open any Evidence project folder in the new `Extension Host Window` to try updated extension commands and features.
 
-Press `F5` to start debugging Evidence VS Code extension, and attach it to the running extension host.
+**Note**: Disable Evidence extension installed from marketpace to see your code changes reflected in the running host extension window during debug.
 
-**Note**: disable Evidence extension installed from marketpace to see your code changes reflected in the running host extension window during debug.
+See the official [Debugging extension](https://code.visualstudio.com/api/get-started/your-first-extension#debugging-the-extension) documentation for more information about developing extensions in VS Code.
 
 ## Support
 
