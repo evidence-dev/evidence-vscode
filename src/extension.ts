@@ -1,5 +1,6 @@
 import {
-  commands,
+  languages,
+  window,
   workspace,
   ExtensionContext,
 } from 'vscode';
@@ -10,6 +11,8 @@ import { updateProjectContext } from './config';
 import { statusBar } from './statusBar';
 import { closeTerminal } from './terminal';
 
+import { MarkdownSymbolProvider } from './providers/markdownSymbolProvider';
+
 /**
  * Activates Evidence vscode extension.
  *
@@ -18,6 +21,11 @@ import { closeTerminal } from './terminal';
 export async function activate(context: ExtensionContext) {
   setExtensionContext(context);
   registerCommands(context);
+
+  // register markdown symbol provider
+  const markdownLanguage = { language: 'emd', scheme: 'file' };
+  const provider = new MarkdownSymbolProvider();
+  languages.registerDocumentSymbolProvider(markdownLanguage, provider);
 
   // check for evidence app files
   const evidenceFiles = await workspace.findFiles('**/.evidence/**/*.*');
