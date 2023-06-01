@@ -69,7 +69,7 @@ export async function startServer(pageUri?: Uri) {
         // and assume default app port is available on remote host
         devServerHostParameter = ' -- --host 0.0.0.0';
       }
-      else if (_activePort !== defaultAppPort) {
+      else {
         // use the last saved active local host port number to start dev server
         serverPortParameter = ` -- --port ${_activePort}`;
       }
