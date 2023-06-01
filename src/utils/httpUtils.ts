@@ -34,7 +34,7 @@ export async function isPortFree(port: number) {
 export async function tryPort(port = 3000): Promise<number> {
   if (await isPortFree(port)) {
     const outputChannel = getOutputChannel();
-    outputChannel.appendLine(`Using server: ${port} ...`);
+    outputChannel.appendLine(`Using server port: ${port} ...`);
     return port;
   }
   return tryPort(port + 1);
