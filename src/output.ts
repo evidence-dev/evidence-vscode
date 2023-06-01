@@ -23,7 +23,7 @@ let _outputChannel: OutputChannel | undefined;
 export function getOutputChannel(): OutputChannel {
   if (_outputChannel === undefined) {
     _outputChannel = window.createOutputChannel(channelName);
-    _outputChannel.appendLine(`Evidence dev server and extension logging output:\n`);
+    _outputChannel.appendLine(`Evidence dev server and extension logging output:`);
   }
   return _outputChannel;
 }

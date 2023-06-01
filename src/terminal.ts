@@ -90,7 +90,7 @@ export async function sendCommand(command: string,
     const processId = await terminal.processId;
     if (processId) {
       _outputChannel?.appendLine(`Running command: ${command}`);
-      _outputChannel?.appendLine(`- Process Id: ${processId}`);
+      _outputChannel?.appendLine(`- Process Id: ${processId}\n`);
     }
   }
   else {
