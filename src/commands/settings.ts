@@ -8,7 +8,6 @@ import {
 
 import { Commands } from './commands';
 import { getWorkspaceFolder } from '../config';
-import { localAppUrl } from './preview';
 
 import {
   getAppPageUri,
@@ -26,13 +25,13 @@ const settingsFilePath = '.evidence/template/evidence.settings.json';
  *
  * @see https://docs.evidence.dev/core-concepts/data-sources/
  */
-const settingsPageUrl = `${localAppUrl}/settings`;
+const settingsPagePath = '/settings';
 
 /**
  * Opens Evidence app settings page in the built-in vscode simple browser webview.
  */
 export async function viewAppSettings() {
-  const settingsPageUri: Uri = await getAppPageUri(settingsPageUrl);
+  const settingsPageUri: Uri = await getAppPageUri(settingsPagePath);
   if (!isServerRunning()) {
     startServer(settingsPageUri);
   }

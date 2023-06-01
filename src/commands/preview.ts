@@ -14,16 +14,10 @@ import {
   startServer
 } from './server';
 
-
-/**
- * Default Evidence app port.
- */
-export const defaultAppPort: number = 3000;
-
 /**
  * Local Evidence app url.
  */
-export const localAppUrl = `http://localhost:${defaultAppPort}`;
+export const localAppUrl = `http://localhost`;
 
 /**
  * Opens Evidence app or markdown page preview
@@ -36,7 +30,7 @@ export const localAppUrl = `http://localhost:${defaultAppPort}`;
  */
 export async function preview(uri?: Uri) {
   // default page url
-  let pageUrl: string = localAppUrl;
+  let pageUrl: string = '/';
 
   // create web page url from page Uri
   if (uri && (uri.scheme === 'http' || uri.scheme === 'https')) {
@@ -50,7 +44,7 @@ export async function preview(uri?: Uri) {
     let pagePath: string = uri.fsPath.replace(workspaceFolderPath, '')
       .split('\\').join('/').replace('/pages/', '')
       .replace('index.md', '').replace('.md', '');
-    pageUrl = `${localAppUrl}/${pagePath}`;
+    pageUrl = `/${pagePath}`;
   }
 
   // create external app page Uri from page url

@@ -2,9 +2,10 @@ import { commands, env, Uri } from 'vscode';
 
 import { Commands } from './commands';
 import { executeCommand } from './build';
+import { Settings, getConfig } from '../config';
 import { getOutputChannel } from '../output';
 import { closeTerminal, sendCommand } from '../terminal';
-import { defaultAppPort, localAppUrl, preview } from './preview';
+import { localAppUrl, preview } from './preview';
 import { getNodeVersion, isSupportedNodeVersion } from '../node';
 import { timeout } from '../utils/timer';
 import { statusBar } from '../statusBar';
@@ -12,7 +13,7 @@ import { tryPort } from '../utils/httpUtils';
 
 const localhost = 'localhost';
 let _running: boolean = false;
-let _activePort: number = defaultAppPort;
+let _activePort: number = <number>getConfig(Settings.DefaultPort);
 
 /**
  * Creates Evidence app page Uri from the provided pageUrl,
@@ -26,22 +27,29 @@ let _activePort: number = defaultAppPort;
  * when running in GitHub Codespaces.
  */
 export async function getAppPageUri(pageUrl?: string): Promise<Uri> {
+  const defaultPort = <number>getConfig(Settings.DefaultPort);
+  const serverUrl = `${localAppUrl}:${defaultPort}`;
   if (pageUrl === undefined) {
-    pageUrl = localAppUrl;
+    pageUrl = serverUrl;
+  }
+  else if (pageUrl.startsWith('/')) {
+    // construct page url for page path wihtout host and port
+    pageUrl = `${localAppUrl}:${defaultPort}${pageUrl}`;
   }
 
   // get external web page url
   let pageUri: Uri = await env.asExternalUri(Uri.parse(pageUrl));
 
+  // update active server port number
   if (!_running) { //pageUri.authority.startsWith(localhost) && !isServerRunning()) {
     // get the next available localhost port number
-    _activePort = await tryPort(defaultAppPort);
+    _activePort = await tryPort(defaultPort);
   }
 
-  if (_activePort !== defaultAppPort) {
+  if (_activePort !== defaultPort) {
     // rewrite requested app page url to use the new active localhost server port
     pageUri = Uri.parse(pageUri.toString(true) // skip encoding
-      .replace(`/:${defaultAppPort}/`, `/:${_activePort}/`));
+      .replace(`/:${defaultPort}/`, `/:${_activePort}/`));
   }
 
   const outputChannel = getOutputChannel();
@@ -57,7 +65,7 @@ export async function getAppPageUri(pageUrl?: string): Promise<Uri> {
  */
 export async function startServer(pageUri?: Uri) {
   if (!pageUri) {
-    pageUri = await getAppPageUri(localAppUrl);
+    pageUri = await getAppPageUri('/');
   }
 
   // check supported node version prior to server start
@@ -133,6 +141,6 @@ export function stopServer() {
 
   // reset server state and status display
   _running = false;
-  _activePort = defaultAppPort;
+  _activePort = <number>getConfig(Settings.DefaultPort);
   statusBar.showStart();
 }
