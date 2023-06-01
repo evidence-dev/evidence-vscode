@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import {
   commands,
   workspace,
@@ -10,8 +11,8 @@ import { Commands } from './commands/commands';
  * VSCode and Evidence extension settings.
  */
 export const enum Settings {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  DefaultPort = 'defaultPort'
+  DefaultPort = 'defaultPort',
+  AutoStart = 'autoStart'
 }
 
 /**
