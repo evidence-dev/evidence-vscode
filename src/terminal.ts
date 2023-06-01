@@ -10,6 +10,7 @@ import {
 
 import { getExtensionContext } from './extensionContext';
 import { getNodeVersion, isSupportedNodeVersion } from './node';
+import { getOutputChannel } from './output';
 
 /**
  * Evidence terminal title.
@@ -35,10 +36,10 @@ let _disposable: Disposable | undefined;
  * @returns VScode Terminal instance.
  */
 async function getTerminal(context: ExtensionContext, workingDirectory?: string): Promise<Terminal> {
+  _outputChannel = getOutputChannel();
   if (_terminal === undefined) {
     _terminal = window.createTerminal(terminalName);
     _terminal.show(false);
-    _outputChannel = window.createOutputChannel('Evidence');
     _terminal.sendText('node -v');
     _nodeVersion = await getNodeVersion();
     _outputChannel.appendLine(`Using node ${_nodeVersion}`);
