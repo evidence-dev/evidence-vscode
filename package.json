@@ -179,6 +179,17 @@
         }
       ]
     },
+    "configuration": {
+      "title": "Evidence",
+      "type": "object",
+      "properties": {
+        "evidence.defaultPort": {
+          "type": "number",
+          "default": 3000,
+          "description": "Default Evidence dev server port."
+        }
+      }
+    },
     "languages": [
       {
         "id": "emd",
