@@ -45,7 +45,7 @@ export async function getAppPageUri(pageUrl?: string): Promise<Uri> {
   }
 
   const outputChannel = getOutputChannel();
-  outputChannel.appendLine(`Requested page: ${pageUri.toString(true)}`); // skip encoding
+  outputChannel.appendLine(`Requested page preview: ${pageUri.toString(true)}`); // skip encoding
   return pageUri;
 }
 
