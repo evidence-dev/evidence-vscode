@@ -38,6 +38,8 @@
     "onLanguage:javascript",
     "onLanguage:json",
     "onLanguage:svelte",
+    "workspaceContains:**/package.json",
+    "onView:simpleBrowser.view",
     "onCommand:evidence.createProjectFromTemplate",
     "onCommand:evidence.openSettings",
     "onCommand:evidence.installDependencies",
