@@ -1,6 +1,7 @@
 import * as http from 'http';
 import * as https from 'https';
 
+import { getOutputChannel } from '../output';
 import { timeout } from './timer';
 
 /**
@@ -26,12 +27,14 @@ export async function isPortFree(port: number) {
 /**
  * Tries to find a free port recursively.
  *
- * @param port Starting port number
+ * @param port Starting port number, set to the default value to start from 3000.
  *
  * @returns Available port number or the next port nubmer to try.
  */
 export async function tryPort(port = 3000): Promise<number> {
   if (await isPortFree(port)) {
+    const outputChannel = getOutputChannel();
+    outputChannel.appendLine(`Using server: ${port} ...`);
     return port;
   }
   return tryPort(port + 1);
