@@ -2,6 +2,7 @@ import { commands, env, Uri } from 'vscode';
 
 import { Commands } from './commands';
 import { executeCommand } from './build';
+import { getOutputChannel } from '../output';
 import { closeTerminal, sendCommand } from '../terminal';
 import { defaultAppPort, localAppUrl, preview } from './preview';
 import { getNodeVersion, isSupportedNodeVersion } from '../node';
@@ -32,7 +33,7 @@ export async function getAppPageUri(pageUrl?: string): Promise<Uri> {
   // get external web page url
   let pageUri: Uri = await env.asExternalUri(Uri.parse(pageUrl));
 
-  if (pageUri.authority.startsWith(localhost) && !isServerRunning()) {
+  if (!_running) { //pageUri.authority.startsWith(localhost) && !isServerRunning()) {
     // get the next available localhost port number
     _activePort = await tryPort(defaultAppPort);
   }
@@ -42,7 +43,9 @@ export async function getAppPageUri(pageUrl?: string): Promise<Uri> {
     pageUri = Uri.parse(pageUri.toString(true) // skip encoding
       .replace(`/:${defaultAppPort}/`, `/:${_activePort}/`));
   }
-  console.log(pageUri);
+
+  const outputChannel = getOutputChannel();
+  outputChannel.appendLine(`Requested page: ${pageUri.toString(true)}`); // skip encoding
   return pageUri;
 }
 
