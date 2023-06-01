@@ -3,6 +3,7 @@ import {
   window,
   workspace,
   ExtensionContext,
+  ProgressLocation
 } from 'vscode';
 
 import { MarkdownSymbolProvider } from './providers/markdownSymbolProvider';
@@ -47,6 +48,18 @@ export async function activate(context: ExtensionContext) {
 
       if (autoStart) {
         startServer();
+
+        // show spinning progress bar for 25 seconds
+        window.withProgress({
+          location: ProgressLocation.Notification,
+          title: 'Starting Evidence dev server ...',
+          cancellable: false
+        }, async (progress) => {
+          for (let i = 0; i < 25; i++) {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            progress.report({ increment: 4 });
+          }
+        });
       }
     }
     else {
@@ -55,7 +68,7 @@ export async function activate(context: ExtensionContext) {
 
       // prompt a user to install Evidence node.js dependencies
       window.showInformationMessage(
-        'Would you like to install Evidence project node.js dependencies?', 'Yes', 'No')
+        'Would you like to install Evidence dev server dependencies?', 'Yes', 'No')
         .then((selection) => {
           if (selection === 'Yes') {
             installDependencies();
