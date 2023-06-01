@@ -7,12 +7,23 @@ import {
 
 import { Commands } from './commands';
 import { getWorkspaceFolder } from '../config';
-import { isServerRunning, startServer } from './server';
+
+import {
+  getAppPageUri,
+  isServerRunning,
+  startServer
+} from './server';
+
 
 /**
- * Local Evidence app url with a port.
+ * Default Evidence app port.
  */
-export const localAppUrl = 'http://localhost:3000';
+export const defaultAppPort: number = 3000;
+
+/**
+ * Local Evidence app url.
+ */
+export const localAppUrl = `http://localhost:${defaultAppPort}`;
 
 /**
  * Opens Evidence app or markdown page preview
@@ -42,8 +53,10 @@ export async function preview(uri?: Uri) {
     pageUrl = `${localAppUrl}/${pagePath}`;
   }
 
-  // create external Uri from page url
-  const pageUri: Uri = await env.asExternalUri(Uri.parse(pageUrl));
+  // create external app page Uri from page url
+  const pageUri: Uri = await getAppPageUri(pageUrl);
+
+  // start server if not running
   if (!isServerRunning()) {
     startServer(pageUri);
   }

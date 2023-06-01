@@ -9,7 +9,12 @@ import {
 import { Commands } from './commands';
 import { getWorkspaceFolder } from '../config';
 import { localAppUrl } from './preview';
-import { isServerRunning, startServer } from './server';
+
+import {
+  getAppPageUri,
+  isServerRunning,
+  startServer
+} from './server';
 
 /**
  * Evidence app setting file location to configure data sources.
@@ -27,7 +32,7 @@ const settingsPageUrl = `${localAppUrl}/settings`;
  * Opens Evidence app settings page in the built-in vscode simple browser webview.
  */
 export async function viewAppSettings() {
-  const settingsPageUri: Uri = await env.asExternalUri(Uri.parse(settingsPageUrl));
+  const settingsPageUri: Uri = await getAppPageUri(settingsPageUrl);
   if (!isServerRunning()) {
     startServer(settingsPageUri);
   }
