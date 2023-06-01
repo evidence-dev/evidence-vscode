@@ -7,10 +7,11 @@ import {
 } from 'vscode';
 
 import { Commands } from './commands';
-import { getWorkspaceFolder, updateProjectContext } from '../config';
+import { updateProjectContext } from '../config';
 import { timeout } from '../utils/timer';
 import { statusBar } from '../statusBar';
 import { deleteFile, deleteFolder } from '../utils/fsUtils';
+import { getOutputChannel } from '../output';
 
 /**
  * @see https://github.com/tiged/tiged#javascript-api
@@ -97,7 +98,7 @@ async function projectHasFiles(): Promise<boolean> {
  * @param projectFolderPath Destination project folder to clone template content to.
  */
 async function cloneTemplateRepository(templateRepository: string, projectFolderPath: string) {
-  const outputChannel: OutputChannel = window.createOutputChannel('Evidence');
+  const outputChannel: OutputChannel = getOutputChannel();
   outputChannel.show();
   outputChannel.appendLine(`Cloning ${templateRepository} to ${projectFolderPath}:`);
 
