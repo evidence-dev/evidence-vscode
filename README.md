@@ -100,7 +100,6 @@ Our first version of Evidence VS Code extension with new interactive commands ha
 
 
 - New commands only work in workspaces that have `/pages` and other Evidence BI application files at the root of the open project ([#25](https://github.com/evidence-dev/evidence-vscode/issues/25#issuecomment-1567647672))
-- "Create Project from Template" requires you to have an empty VSCode project open (it will not create a new project for you).
 - Open Evidence markdown documents do not display [Outline](https://code.visualstudio.com/docs/getstarted/userinterface#_outline-view) ([#33](https://github.com/evidence-dev/evidence-vscode/issues/33))
 - Preview and Start/Stop Dev Server commands only work with the deafult app dev server port `3000` ([#31](https://github.com/evidence-dev/evidence-vscode/issues/31))
 - Preview of the open Evidence markdown document for the [templated pages](https://docs.evidence.dev/core-concepts/templated-pages/) doesn't properly rewrite template page Urls  ([#30](https://github.com/evidence-dev/evidence-vscode/issues/30))
