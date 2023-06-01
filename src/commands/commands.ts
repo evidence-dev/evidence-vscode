@@ -6,17 +6,19 @@ import {
   ExtensionContext,
 } from 'vscode';
 
-import { createProjectFromTemplate } from './template';
-import { startServer, stopServer} from './server';
-import { preview } from './preview';
-import { openSettingsFile, viewAppSettings } from './settings';
-import { clearCache} from './cache';
 import {
   installDependencies,
   updateDependencies,
   buildProject,
   buildProjectStrict
 } from './build';
+
+import { createProjectFromTemplate } from './template';
+import { startServer, stopServer} from './server';
+import { preview } from './preview';
+import { openSettingsFile, viewAppSettings } from './settings';
+import { clearCache} from './cache';
+import { showOutput } from '../output';
 
 /**
  * VSCode and Evidence extension commands.
@@ -38,7 +40,8 @@ export const enum Commands {
   ViewAppSettings = 'evidence.viewSettings',
   ClearCache = 'evidence.clearCache',
   BuildProject = 'evidence.build',
-  BuildProjectStrict = 'evidence.buildStrict'
+  BuildProjectStrict = 'evidence.buildStrict',
+  ShowOutput = 'evidence.showOutput',
 }
 
 let _context: ExtensionContext;
@@ -63,6 +66,7 @@ export function registerCommands(context: ExtensionContext) {
   registerCommand(Commands.ClearCache, clearCache);
   registerCommand(Commands.BuildProject, buildProject);
   registerCommand(Commands.BuildProjectStrict, buildProjectStrict);
+  registerCommand(Commands.ShowOutput, showOutput);
 }
 
 /**

@@ -27,3 +27,10 @@ export function getOutputChannel(): OutputChannel {
   }
   return _outputChannel;
 }
+
+/**
+ * Shows Evidence extension output channel in the Output view.
+ */
+export function showOutput() {
+  getOutputChannel().show();
+}

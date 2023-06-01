@@ -93,6 +93,7 @@ Evidence extension provides a number of custom VS Code shortcut commands for Evi
 | `clearCache` | Clear Cache | Clear Evidence application data and queries cache. |
 | `build` | Build | Build Evidence app for deployment to production. |
 | `buildStrict` | Build Strict | Build Evidence app for deployment to production in a strict mode. |
+| `showOutput` | Show Output | Show Evidence extension output in Output view. |
 
 ## Limitations
 

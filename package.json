@@ -48,7 +48,8 @@
     "onCommand:evidence.preview",
     "onCommand:evidence.viewSettings",
     "onCommand:evidence.build",
-    "onCommand:evidence.buildStrict"
+    "onCommand:evidence.buildStrict",
+    "onCommand:evidence.showOutput"
   ],
   "contributes": {
     "commands": [
@@ -115,6 +116,12 @@
       {
         "command": "evidence.buildStrict",
         "title": "Build Strict",
+        "category": "Evidence",
+        "enablement": "evidence.hasProject"
+      },
+      {
+        "command": "evidence.showOutput",
+        "title": "Show Output",
         "category": "Evidence",
         "enablement": "evidence.hasProject"
       }
