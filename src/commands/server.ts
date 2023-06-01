@@ -46,11 +46,9 @@ export async function getAppPageUri(pageUrl?: string): Promise<Uri> {
     _activePort = await tryPort(defaultPort);
   }
 
-  if (_activePort !== defaultPort) {
-    // rewrite requested app page url to use the new active localhost server port
-    pageUri = Uri.parse(pageUri.toString(true) // skip encoding
-      .replace(`/:${defaultPort}/`, `/:${_activePort}/`));
-  }
+  // rewrite requested app page url to use the new active localhost server port
+  pageUri = Uri.parse(pageUri.toString(true) // skip encoding
+    .replace(`/:${defaultPort}/`, `/:${_activePort}/`));
 
   const outputChannel = getOutputChannel();
   outputChannel.appendLine(`Requested page preview: ${pageUri.toString(true)}`); // skip encoding
@@ -73,20 +71,17 @@ export async function startServer(pageUri?: Uri) {
   if (isSupportedNodeVersion(nodeVersion, 16, 14)) {
 
     if (!_running) {
+      // use the last saved active port number to start dev server
+      const serverPortParameter = ` --port ${_activePort}`;
+
       let devServerHostParameter: string = '';
-      let serverPortParameter: string = '';
       if (!pageUri.authority.startsWith(localhost)) {
-        // use remote host parameter to start dev server on github codespaces,
-        // and assume default app port is available on remote host
-        devServerHostParameter = ' -- --host 0.0.0.0';
-      }
-      else {
-        // use the last saved active local host port number to start dev server
-        serverPortParameter = ` -- --port ${_activePort}`;
+        // use remote host parameter to start dev server on github codespaces
+        devServerHostParameter = ' --host 0.0.0.0';
       }
 
       // start dev server via terminal command
-      executeCommand(`npm exec evidence dev${devServerHostParameter}${serverPortParameter}`);
+      executeCommand(`npm exec evidence dev --${devServerHostParameter}${serverPortParameter}`);
     }
 
     // update server status and show running status bar icon
