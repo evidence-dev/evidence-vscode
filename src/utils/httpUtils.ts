@@ -10,7 +10,7 @@ import { timeout } from './timer';
  *
  * @returns True if port is free and false otherwise.
  */
-function isPortFree(port: number) {
+export async function isPortFree(port: number) {
   return new Promise((resolve) => {
     const server = http.createServer()
       .listen(port, () => {
@@ -22,7 +22,6 @@ function isPortFree(port: number) {
       });
   });
 }
-
 
 /**
  * Tries to find a free port recursively.
