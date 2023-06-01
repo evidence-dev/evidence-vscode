@@ -7,6 +7,25 @@ import {
 import { Commands } from './commands/commands';
 
 /**
+ * VSCode and Evidence extension settings.
+ */
+export const enum Settings {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  DefaultPort = 'defaultPort'
+}
+
+/**
+ * Gets Evidence extension configuration setting.
+ *
+ * @param settingName Configuration setting name.
+ * @param defaultValue Optional efault setting value to use when not found.
+ * @returns
+ */
+export function getConfig<T>(settingName: string, defaultValue?: T) {
+  return workspace.getConfiguration().get(`evidence.${settingName}`, defaultValue);
+}
+
+/**
  * Updates Evidence project context values
  * to show available Evidence project commands in Command Palette.
  */
