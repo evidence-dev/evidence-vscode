@@ -16,7 +16,7 @@ import {
 import { createProjectFromTemplate } from './template';
 import { startServer, stopServer} from './server';
 import { preview } from './preview';
-import { openSettingsFile, viewAppSettings } from './settings';
+import { openSettingsFile, viewExtensionSettings, viewAppSettings } from './settings';
 import { clearCache} from './cache';
 import { showOutput } from '../output';
 
@@ -24,12 +24,16 @@ import { showOutput } from '../output';
  * VSCode and Evidence extension commands.
  */
 export const enum Commands {
+  // VS Code and built-in extenions commands
   Open = 'vscode.open',
+  OpenSettings = 'workbench.action.openSettings',
   FocusActiveEditorGroup = 'workbench.action.focusActiveEditorGroup',
   NewWindow = 'workbench.action.newWindow',
   ReloadWindow = 'workbench.action.reloadWindow',
   ShowSimpleBrowser = 'simpleBrowser.show',
   SetContext = 'setContext',
+
+  // Evidence extension commands
   CreateProjectFromTemplate = 'evidence.createProjectFromTemplate',
   OpenProjectSettings = 'evidence.openSettings',
   InstallDependencies = 'evidence.installDependencies',
@@ -37,7 +41,8 @@ export const enum Commands {
   StartServer = 'evidence.startServer',
   StopServer = 'evidence.stopServer',
   PreviewApp = 'evidence.preview',
-  ViewAppSettings = 'evidence.viewSettings',
+  ViewExtensionSettings = 'evidence.viewSettings',
+  ViewAppSettings = 'evidence.viewAppSettings',
   ClearCache = 'evidence.clearCache',
   BuildProject = 'evidence.build',
   BuildProjectStrict = 'evidence.buildStrict',
@@ -62,6 +67,7 @@ export function registerCommands(context: ExtensionContext) {
   registerCommand(Commands.StartServer, startServer);
   registerCommand(Commands.StopServer, stopServer);
   registerCommand(Commands.PreviewApp, preview);
+  registerCommand(Commands.ViewExtensionSettings, viewExtensionSettings);
   registerCommand(Commands.ViewAppSettings, viewAppSettings);
   registerCommand(Commands.ClearCache, clearCache);
   registerCommand(Commands.BuildProject, buildProject);

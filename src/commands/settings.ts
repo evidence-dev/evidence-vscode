@@ -28,6 +28,13 @@ const settingsFilePath = '.evidence/template/evidence.settings.json';
 const settingsPagePath = '/settings';
 
 /**
+ * Opends Evidence extension settings in the built-in vscode settings editor.
+ */
+export async function viewExtensionSettings() {
+  commands.executeCommand(Commands.OpenSettings, 'Evidence');
+}
+
+/**
  * Opens Evidence app settings page in the built-in vscode simple browser webview.
  */
 export async function viewAppSettings() {
