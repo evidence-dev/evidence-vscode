@@ -174,10 +174,6 @@
         {
           "command": "evidence.preview",
           "when": "never"
-        },
-        {
-          "command": "evidence.viewSettings",
-          "when": "never"
         }
       ]
     },
