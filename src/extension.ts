@@ -11,7 +11,7 @@ import { setExtensionContext } from './extensionContext';
 import { registerCommands } from './commands/commands';
 import { loadPackageJson, hasDependency } from './utils/jsonUtils';
 import { Settings, getConfig, updateProjectContext } from './config';
-import { installDependencies } from './commands/build';
+import { showInstallDependencies } from './views/prompts';
 import { startServer } from './commands/server';
 import { statusBar } from './statusBar';
 import { closeTerminal } from './terminal';
@@ -67,13 +67,7 @@ export async function activate(context: ExtensionContext) {
       statusBar.showInstall();
 
       // prompt a user to install Evidence node.js dependencies
-      window.showInformationMessage(
-        'Would you like to install Evidence dev server dependencies?', 'Yes', 'No')
-        .then((selection) => {
-          if (selection === 'Yes') {
-            installDependencies();
-          }
-        });
+      showInstallDependencies();
     }
   }
 }
