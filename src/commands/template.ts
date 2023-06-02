@@ -3,11 +3,13 @@ import {
   window,
   workspace,
   ProgressLocation,
-  OutputChannel
+  OutputChannel,
+  WorkspaceFolder,
+  Uri
 } from 'vscode';
 
 import { Commands } from './commands';
-import { updateProjectContext } from '../config';
+import { getWorkspaceFolder, updateProjectContext } from '../config';
 import { timeout } from '../utils/timer';
 import { statusBar } from '../statusBar';
 import { deleteFile, deleteFolder } from '../utils/fsUtils';
@@ -19,14 +21,35 @@ import { getOutputChannel } from '../output';
 const tiged = require('tiged');
 
 /**
- * Default Evidence app template project github Url.
+ * Open new project workspace prompt button title.
  */
-const templateProjectUrl = 'https://github.com/evidence-dev/template';
+const openNewProjectWorkspace = 'Open New Project Workspace';
 
 /**
- * Create new project prompt button title.
+ * GitHub Url base for all the template github projects.
  */
-const creteNewProject = 'Create New Project';
+const gitHubUrlBase = 'https://github.com';
+
+/**
+ * Default Evidence app template project github Url.
+ */
+const templateProjectUrl = `${gitHubUrlBase}/evidence-dev/template`;
+
+/**
+ * Required Evidence template project data source configuration settings.
+ */
+const templateProjectSettings = {
+  "database": "duckdb",
+  "credentials": {
+    "filename": "needful_things.duckdb",
+    "gitignoreDuckdb": null
+  }
+};
+
+/**
+ * Evidence template project settings file path.
+ */
+const templateProjectSettingsPath = '.evidence/template/evidence.settings.json';
 
 /**
  * Creates new Evidence app project from a github repository template.
@@ -40,25 +63,25 @@ export async function createProjectFromTemplate() {
   }
 
   // show project template github repository Url input box
-  const templateGithubUrl = await window.showInputBox({
-    prompt: 'Evidence app template github repository Url',
+  const templateRepositoryUrl = await window.showInputBox({
+    prompt: 'Enter Evidence app template github repository Url',
     value: templateProjectUrl,
     ignoreFocusOut: true
   });
 
-  if (!templateGithubUrl) {
+  if (!templateRepositoryUrl) {
     return;
   }
-
-  const templateRepository = templateGithubUrl.replace('https://github.com/', '');
 
   if (!workspace.workspaceFolders) {
-    window.showInformationMessage('Create or open new empty project folder to use this command.');
+    window.showInformationMessage(
+      'Open new empty project folder to create new Evidence project from a template.');
     return;
   }
 
+  // get root project folder path and clone template repo into it
   const projectFolderPath: string = workspace.workspaceFolders[0].uri.fsPath;
-  await cloneTemplateRepository(templateRepository, projectFolderPath);
+  await cloneTemplateRepository(templateRepositoryUrl, projectFolderPath);
 }
 
 /**
@@ -68,12 +91,13 @@ export async function createProjectFromTemplate() {
  * @returns True if open project workspace has files, and false otherwise.
  */
 async function projectHasFiles(): Promise<boolean> {
+
   // check open project workspace for any files
   const files = await workspace.findFiles('**/*.*');
   if (files.length > 0) {
     const newProjectNotification = window.showInformationMessage(
-      `Create new empty project for an Evidence app from template.`, {
-      title: creteNewProject,
+      `Would you like to create new Evidence project from a template?`, {
+      title: openNewProjectWorkspace,
       isCloseAffordance: true
     },
     {
@@ -81,7 +105,7 @@ async function projectHasFiles(): Promise<boolean> {
     });
 
     newProjectNotification.then(async (result) => {
-      if (result?.title === creteNewProject) {
+      if (result?.title === openNewProjectWorkspace) {
         await commands.executeCommand(Commands.NewWindow);
       }
     });
@@ -94,26 +118,32 @@ async function projectHasFiles(): Promise<boolean> {
 /**
  * Clones github repository to the destination project folder.
  *
- * @param templateRepository Template github repository with user and repository name.
+ * @param templateRepositoryUrl Template GitHub repository Url with user and repository name.
  * @param projectFolderPath Destination project folder to clone template content to.
  */
-async function cloneTemplateRepository(templateRepository: string, projectFolderPath: string) {
+async function cloneTemplateRepository(templateRepositoryUrl: string, projectFolderPath: string) {
+
+  // creata user or organization and repository name path from github template repository Url
+  const templateRepository = templateRepositoryUrl.replace(`${gitHubUrlBase}/`, '');
+
+  // display project creation progress in Evidence Output view
   const outputChannel: OutputChannel = getOutputChannel();
   outputChannel.show();
-  outputChannel.appendLine(`Cloning ${templateRepository} to ${projectFolderPath}:`);
+  outputChannel.appendLine(`\nCloning ${templateRepositoryUrl} to ${projectFolderPath}:`);
 
   await window.withProgress({
     location: ProgressLocation.Notification,
     title: 'Creating Evidence project from a template ...',
     cancellable: false
   }, async (progress, token) => {
+    // listen for cancellation
     token.onCancellationRequested(() => {
       outputChannel.appendLine('Canceled cloning Evidence app template.');
     });
 
-    let progressIncrement = 0;
     progress.report({increment: 0});
 
+    // clone template repository
     const emitter = tiged(templateRepository, {
       disableCache: true,
       force: true,
@@ -123,20 +153,21 @@ async function cloneTemplateRepository(templateRepository: string, projectFolder
     emitter.on('error', (error: any) => {
       outputChannel.appendLine(error);
       progress.report({
-        message: `Error while cloning Evidence app template repository. ${error.message}`
+        message: `Error while cloning Evidence app template repository.\n${error.message}`
       });
     });
 
     emitter.on('info', (info: any) => {
-      progressIncrement += 5;
-      progress.report({increment: progressIncrement});
+      progress.report({increment: 5});
+      // replace terminal ascii escape characters in the info message from github cloning library
       const infoMessage: string = info.message?.replaceAll('[1m', '').replaceAll('[22m', '');
       outputChannel.appendLine(`- ${infoMessage}`);
     });
 
     emitter.clone(projectFolderPath)
       .then(async () => {
-        outputChannel.appendLine(`✔ Finished creating Evidence project from ${templateRepository}`);
+        // display project creation progress in Evidence Output view
+        outputChannel.appendLine(`✔ Finished creating Evidence project from ${templateRepositoryUrl}`);
         progress.report({
           increment: 100,
           message: 'Finished cloning Evidence project template.'
@@ -145,6 +176,12 @@ async function cloneTemplateRepository(templateRepository: string, projectFolder
         // delete cloned template repository github files
         await deleteFolder('.github');
         await deleteFile('degit.json');
+
+        if (templateRepositoryUrl === templateProjectUrl) {
+          // create template project seettings file
+          // with the demo DuckDB data source configuration
+          await createTemplateProjectSettingsFile(templateProjectSettingsPath);
+        }
 
         // update Evidence project context and status bar
         updateProjectContext();
@@ -159,4 +196,28 @@ async function cloneTemplateRepository(templateRepository: string, projectFolder
 
     await timeout(15000);
   });
+}
+
+/**
+ * Creates Evidence template project settings configuration file
+ * in the current project workspace.
+ *
+ * @param templateProjectSettingsPath Destination project settings file path.
+ */
+async function createTemplateProjectSettingsFile(templateProjectSettingsPath: string) {
+  // get root project folder
+  const workspaceFolder: WorkspaceFolder | undefined = getWorkspaceFolder();
+
+  // check for at least one workspace folder and writable workspace file system
+  if (workspaceFolder && workspace.fs.isWritableFileSystem('file')) {
+
+    // create template settings file uri
+    const templateSettingsFileUri: Uri =
+      Uri.joinPath(workspaceFolder.uri, templateProjectSettingsPath);
+
+    // write template sesttings to file
+    const templateSettingsFileContent: string = JSON.stringify(templateProjectSettings, null, 2);
+    await workspace.fs.writeFile(templateSettingsFileUri,
+      Buffer.from(templateSettingsFileContent, 'utf-8'));
+  }
 }
