@@ -89,11 +89,11 @@ Evidence extension provides a number of custom VS Code shortcut commands for Evi
 | `startServer` | Start Dev Server | Start Evidence app dev server. |
 | `stopServer` | Stop Dev Server | Stop Evidence app dev server. |
 | `preview` | Preview | Preview Evidence app using built-in VS Code Simpler Browser. |
-| `viewSettings` | View Settings | View Evidence app settings page in the built-in browser. |
 | `clearCache` | Clear Cache | Clear Evidence application data and queries cache. |
 | `build` | Build | Build Evidence app for deployment to production. |
 | `buildStrict` | Build Strict | Build Evidence app for deployment to production in a strict mode. |
 | `showOutput` | Show Output | Show Evidence extension output in Output view. |
+| `viewSettings` | View Settings | View Evidence extension settings in the built-in VS Code Settings editor. New Evidence extension settings will be released in the upcoming `v1.1.0`.  |
 
 ## Settings
 
