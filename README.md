@@ -113,7 +113,7 @@ All Evidence Settings start with `evidence.` prefix. You can overwrite default E
 
 ```json
 {
-  "evidence.defaultPort": 500,
+  "evidence.defaultPort": 5000,
   "evidence.autoStart": "false",
 }
 ```
