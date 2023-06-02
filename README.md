@@ -111,6 +111,8 @@ Edit your settings in `./vscode/settings.json` by opening the `Command Palette..
 
 ![VS Code Settings JSON](https://raw.githubusercontent.com/evidence-dev/evidence-vscode/main/docs/images/evidence-vscode-settings-json.png?raw=true)
 
+### Evidence Settings
+
 All Evidence extension settings start with `evidence.` prefix. You can overwrite default Evidence extension settings in the open workspace directly by opening and changing `/.vscode/settings.json` in your project.
 
 Specify different default Evidence dev server port and overwrite new dev server autostart setting in an open workspace `/.vscode/settings.json` example:
@@ -121,6 +123,15 @@ Specify different default Evidence dev server port and overwrite new dev server 
   "evidence.autoStart": "false",
 }
 ```
+
+Evidence extension `v1.1.0` now has two new settings to allow overwriting default Evidence dev server port when running it locally in VS Code desktop IDE, or opening an Evidence project github repository in Codespaces.
+
+| Setting | Type | Default Value | Name | Description |
+| --- | --- | -- | -- | -- |
+| `evidence.defaultPort` | number | `true` | Default Port | Default Evidence app dev server port. |
+| `evidence.autoStart` | boolean | `3000` | Auto Start | Automatically start Evidence app dev server when opening a project. |
+
+You can request new Evidence extension settings by submitting a [feature request](https://github.com/evidence-dev/evidence-vscode/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=) or [pull request](https://github.com/evidence-dev/evidence-vscode/pulls).
 
 ## Limitations
 
