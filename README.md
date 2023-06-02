@@ -99,17 +99,19 @@ Evidence extension provides a number of custom VS Code shortcut commands for Evi
 
 Create [User or Workspace Settings](https://code.visualstudio.com/docs/getstarted/settings#_creating-user-and-workspace-settings) to change default Evidence VS Code extension Settings.
 
-Open Evidence extension Settings in VS Code by navigating to `File -> Preferences -> Settings` (`cmd/ctrl+,`) and searching for `Evidence` in the settings search box.
+Open Evidence extension Settings in VS Code by navigating to `File -> Preferences -> Settings` (`cmd/ctrl+,`) and searching for `Evidence` in the Settings search box.
 
 ![Evidence Extension Settings](https://raw.githubusercontent.com/evidence-dev/evidence-vscode/main/docs/images/evidence-vscode-settings.png?raw=true)
 
 You can also reconfigure Evidence extension settings in `vscode/settings.json` workspace configuration file. The `.vscode/settings.json` file is a `JSON` file that stores your VS Code Settings. It contains settings that apply globally to all workspaces open in VS Code, or to a specific workspace.
 
-You can edit your settings in `settings.json` by opening the `Command Palette...` with `cmd/ctrl+shift+p`, searching for and selecting `Preferences: Open Workspace Settings (JSON)` command.
+You can edit your settings in `./vscode/settings.json` by opening the `Command Palette...` with `cmd/ctrl+shift+p`, searching for and selecting `Preferences: Open Workspace Settings (JSON)` command.
 
 ![VS Code Settings JSON](https://raw.githubusercontent.com/evidence-dev/evidence-vscode/main/docs/images/evidence-vscode-settings-json.png?raw=true)
 
-All Evidence Settings start with `evidence.` prefix. You can overwrite default Evidence extension settings in the open workspace directly by opening and changing `/.vscode/settings.json` in your project. Specify different default Evidence dev server port and overwrite dev server autostart in an open workspace example:
+All Evidence extension settings start with `evidence.` prefix. You can overwrite default Evidence extension settings in the open workspace directly by opening and changing `/.vscode/settings.json` in your project.
+
+Specify different default Evidence dev server port and overwrite new dev server autostart setting in an open workspace `/.vscode/settings.json` example:
 
 ```json
 {
