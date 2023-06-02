@@ -10,6 +10,7 @@ import {
 
 import { Commands } from './commands';
 import { getWorkspaceFolder, updateProjectContext } from '../config';
+import { showInstallDependencies } from '../views/prompts';
 import { timeout } from '../utils/timer';
 import { statusBar } from '../statusBar';
 import { deleteFile, deleteFolder } from '../utils/fsUtils';
@@ -64,6 +65,7 @@ export async function createProjectFromTemplate() {
 
   // show project template github repository Url input box
   const templateRepositoryUrl = await window.showInputBox({
+    title: 'Evidence App Template GitHub Repository Url',
     prompt: 'Enter Evidence app template github repository Url',
     value: templateProjectUrl,
     ignoreFocusOut: true
@@ -186,6 +188,9 @@ async function cloneTemplateRepository(templateRepositoryUrl: string, projectFol
         // update Evidence project context and status bar
         updateProjectContext();
         statusBar.showInstall();
+
+        // prompt a user to install Evidence node.js dependencies
+        showInstallDependencies();
       })
       .catch((error: any) => {
         outputChannel.appendLine(error);
