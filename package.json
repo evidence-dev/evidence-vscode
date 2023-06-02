@@ -187,7 +187,7 @@
       "properties": {
         "evidence.autoStart": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Autostart Evidence dev server when VS Code opens Evidence project workspace."
         },
         "evidence.defaultPort": {
