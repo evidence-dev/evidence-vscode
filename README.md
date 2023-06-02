@@ -131,7 +131,7 @@ Evidence extension `v1.1.0` now has two new settings to allow overwriting defaul
 | `evidence.defaultPort` | number | `3000` | Default Port | Default Evidence app dev server port. |
 | `evidence.autoStart` | boolean | `true` | Auto Start | Automatically start Evidence app dev server when opening a project. |
 
-You can request new Evidence extension settings to enhance this extension usage experience by submitting a [feature request](https://github.com/evidence-dev/evidence-vscode/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=) or [pull request](https://github.com/evidence-dev/evidence-vscode/pulls).
+You can request new Evidence extension settings to enhance this extension user experience in VS Code by submitting a [feature request](https://github.com/evidence-dev/evidence-vscode/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=) or [pull request](https://github.com/evidence-dev/evidence-vscode/pulls).
 
 ## Limitations
 
