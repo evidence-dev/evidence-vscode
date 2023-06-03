@@ -137,6 +137,11 @@
     "menus": {
       "explorer/context": [
         {
+          "command": "evidence.newProject",
+          "group": "navigation",
+          "when": "explorerResourceIsFolder && !isVirtualResource"
+        },
+        {
           "command": "evidence.preview",
           "when": "resourceLangId == emd",
           "group": "navigation"
