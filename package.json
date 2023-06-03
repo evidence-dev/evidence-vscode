@@ -40,6 +40,7 @@
     "onLanguage:svelte",
     "workspaceContains:**/package.json",
     "onView:simpleBrowser.view",
+    "onCommand:evidence.newProject",
     "onCommand:evidence.createProjectFromTemplate",
     "onCommand:evidence.openSettings",
     "onCommand:evidence.installDependencies",
@@ -55,6 +56,11 @@
   ],
   "contributes": {
     "commands": [
+      {
+        "command": "evidence.newProject",
+        "title": "New Evidence Project",
+        "category": "Evidence"
+      },
       {
         "command": "evidence.createProjectFromTemplate",
         "title": "Create Project from Template",
