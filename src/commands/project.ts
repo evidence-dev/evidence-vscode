@@ -1,10 +1,10 @@
 import {
+  commands,
   window,
   workspace,
   RelativePattern,
   Uri,
-  OutputChannel,
-  ProgressLocation
+  OutputChannel
 } from 'vscode';
 
 import * as path from 'path';

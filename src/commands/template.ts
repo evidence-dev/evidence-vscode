@@ -211,6 +211,25 @@ export async function cloneTemplateRepository(
           // prompt a user to install Evidence node.js dependencies
           showInstallDependencies();
         }
+        else {
+          // get open workspace folder
+          const workspaceFolder: WorkspaceFolder | undefined = getWorkspaceFolder();
+
+          // check if open workspace folder is the same as the created project folder
+          if (workspaceFolder && workspaceFolder.uri.fsPath !== projectFolderPath) {
+            // display Open Folder notification message
+            window.showInformationMessage(
+              `Evidence project created in: ${projectFolderPath}.`,
+              'Open Folder'
+            ).then((selection: string | undefined) => {
+              if (selection === 'Open Folder') {
+                // open created project folder in a new VS Code window
+                // if the user selected the Open Folder option
+                commands.executeCommand(Commands.OpenFolder, Uri.file(projectFolderPath), true);
+              }
+            });
+          }
+        }
       })
       .catch((error: any) => {
         outputChannel.appendLine(error);
@@ -230,7 +249,7 @@ export async function cloneTemplateRepository(
  * @param templateProjectSettingsPath Destination project settings file path.
  */
 async function createTemplateProjectSettingsFile(templateProjectSettingsPath: string) {
-  // get root project folder
+  // get open workspace folder
   const workspaceFolder: WorkspaceFolder | undefined = getWorkspaceFolder();
 
   // check for at least one workspace folder and writable workspace file system
