@@ -30,11 +30,15 @@ export async function activate(context: ExtensionContext) {
   const provider = new MarkdownSymbolProvider();
   languages.registerDocumentSymbolProvider(markdownLanguage, provider);
 
-  // check for evidence app files and node modules
-  const packageJson = await loadPackageJson();
+  // load package.json
+  const workspacePackageJson = await loadPackageJson();
+
+  // get all evidence files in workspace
   const evidenceFiles = await workspace.findFiles('**/.evidence/**/*.*');
+
+  // check for evidence app files and dependencies in the loaded package.json
   if (workspace.workspaceFolders && evidenceFiles.length > 0 &&
-    hasDependency(packageJson, '@evidence-dev/evidence')) {
+    workspacePackageJson && hasDependency(workspacePackageJson, '@evidence-dev/evidence')) {
 
     // set Evidence project context
     updateProjectContext();
