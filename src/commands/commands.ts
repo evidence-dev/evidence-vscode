@@ -13,6 +13,7 @@ import {
   buildProjectStrict
 } from './build';
 
+import { createNewProject } from './project';
 import { createProjectFromTemplate } from './template';
 import { startServer, stopServer} from './server';
 import { preview } from './preview';
@@ -61,6 +62,7 @@ export function registerCommands(context: ExtensionContext) {
   _context = context;
 
   // regiester Evidence extension commands
+  registerCommand(Commands.NewProject, createNewProject);
   registerCommand(Commands.CreateProjectFromTemplate, createProjectFromTemplate);
   registerCommand(Commands.OpenProjectSettings, openSettingsFile);
   registerCommand(Commands.InstallDependencies, installDependencies);
