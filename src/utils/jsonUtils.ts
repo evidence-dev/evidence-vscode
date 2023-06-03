@@ -12,8 +12,8 @@ import { getWorkspaceFolder } from '../config';
  *
  * @returns package.json file content, or udefined if package.json file doesn't exist.
  */
-export async function loadPackageJson() {
-  const packageJsonFiles = await workspace.findFiles('**/package.json');
+export async function loadPackageJson(): Promise<any | undefined> {
+  const packageJsonFiles = await workspace.findFiles('package.json');
   if (workspace.workspaceFolders && packageJsonFiles.length > 0) {
     // get package.json from the top workspace folder for now
     const packageJsonUri: Uri = Uri.joinPath(getWorkspaceFolder()!.uri, 'package.json');
