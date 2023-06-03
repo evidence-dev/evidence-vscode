@@ -49,7 +49,8 @@ export async function createNewProject(projectFolderUri?: Uri) {
   // display creating new Evidence project status in the output channel
   const outputChannel: OutputChannel = getOutputChannel();
   outputChannel.show();
-  outputChannel.append(`Creating new Evidence project in ${projectFolderPath} ...`);
+  outputChannel.append(`\nCreating new Evidence project ...\n\
+  - ProjectFolder: ${projectFolderPath}`);
 
   window.withProgress({
     location: ProgressLocation.Notification,
