@@ -27,6 +27,7 @@ import { showOutput } from '../output';
 export const enum Commands {
   // VS Code and built-in extenions commands
   Open = 'vscode.open',
+  OpenFolder = 'vscode.openFolder',
   OpenSettings = 'workbench.action.openSettings',
   FocusActiveEditorGroup = 'workbench.action.focusActiveEditorGroup',
   NewWindow = 'workbench.action.newWindow',
