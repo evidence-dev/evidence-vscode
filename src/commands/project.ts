@@ -9,6 +9,7 @@ import {
 
 import * as path from 'path';
 
+import { templateProjectUrl, cloneTemplateRepository } from './template';
 import { getOutputChannel } from '../output';
 
 /**
@@ -53,25 +54,11 @@ export async function createNewProject(projectFolderUri?: Uri) {
   // display creating new Evidence project status in the output channel
   const outputChannel: OutputChannel = getOutputChannel();
   outputChannel.show();
-  outputChannel.append(`\nCreating new Evidence project ...\n\
-  - ProjectFolder: ${projectFolderPath}`);
+  outputChannel.append(`\nCreating new project ...\n- New Project Folder: ${projectFolderPath}\n`);
 
-  window.withProgress({
-    location: ProgressLocation.Notification,
-    title: 'New Evidence Project',
-    cancellable: false,
-  }, async (progress, token) => {
-
-    let increment = 0;
-    progress.report({
-      increment: increment,
-      message: `Creating new Evidence project in ${projectFolderPath}`
-    });
-
-    progress.report({
-      increment: 100,
-      message: 'TODO: creat project from template in'+ projectFolderName });
-  });
+  // clone default Evidence template project from github repository
+  // into the selected new Evidence project folder
+  await cloneTemplateRepository(templateProjectUrl, projectFolderPath);
 }
 
 /**
