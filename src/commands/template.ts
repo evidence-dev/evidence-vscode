@@ -83,7 +83,8 @@ export async function createProjectFromTemplate() {
 
   // get root project folder path and clone template repo into it
   const projectFolderPath: string = workspace.workspaceFolders[0].uri.fsPath;
-  await cloneTemplateRepository(templateRepositoryUrl, projectFolderPath);
+  await cloneTemplateRepository(
+    templateRepositoryUrl, projectFolderPath, true); // prompt to install dependencies
 }
 
 /**
@@ -123,8 +124,11 @@ async function projectHasFiles(): Promise<boolean> {
  *
  * @param templateRepositoryUrl Template GitHub repository Url with user and repository name.
  * @param projectFolderPath Destination project folder to clone template content to.
+ * @param showInstallDependenciesNotification Optional show install dependencies notification flag.
  */
-export async function cloneTemplateRepository(templateRepositoryUrl: string, projectFolderPath: string) {
+export async function cloneTemplateRepository(
+  templateRepositoryUrl: string, projectFolderPath: string,
+  showInstallDependenciesNotification: boolean = false) {
 
   // creata user or organization and repository name path from github template repository Url
   const templateRepository = templateRepositoryUrl.replace(`${gitHubUrlBase}/`, '');
@@ -203,8 +207,10 @@ export async function cloneTemplateRepository(templateRepositoryUrl: string, pro
           message: 'Finished creating Evidence project.'
         });
 
-        // prompt a user to install Evidence node.js dependencies
-        showInstallDependencies();
+        if (showInstallDependenciesNotification) {
+          // prompt a user to install Evidence node.js dependencies
+          showInstallDependencies();
+        }
       })
       .catch((error: any) => {
         outputChannel.appendLine(error);
