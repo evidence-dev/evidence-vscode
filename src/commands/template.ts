@@ -136,16 +136,19 @@ async function cloneTemplateRepository(templateRepositoryUrl: string, projectFol
 
   await window.withProgress({
     location: ProgressLocation.Notification,
-    title: 'Creating Evidence project from a template ...',
+    title: 'Creating project from a template ...',
     cancellable: false
   }, async (progress, token) => {
     // listen for cancellation
     token.onCancellationRequested(() => {
-      outputChannel.appendLine('Canceled cloning Evidence app template.');
+      outputChannel.appendLine('Canceled cloning template project.');
     });
 
     let increment = 0;
-    progress.report({increment: increment});
+    progress.report({
+      increment: increment,
+      message: 'Cloning template repository...'
+    });
 
     // clone template repository
     const emitter = tiged(templateRepository, {
@@ -157,16 +160,19 @@ async function cloneTemplateRepository(templateRepositoryUrl: string, projectFol
     emitter.on('error', (error: any) => {
       outputChannel.appendLine(error);
       progress.report({
-        message: `Error while cloning Evidence app template repository.\n${error.message}`
+        message: `Error while cloning template repository.\n${error.message}`
       });
     });
 
     emitter.on('info', (info: any) => {
-      increment += 5;
-      progress.report({increment: increment});
       // replace terminal ascii escape characters in the info message from github cloning library
       const infoMessage: string = info.message?.replaceAll('[1m', '').replaceAll('[22m', '');
       outputChannel.appendLine(`- ${infoMessage}`);
+      increment += 5;
+      progress.report({
+        increment: increment,
+        message: infoMessage
+      });
     });
 
     emitter.clone(projectFolderPath)
@@ -175,7 +181,7 @@ async function cloneTemplateRepository(templateRepositoryUrl: string, projectFol
         outputChannel.appendLine(`✔ Finished creating Evidence project from ${templateRepositoryUrl}`);
         progress.report({
           increment: 100,
-          message: 'Finished cloning Evidence project template.'
+          message: 'Finished cloning template project.'
         });
 
         // delete cloned template repository github files
@@ -203,7 +209,7 @@ async function cloneTemplateRepository(templateRepositoryUrl: string, projectFol
       .catch((error: any) => {
         outputChannel.appendLine(error);
         progress.report({
-          message: `Error cloning Evidence app template repository. ${error.message}`
+          message: `Error cloning template repository. ${error.message}`
         });
       });
 

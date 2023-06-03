@@ -42,7 +42,7 @@ export async function installDependencies() {
   sendCommand('npm install');
   await timeout(1000);
   statusBar.showInstalling();
-  await timeout(25000);
+  await timeout(30000);
   statusBar.showStart();
 }
 
