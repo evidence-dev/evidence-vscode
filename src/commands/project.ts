@@ -1,6 +1,7 @@
 import {
   window,
   workspace,
+  RelativePattern,
   Uri,
   OutputChannel,
   ProgressLocation
@@ -29,15 +30,18 @@ export async function createNewProject(projectFolderUri?: Uri) {
     }
   }
 
-  // check for existing project files in the selected new project folder
+  // get the list of files and folder in the selected new project folder
   const projectFiles = await workspace.findFiles(
-    Uri.joinPath(projectFolderUri, '**/*.*').fsPath);
+    new RelativePattern(projectFolderUri.fsPath, '**/*'));
 
+  // check if the selected folder is empty
   if (projectFiles.length > 0 ) {
     // prompt to select an empty new project folder
     // and display the project selection dialog again
     window.showInformationMessage(
      'Select an empty folder to create a new Evidence project.');
+
+    // display create new project dialog again
     createNewProject();
     return;
   }
