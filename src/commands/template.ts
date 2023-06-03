@@ -136,7 +136,7 @@ async function cloneTemplateRepository(templateRepositoryUrl: string, projectFol
 
   await window.withProgress({
     location: ProgressLocation.Notification,
-    title: 'Creating project from a template ...',
+    title: 'Create Project',
     cancellable: false
   }, async (progress, token) => {
     // listen for cancellation
