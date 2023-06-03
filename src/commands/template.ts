@@ -34,7 +34,7 @@ const gitHubUrlBase = 'https://github.com';
 /**
  * Default Evidence app template project github Url.
  */
-const templateProjectUrl = `${gitHubUrlBase}/evidence-dev/template`;
+export const templateProjectUrl = `${gitHubUrlBase}/evidence-dev/template`;
 
 /**
  * Required Evidence template project data source configuration settings.
@@ -124,7 +124,7 @@ async function projectHasFiles(): Promise<boolean> {
  * @param templateRepositoryUrl Template GitHub repository Url with user and repository name.
  * @param projectFolderPath Destination project folder to clone template content to.
  */
-async function cloneTemplateRepository(templateRepositoryUrl: string, projectFolderPath: string) {
+export async function cloneTemplateRepository(templateRepositoryUrl: string, projectFolderPath: string) {
 
   // creata user or organization and repository name path from github template repository Url
   const templateRepository = templateRepositoryUrl.replace(`${gitHubUrlBase}/`, '');
