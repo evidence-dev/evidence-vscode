@@ -98,7 +98,8 @@ async function projectHasFiles(): Promise<boolean> {
   const files = await workspace.findFiles('**/*.*');
   if (files.length > 0) {
     const newProjectNotification = window.showInformationMessage(
-      `Would you like to create new Evidence project from a template?`, {
+      `Use new Workspace with an empty folder \
+      to create new Evidence project from a template.`, {
       title: openNewProjectWorkspace,
       isCloseAffordance: true
     },
@@ -143,7 +144,8 @@ async function cloneTemplateRepository(templateRepositoryUrl: string, projectFol
       outputChannel.appendLine('Canceled cloning Evidence app template.');
     });
 
-    progress.report({increment: 0});
+    let increment = 0;
+    progress.report({increment: increment});
 
     // clone template repository
     const emitter = tiged(templateRepository, {
@@ -160,7 +162,8 @@ async function cloneTemplateRepository(templateRepositoryUrl: string, projectFol
     });
 
     emitter.on('info', (info: any) => {
-      progress.report({increment: 5});
+      increment += 5;
+      progress.report({increment: increment});
       // replace terminal ascii escape characters in the info message from github cloning library
       const infoMessage: string = info.message?.replaceAll('[1m', '').replaceAll('[22m', '');
       outputChannel.appendLine(`- ${infoMessage}`);
@@ -188,6 +191,11 @@ async function cloneTemplateRepository(templateRepositoryUrl: string, projectFol
         // update Evidence project context and status bar
         updateProjectContext();
         statusBar.showInstall();
+
+        progress.report({
+          increment: 100,
+          message: 'Finished creating Evidence project.'
+        });
 
         // prompt a user to install Evidence node.js dependencies
         showInstallDependencies();
