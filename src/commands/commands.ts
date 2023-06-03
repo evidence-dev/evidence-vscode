@@ -34,6 +34,7 @@ export const enum Commands {
   SetContext = 'setContext',
 
   // Evidence extension commands
+  NewProject = 'evidence.newProject',
   CreateProjectFromTemplate = 'evidence.createProjectFromTemplate',
   OpenProjectSettings = 'evidence.openSettings',
   InstallDependencies = 'evidence.installDependencies',
