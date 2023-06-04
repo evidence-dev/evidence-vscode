@@ -51,6 +51,10 @@ export function ping(url: string) {
     const useHttps = url.indexOf('https') === 0;
     const request = useHttps ? https.request : http.request;
 
+    // log requsted page Url in the Evidence output channel view for troubleshooting
+    const outputChannel = getOutputChannel();
+    outputChannel.appendLine(`Requested page preview: ${url}`);
+
     const pingRequest = request(url, () => {
       resolve(true);
       pingRequest.destroy();
