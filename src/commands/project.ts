@@ -21,9 +21,11 @@ import {
 } from '../views/prompts';
 
 /**
- * Default Evidence template project url.
+ * Relative path to the built-in Evidence app /template folder
+ *
+ * @see https://github.com/evidence-dev/evidence-vscode/issues/61
  */
-const defaultTemplateProjectUrl: string = '../../template';
+const extensionTemplateProjectPath: string = '../../template';
 
 /**
  * Evidence template project Url setting name.
@@ -74,9 +76,8 @@ export async function createNewProject(projectFolder?: Uri) {
     return;
   }
 
-  // get new project folder path and name
+  // get new project folder absolute/full path
   const projectFolderPath = projectFolder.fsPath;
-  const projectFolderName = path.basename(projectFolderPath);
 
   // display creating new Evidence project status in the output channel
   const outputChannel: OutputChannel = getOutputChannel();
@@ -97,19 +98,9 @@ export async function createNewProject(projectFolder?: Uri) {
   }
   else if (projectTemplateUrl.startsWith('file://')) {
     // create local template folder Uri to check if that template folder exists
-    let templateFolder: Uri = Uri.file(projectTemplateUrl.replace('file://', ''));
+    const templateFolder: Uri = Uri.file(projectTemplateUrl.replace('file://', ''));
 
-    if (projectTemplateUrl === defaultTemplateProjectUrl ||
-      projectTemplateUrl === templateProjectUrlSettingDefault) {
-
-      // get built-in /template folder Uri from extension context
-      const templateFolder: Uri = getFileUri(defaultTemplateProjectUrl);
-      outputChannel.appendLine(`- Template Project Folder: ${templateFolder.fsPath}`);
-
-      // create new Evidence project folder from the built-in /template
-      createProjectFolder(templateFolder, projectFolder);
-    }
-    else if (await folderExists(templateFolder)) {
+    if (await folderExists(templateFolder)) {
       outputChannel.appendLine(`- Template Project Folder: ${templateFolder.fsPath}`);
 
       // create new Evidence project folder from the local user-defined template folder
@@ -121,9 +112,28 @@ export async function createNewProject(projectFolder?: Uri) {
       outputChannel.appendLine(`✗ Ivalid Template Project Folder: ${projectTemplateUrl}`);
     }
   }
+  else if (projectTemplateUrl === extensionTemplateProjectPath ||
+    projectTemplateUrl === templateProjectUrlSettingDefault) {
+
+    // get built-in /template folder Uri from extension context
+    const templateFolder: Uri = getFileUri(extensionTemplateProjectPath);
+
+    if (await folderExists(templateFolder)) {
+      outputChannel.appendLine(`- Template Project Folder: ${templateFolder.fsPath}`);
+
+      // create new Evidence project folder from the built-in /template
+      createProjectFolder(templateFolder, projectFolder);
+    }
+    else {
+      // invalid built-in /template folder path
+      showInvalidTemplateProjectUrlErrorMessage(templateFolder.fsPath);
+      outputChannel.appendLine(`✗ Ivalid Template Project Folder: ${templateFolder.fsPath}`);
+    }
+  }
   else {
     // invalid template project Uri scheme
     showInvalidTemplateProjectUrlErrorMessage(projectTemplateUrl);
+    outputChannel.appendLine(`✗ Ivalid Template Project Folder: ${projectTemplateUrl}`);
   }
 }
 
