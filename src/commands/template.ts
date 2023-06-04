@@ -29,7 +29,7 @@ const openNewProjectWorkspace = 'Open New Project Workspace';
 /**
  * GitHub Url base for all the template github projects.
  */
-const gitHubUrlBase = 'https://github.com';
+export const gitHubUrlBase = 'https://github.com';
 
 /**
  * Default Evidence app template project github Url.
