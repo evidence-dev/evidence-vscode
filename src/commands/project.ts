@@ -70,7 +70,7 @@ export async function createNewProject(projectFolder?: Uri) {
   const projectTemplateUrl = templateProjectUrl;
 
   if (projectTemplateUrl.startsWith(gitHubUrlBase)) {
-    // clone default Evidence template project from github repository
+    // clone Evidence template project from a github repository
     // into the selected new Evidence project folder
     await cloneTemplateRepository(templateProjectUrl, projectFolderPath);
   }
