@@ -65,8 +65,8 @@ export async function createProjectFromTemplate() {
 
   // show project template github repository Url input box
   const templateRepositoryUrl = await window.showInputBox({
-    title: 'Evidence App Template GitHub Repository Url',
-    prompt: 'Enter Evidence app template github repository Url',
+    title: 'Evidence Template GitHub Url',
+    prompt: 'Enter Evidence template repository GitHub Url',
     value: templateProjectUrl,
     ignoreFocusOut: true
   });
@@ -75,8 +75,9 @@ export async function createProjectFromTemplate() {
     return;
   }
   else if (!templateRepositoryUrl.startsWith(gitHubUrlBase)) {
-    window.showErrorMessage(`Evidence extension only supports template repositories hosted on GitHub.\
-      Provide Evidence template repositry GitHub Url, or use the default ${templateProjectUrl} repository Url instead.`);
+    window.showErrorMessage(`Invalid Evidence template GitHub Url: ${templateRepositoryUrl}.\
+      Evidence extension only supports template repositories hosted on GitHub.\
+      Provide a valid template repositry GitHub Url, or use the default ${templateProjectUrl} instead.`);
 
     // display this prompt again with the default template repositry Url
     createProjectFromTemplate();
