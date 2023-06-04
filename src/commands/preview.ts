@@ -64,6 +64,6 @@ export async function preview(uri?: Uri) {
     // use waitFor(url) with ping from our http utils
     // to hit the Evidence dev server and have it
     // load the requested page when it is done rebuilding pages
-    await waitFor(pageUri.toString(false), 1000, 30000); // encoding, ms interval, max total wait time ms
+    await waitFor(pageUri.toString(true), 1000, 30000); // encoding, ms interval, max total wait time ms
   }
 }
