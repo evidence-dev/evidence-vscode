@@ -8,8 +8,9 @@ import {
 
 import * as path from 'path';
 
+import { getConfig } from '../config';
 import { showSelectFolderDialog, showOpenFolder } from '../views/prompts';
-import { gitHubUrlBase, templateProjectUrl, cloneTemplateRepository } from './template';
+import { gitHubUrlBase, cloneTemplateRepository } from './template';
 import { getOutputChannel } from '../output';
 import { getFileUri } from '../extensionContext';
 
@@ -17,6 +18,13 @@ import { getFileUri } from '../extensionContext';
  * Default Evidence template project url.
  */
 const defaultTemplateProjectUrl = '../../template';
+
+/**
+ * Evidence template project Url setting name.
+ *
+ * @see https://github.com/evidence-dev/evidence-vscode/issues/62
+ */
+const templateProjectUrlSetting = 'templateProjectUrl';
 
 /**
  * Creates a new Evidence project.
@@ -62,17 +70,15 @@ export async function createNewProject(projectFolder?: Uri) {
   outputChannel.show();
   outputChannel.append(`\nCreating new project ...\n- New Project Folder: ${projectFolderPath}\n`);
 
-  // TODO: add and use new evidence.templateProjectUrl setting
-  // to determine if user prefers to create new project
-  // from the template project github url or
-  // use new simple template from exension /template folder
-  // @see https://github.com/evidence-dev/evidence-vscode/issues/61
+  // use new evidence template project Url setting
+  // @see https://github.com/evidence-dev/evidence-vscode/issues/62
+  const templateProjectUrl = <string>getConfig('templateProjectUrl', defaultTemplateProjectUrl);
   const projectTemplateUrl = templateProjectUrl;
 
   if (projectTemplateUrl.startsWith(gitHubUrlBase)) {
     // clone Evidence template project from a github repository
     // into the selected new Evidence project folder
-    await cloneTemplateRepository(templateProjectUrl, projectFolderPath);
+    await cloneTemplateRepository(projectTemplateUrl, projectFolderPath);
   }
   else if (projectTemplateUrl === defaultTemplateProjectUrl) {
     // get embedded /template folder Uri from extension context
