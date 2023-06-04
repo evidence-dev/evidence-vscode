@@ -12,6 +12,7 @@ import { getConfig } from '../config';
 import { cloneTemplateRepository } from './template';
 import { getOutputChannel } from '../output';
 import { getFileUri } from '../extensionContext';
+import { folderExists } from '../utils/fsUtils';
 
 import {
   showSelectFolderDialog,
@@ -80,7 +81,8 @@ export async function createNewProject(projectFolder?: Uri) {
   // display creating new Evidence project status in the output channel
   const outputChannel: OutputChannel = getOutputChannel();
   outputChannel.show();
-  outputChannel.append(`\nCreating new project ...\n- New Project Folder: ${projectFolderPath}\n`);
+  outputChannel.appendLine('\nCreating new project ...');
+  outputChannel.appendLine(`- New Project Folder: ${projectFolderPath}`);
 
   // use new evidence template project Url setting
   // @see https://github.com/evidence-dev/evidence-vscode/issues/62
@@ -94,25 +96,29 @@ export async function createNewProject(projectFolder?: Uri) {
     await cloneTemplateRepository(projectTemplateUrl, projectFolderPath);
   }
   else if (projectTemplateUrl.startsWith('file://')) {
-    // parse local template folder Url
-    let templateFolder: Uri = Uri.parse(projectTemplateUrl, false); // don't throw error
+    // create local template folder Uri to check if that template folder exists
+    let templateFolder: Uri = Uri.file(projectTemplateUrl.replace('file://', ''));
 
     if (projectTemplateUrl === defaultTemplateProjectUrl ||
       projectTemplateUrl === templateProjectUrlSettingDefault) {
 
       // get built-in /template folder Uri from extension context
       const templateFolder: Uri = getFileUri(defaultTemplateProjectUrl);
+      outputChannel.appendLine(`- Template Project Folder: ${templateFolder.fsPath}`);
 
       // create new Evidence project folder from the built-in /template
       createProjectFolder(templateFolder, projectFolder);
     }
-    else if (templateFolder) {
+    else if (await folderExists(templateFolder)) {
+      outputChannel.appendLine(`- Template Project Folder: ${templateFolder.fsPath}`);
+
       // create new Evidence project folder from the local user-defined template folder
       createProjectFolder(templateFolder, projectFolder);
     }
     else {
       // template folder specified in evidence.templateProjectUrl settings doesn't exist
       showInvalidTemplateProjectUrlErrorMessage(projectTemplateUrl);
+      outputChannel.appendLine(`✗ Ivalid Template Project Folder: ${projectTemplateUrl}`);
     }
   }
   else {
