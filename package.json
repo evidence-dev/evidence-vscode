@@ -106,8 +106,7 @@
       {
         "command": "evidence.viewSettings",
         "title": "View Settings",
-        "category": "Evidence",
-        "enablement": "evidence.hasProject"
+        "category": "Evidence"
       },
       {
         "command": "evidence.clearCache",
