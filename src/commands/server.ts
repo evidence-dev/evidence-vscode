@@ -48,7 +48,7 @@ export async function getAppPageUri(pageUrl?: string): Promise<Uri> {
 
   // rewrite requested app page url to use the new active localhost server port
   pageUri = Uri.parse(pageUri.toString(true) // skip encoding
-    .replace(`/:${defaultPort}/`, `/:${_activePort}/`));
+    .replace(`:${defaultPort}/`, `:${_activePort}/`));
 
   const outputChannel = getOutputChannel();
   outputChannel.appendLine(`Requested page preview: ${pageUri.toString(true)}`); // skip encoding
