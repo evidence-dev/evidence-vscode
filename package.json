@@ -201,6 +201,11 @@
           "type": "number",
           "default": 3000,
           "description": "Default Evidence dev server port."
+        },
+        "evidence.templateProjectUrl": {
+          "type": "string",
+          "default": "https://github.com/evidence-dev/template",
+          "description": "Evidence template project GitHub URL or local file:// path to the project template folder to use when creating new Evidence projects."
         }
       }
     },
