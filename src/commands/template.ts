@@ -145,7 +145,7 @@ export async function cloneTemplateRepository(
   // display project creation progress in Evidence Output view
   const outputChannel: OutputChannel = getOutputChannel();
   outputChannel.show();
-  outputChannel.appendLine(`\nCloning ${templateRepositoryUrl} to ${projectFolderPath}:`);
+  outputChannel.appendLine(`\nCloning ${templateRepositoryUrl}\n to: ${projectFolderPath}:`);
 
   await window.withProgress({
     location: ProgressLocation.Notification,
@@ -179,8 +179,15 @@ export async function cloneTemplateRepository(
 
     emitter.on('info', (info: any) => {
       // replace terminal ascii escape characters in the info message from github cloning library
-      const infoMessage: string = info.message?.replaceAll('[1m', '').replaceAll('[22m', '');
-      outputChannel.appendLine(`- ${infoMessage}`);
+      const infoMessage: string = info.message?.replaceAll('[1m', '').replaceAll('[22m', '')
+        .replace(' to ', '\n to: '); // show destination on new line in the Output view
+
+      if (!infoMessage.includes(' cache')) {
+        // show git clonning info messages in the Evidence Output view
+        outputChannel.appendLine(`- ${infoMessage}`);
+      }
+
+      // update cloning progress
       increment += 5;
       progress.report({
         increment: increment,
