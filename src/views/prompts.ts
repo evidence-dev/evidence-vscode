@@ -20,6 +20,22 @@ export async function showInstallDependencies() {
 }
 
 /**
+ * Displays a dialog to select a folder.
+ *
+ * @returns The selected folder Uri, or undefined.
+ */
+export async function showSelectFolderDialog(): Promise<Uri[] | undefined> {
+  // show open dialog to select an empty folder for a new Evidence project
+  return await window.showOpenDialog({
+    title: 'New Evidence Project Folder',
+    canSelectFiles: false,
+    canSelectFolders: true,
+    canSelectMany: false,
+    openLabel: 'Select an empty folder to create new Evidence project.'
+  });
+}
+
+/**
  * Displays Open Folder notification message,
  * and opens it in a new VS Code window
  * when a user confirms the Open Folder dialog selection.

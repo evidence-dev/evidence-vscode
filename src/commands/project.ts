@@ -1,7 +1,6 @@
 import {
   window,
   workspace,
-  ExtensionContext,
   RelativePattern,
   Uri,
   OutputChannel
@@ -9,10 +8,10 @@ import {
 
 import * as path from 'path';
 
-import { getFileUri } from '../extensionContext';
+import { showSelectFolderDialog, showOpenFolder } from '../views/prompts';
 import { gitHubUrlBase, templateProjectUrl, cloneTemplateRepository } from './template';
 import { getOutputChannel } from '../output';
-import { showOpenFolder } from '../views/prompts';
+import { getFileUri } from '../extensionContext';
 
 /**
  * Default Evidence template project url.
@@ -46,7 +45,7 @@ export async function createNewProject(projectFolder?: Uri) {
   if (projectFiles.length > 0 ) {
 
     // prompt to select an empty new project folder
-    window.showInformationMessage(
+    window.showErrorMessage(
      'Select an empty folder to create a new Evidence project.');
 
     // display create new project dialog again
@@ -88,22 +87,6 @@ export async function createNewProject(projectFolder?: Uri) {
       showOpenFolder(projectFolder);
     }
   }
-}
-
-/**
- * Displays a dialog to select a folder.
- *
- * @returns The selected folder Uri, or undefined.
- */
-export async function showSelectFolderDialog(): Promise<Uri[] | undefined> {
-  // show open dialog to select an empty folder for a new Evidence project
-  return await window.showOpenDialog({
-    title: 'New Evidence Project Folder',
-    canSelectFiles: false,
-    canSelectFolders: true,
-    canSelectMany: false,
-    openLabel: 'Select an empty folder to create new Evidence project.'
-  });
 }
 
 /**
