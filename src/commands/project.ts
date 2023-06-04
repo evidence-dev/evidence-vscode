@@ -11,7 +11,7 @@ import * as path from 'path';
 import { getConfig } from '../config';
 import { cloneTemplateRepository } from './template';
 import { getOutputChannel } from '../output';
-import { getFileUri } from '../extensionContext';
+import { getExtensionFileUri } from '../extensionContext';
 import { folderExists } from '../utils/fsUtils';
 
 import {
@@ -25,7 +25,7 @@ import {
  *
  * @see https://github.com/evidence-dev/evidence-vscode/issues/61
  */
-const extensionTemplateProjectPath: string = '../../template';
+const extensionTemplateProjectFolderName: string = 'template';
 
 /**
  * Evidence template project Url setting name.
@@ -112,11 +112,10 @@ export async function createNewProject(projectFolder?: Uri) {
       outputChannel.appendLine(`✗ Ivalid Template Project Folder: ${projectTemplateUrl}`);
     }
   }
-  else if (projectTemplateUrl === extensionTemplateProjectPath ||
-    projectTemplateUrl === templateProjectUrlSettingDefault) {
+  else if (projectTemplateUrl === templateProjectUrlSettingDefault) {
 
     // get built-in /template folder Uri from extension context
-    const templateFolder: Uri = getFileUri(extensionTemplateProjectPath);
+    const templateFolder: Uri = getExtensionFileUri(extensionTemplateProjectFolderName);
 
     if (await folderExists(templateFolder)) {
       outputChannel.appendLine(`- Template Project Folder: ${templateFolder.fsPath}`);

@@ -29,12 +29,12 @@ export function getExtensionContext(): ExtensionContext {
 }
 
 /**
- * Gets extension file Uri.
+ * Gets extension file or folder Uri.
  *
- * @param relativeFilePath Relative extension file path.
+ * @param relativeExtensionFilePath Relative extension file or folder path.
  *
- * @returns Extension file Uri.
+ * @returns Extension file or folder Uri.
  */
-export function getFileUri(relativeExtensionFilePath: string): Uri {
-  return Uri.joinPath(extensionContext.extensionUri, relativeExtensionFilePath);
+export function getExtensionFileUri(relativeExtensionFilePath: string): Uri {
+  return Uri.file(extensionContext.asAbsolutePath(relativeExtensionFilePath));
 }
