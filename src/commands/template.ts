@@ -232,7 +232,7 @@ export async function cloneTemplateRepository(
         }
       })
       .catch((error: any) => {
-        outputChannel.appendLine(error);
+        outputChannel.appendLine(`✗ Error cloning template repository.\n ${error.message}`);
         progress.report({
           message: `Error cloning template repository. ${error.message}`
         });
