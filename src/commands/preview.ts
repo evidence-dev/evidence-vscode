@@ -14,6 +14,8 @@ import {
   startServer
 } from './server';
 
+import { waitFor } from '../utils/httpUtils';
+
 /**
  * Local Evidence app url.
  */
@@ -58,5 +60,10 @@ export async function preview(uri?: Uri) {
     // open web page in the built-in simple browser webview
     commands.executeCommand(Commands.ShowSimpleBrowser,
       pageUri.toString(true)); // skip encoding
+
+    // use waitFor(url) with ping from our http utils
+    // to hit the Evidence dev server and have it
+    // load the requested page when it is done rebuilding pages
+    await waitFor(pageUri.toString(false), 1000, 30000); // encoding, ms interval, max total wait time ms
   }
 }
