@@ -5,7 +5,26 @@ import {
 } from 'vscode';
 
 /**
- * Deletes a folder from the open project workspace.
+ * Checks if the given folder exists using workspace.fs API.
+ *
+ * @param folder Folder Uri.
+ */
+export async function folderExists(folder: Uri): Promise<boolean> {
+  try {
+    const fileStat = await workspace.fs.stat(folder);
+    if (fileStat.type === FileType.Directory) {
+      return true;
+    }
+  }
+  catch (error) {
+    return false;
+  }
+  return false;
+}
+
+/**
+ * Deletes a folder from the open project workspace
+ * ussing workspace.fs API.
  *
  * @param relativeFolderPath Relative folder path to delete.
  * @returns True if the folder is deleted, and false otherwise.
@@ -15,14 +34,14 @@ export async function deleteFolder(relativeFolderPath: string): Promise<boolean>
   if (workspaceFolders) {
     for (const folder of workspaceFolders) {
       const folderUri: Uri = Uri.joinPath(folder.uri, relativeFolderPath);
-      try {
-        const fileStat = await workspace.fs.stat(folderUri);
-        if (fileStat.type === FileType.Directory) {
-          await workspace.fs.delete(folderUri, {recursive: true});
+      if (await folderExists(folderUri)) {
+        try {
+          await workspace.fs.delete(folderUri, { recursive: true });
           return true;
         }
-      }
-      catch (error) {
+        catch (error) {
+          return false;
+        }
       }
     }
   }
