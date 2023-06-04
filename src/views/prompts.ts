@@ -7,6 +7,9 @@ import { commands, Uri } from 'vscode';
 import { Commands } from '../commands/commands';
 import { installDependencies } from '../commands/build';
 
+/**
+ * Displays a dialog to install Evidence node.js dependencies.
+ */
 export async function showInstallDependencies() {
   // prompt a user to install Evidence node.js dependencies
   window.showInformationMessage(
@@ -54,5 +57,17 @@ export async function showOpenFolder(projectFolder: Uri) {
       commands.executeCommand(Commands.OpenFolder, projectFolder, true);
     }
   });
+}
 
+/**
+ * Displays invalid template project Url message.
+ *
+ * @param templateUrl The provided template project Url.
+ */
+export function showInvalidTemplateProjectUrlErrorMessage(templateUrl: string) {
+  // show invalid template project Url message
+  window.showErrorMessage(
+    `Invalided Evidence project template Url: ${templateUrl}.`,
+    'OK'
+  );
 }
