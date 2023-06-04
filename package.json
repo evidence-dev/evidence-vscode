@@ -203,7 +203,7 @@
         },
         "evidence.templateProjectUrl": {
           "type": "string",
-          "default": "https://github.com/evidence-dev/template",
+          "default": "/template",
           "description": "Evidence template project GitHub URL or local file:// path to the project template folder to use when creating new Evidence projects."
         }
       }
