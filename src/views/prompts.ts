@@ -67,7 +67,7 @@ export async function showOpenFolder(projectFolder: Uri) {
 export function showInvalidTemplateProjectUrlErrorMessage(templateUrl: string) {
   // show invalid template project Url message
   window.showErrorMessage(
-    `Invalided Evidence project template Url: ${templateUrl}.`,
+    `Invalid Evidence project template Url: ${templateUrl}.`,
     'OK'
   );
 }
