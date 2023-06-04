@@ -48,7 +48,7 @@ export async function showSelectFolderDialog(): Promise<Uri[] | undefined> {
 export async function showOpenFolder(projectFolder: Uri) {
   // display Open Folder notification message
   window.showInformationMessage(
-    `Evidence project created in: ${projectFolder.fsPath}.`,
+    `Evidence project created in: ${projectFolder.fsPath}`,
     'Open Folder'
   ).then((selection: string | undefined) => {
     if (selection === 'Open Folder') {
