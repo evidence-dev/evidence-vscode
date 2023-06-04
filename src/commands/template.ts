@@ -74,6 +74,14 @@ export async function createProjectFromTemplate() {
   if (!templateRepositoryUrl) {
     return;
   }
+  else if (!templateRepositoryUrl.startsWith(gitHubUrlBase)) {
+    window.showErrorMessage(`Evidence extension only supports template repositories hosted on GitHub.\
+      Provide Evidence template repositry GitHub Url, or use the default ${templateProjectUrl} repository Url instead.`);
+
+    // display this prompt again with the default template repositry Url
+    createProjectFromTemplate();
+    return;
+  }
 
   if (!workspace.workspaceFolders) {
     window.showInformationMessage(
@@ -232,10 +240,10 @@ export async function cloneTemplateRepository(
         }
       })
       .catch((error: any) => {
-        outputChannel.appendLine(`✗ Error cloning template repository.\n ${error.message}`);
-        progress.report({
-          message: `Error cloning template repository. ${error.message}`
-        });
+        const errorMessage = `Error cloning template repository. ${error.message}`;
+        outputChannel.appendLine(`✗ ${errorMessage}`);
+        progress.report({ increment: 100 });
+        window.showErrorMessage(errorMessage);
       });
 
     await timeout(15000);
