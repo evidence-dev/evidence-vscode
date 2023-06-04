@@ -17,7 +17,7 @@ import { getFileUri } from '../extensionContext';
 /**
  * Default Evidence template project url.
  */
-const defaultTemplateProjectUrl = '../../template';
+const defaultTemplateProjectUrl: string = '../../template';
 
 /**
  * Evidence template project Url setting name.
@@ -75,12 +75,14 @@ export async function createNewProject(projectFolder?: Uri) {
   const templateProjectUrl = <string>getConfig('templateProjectUrl', defaultTemplateProjectUrl);
   const projectTemplateUrl = templateProjectUrl;
 
-  if (projectTemplateUrl.startsWith(gitHubUrlBase)) {
-    // clone Evidence template project from a github repository
+  if (projectTemplateUrl.startsWith('https://')) {
+    // attemplt to clone an Evidence template project from a github repository
     // into the selected new Evidence project folder
     await cloneTemplateRepository(projectTemplateUrl, projectFolderPath);
   }
-  else if (projectTemplateUrl === defaultTemplateProjectUrl) {
+  else if (projectTemplateUrl.startsWith('file://') &&
+    (projectTemplateUrl === defaultTemplateProjectUrl ||
+      projectTemplateUrl === '/template') ) {
     // get embedded /template folder Uri from extension context
     const templateFolder: Uri = getFileUri(defaultTemplateProjectUrl);
 
