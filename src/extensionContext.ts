@@ -36,5 +36,5 @@ export function getExtensionContext(): ExtensionContext {
  * @returns Extension file Uri.
  */
 export function getFileUri(relativeExtensionFilePath: string): Uri {
-  return Uri.file(extensionContext.asAbsolutePath(relativeExtensionFilePath));
+  return Uri.joinPath(extensionContext.extensionUri, relativeExtensionFilePath);
 }
