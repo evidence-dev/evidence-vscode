@@ -9,10 +9,15 @@ import {
 import * as path from 'path';
 
 import { getConfig } from '../config';
-import { showSelectFolderDialog, showOpenFolder } from '../views/prompts';
-import { gitHubUrlBase, cloneTemplateRepository } from './template';
+import { cloneTemplateRepository } from './template';
 import { getOutputChannel } from '../output';
 import { getFileUri } from '../extensionContext';
+
+import {
+  showSelectFolderDialog,
+  showOpenFolder,
+  showInvalidTemplateProjectUrlErrorMessage
+} from '../views/prompts';
 
 /**
  * Default Evidence template project url.
@@ -25,6 +30,13 @@ const defaultTemplateProjectUrl: string = '../../template';
  * @see https://github.com/evidence-dev/evidence-vscode/issues/62
  */
 const templateProjectUrlSetting = 'templateProjectUrl';
+
+/**
+ * Default evdinecence template project url setting value
+ *
+ * @see https://github.com/evidence-dev/evidence-vscode/issues/62
+ */
+const templateProjectUrlSettingDefault = '/template';
 
 /**
  * Creates a new Evidence project.
@@ -72,7 +84,8 @@ export async function createNewProject(projectFolder?: Uri) {
 
   // use new evidence template project Url setting
   // @see https://github.com/evidence-dev/evidence-vscode/issues/62
-  const templateProjectUrl = <string>getConfig('templateProjectUrl', defaultTemplateProjectUrl);
+  const templateProjectUrl =
+    <string>getConfig('templateProjectUrl', templateProjectUrlSettingDefault);
   const projectTemplateUrl = templateProjectUrl;
 
   if (projectTemplateUrl.startsWith('https://')) {
@@ -80,20 +93,48 @@ export async function createNewProject(projectFolder?: Uri) {
     // into the selected new Evidence project folder
     await cloneTemplateRepository(projectTemplateUrl, projectFolderPath);
   }
-  else if (projectTemplateUrl.startsWith('file://') &&
-    (projectTemplateUrl === defaultTemplateProjectUrl ||
-      projectTemplateUrl === '/template') ) {
-    // get embedded /template folder Uri from extension context
-    const templateFolder: Uri = getFileUri(defaultTemplateProjectUrl);
+  else if (projectTemplateUrl.startsWith('file://')) {
+    // parse local template folder Url
+    let templateFolder: Uri = Uri.parse(projectTemplateUrl, false); // don't throw error
 
-    // copy template folder to the new project folder
-    const projectFolderCreated: boolean = await copyFolder(templateFolder, projectFolder);
-    if (projectFolderCreated) {
-      // display Open Folder prompt to open newly created Evidence project
-      // in a new VS Code workspace window and enable all Evidence extensioin commands
-      // in the open workspace with an Evidence project for the app and markdown pages development
-      showOpenFolder(projectFolder);
+    if (projectTemplateUrl === defaultTemplateProjectUrl ||
+      projectTemplateUrl === templateProjectUrlSettingDefault) {
+
+      // get built-in /template folder Uri from extension context
+      const templateFolder: Uri = getFileUri(defaultTemplateProjectUrl);
+
+      // create new Evidence project folder from the built-in /template
+      createProjectFolder(templateFolder, projectFolder);
     }
+    else if (templateFolder) {
+      // create new Evidence project folder from the local user-defined template folder
+      createProjectFolder(templateFolder, projectFolder);
+    }
+    else {
+      // template folder specified in evidence.templateProjectUrl settings doesn't exist
+      showInvalidTemplateProjectUrlErrorMessage(projectTemplateUrl);
+    }
+  }
+  else {
+    // invalid template project Uri scheme
+    showInvalidTemplateProjectUrlErrorMessage(projectTemplateUrl);
+  }
+}
+
+/**
+ * Creates new Evidence project folder from a local template project folder.
+ *
+ * @param templateFolder Template folder Uri.
+ * @param projectFolder Target Evidence project folder Uri.
+ */
+async function createProjectFolder(templateFolder: Uri, projectFolder: Uri) {
+  // copy template folder to the new project folder
+  const projectFolderCreated: boolean = await copyFolder(templateFolder, projectFolder);
+  if (projectFolderCreated) {
+    // display Open Folder prompt to open newly created Evidence project
+    // in a new VS Code workspace window and enable all Evidence extensioin commands
+    // in the open workspace with an Evidence project for the app and markdown pages development
+    showOpenFolder(projectFolder);
   }
 }
 
