@@ -1,0 +1,7 @@
+{
+  "database": "duckdb",
+  "credentials": {
+    "filename": "needful_things.duckdb",
+    "gitignoreDuckdb": null
+  }
+}
