@@ -42,8 +42,26 @@ export async function preview(uri?: Uri) {
   // default page url
   let pageUrl: string = '/';
 
+  // check if the open workspace has an Evidence project
+  const isEvidenceProject =
+    getExtensionContext().workspaceState.get(Context.HasEvidenceProject);
+
+  if ((!uri || uri.path === '/') && isEvidenceProject && isServerRunning()) {
+    // open the default app page in the built-in simple browser webview
+    const homePage: Uri = await getAppPageUri('/');
+    openPageView(homePage);
+
+    // wait for the server to load the app home page
+    await waitFor(homePage.toString(true), 1000, 30000); // encoding, ms interval, max total wait time ms
+
+    // call the built-in simple browser once more
+    // to load the home page conent on server startup
+    openPageView(homePage);
+    return;
+  }
+
   if (uri) {
-    // log preview page request in output channel for troubleshooting
+    // log preview document or page request in output channel for troubleshooting
     const outputChannel = getOutputChannel();
     if (uri.scheme === 'file ') {
       outputChannel.appendLine(`Requested document preview: ${uri.fsPath}`); // skip encoding
@@ -54,14 +72,7 @@ export async function preview(uri?: Uri) {
     }
   }
 
-  // check if the open workspace has an Evidence project
-  const isEvidenceProject =
-    getExtensionContext().workspaceState.get(Context.HasEvidenceProject);
-
-  // check for a regular markdown document, like README.md, etc.
-  // in an open workspace without or with an Evidence project folder
-  // @see https://github.com/evidence-dev/evidence-vscode/issues/67
-  if (!isEvidenceProject || !uri?.path.includes('/pages/')) {
+  if (!isEvidenceProject || !isServerRunning() || !uri?.path.includes('/pages/')) {
     // show standard markdown document preview
     commands.executeCommand(Commands.MarkdownShowPreview, uri);
     return;
@@ -71,7 +82,8 @@ export async function preview(uri?: Uri) {
   if (uri && (uri.scheme === 'http' || uri.scheme === 'https')) {
     pageUrl = uri.toString(true); // skip encoding
   }
-  else if (uri && uri.scheme === 'file' && workspace.workspaceFolders) {
+  else if (uri && uri.scheme === 'file' && workspace.workspaceFolders &&
+    isEvidenceProject && isServerRunning()) {
     // get project folder root path
     const workspaceFolderPath: string = getWorkspaceFolder()!.uri.fsPath;
 
@@ -85,20 +97,8 @@ export async function preview(uri?: Uri) {
   // create external app page Uri from page url
   const pageUri: Uri = await getAppPageUri(pageUrl);
 
-  // start server if not running
-  if (!isServerRunning()) {
-    startServer(pageUri);
-  }
-  else {
-    // open requested page in the built-in simple browser webview
-    openPageView(pageUri);
-
-    // wait for the server to load the page
-    await waitFor(pageUri.toString(true), 1000, 30000); // encoding, ms interval, max total wait time ms
-
-    // call the built-in simple browser once more to load page conent
-    openPageView(pageUri);
-  }
+  // open requested page in the built-in simple browser webview
+  openPageView(pageUri);
 }
 
 /**
@@ -109,7 +109,6 @@ export async function preview(uri?: Uri) {
 async function openPageView(pageUri: Uri) {
   if (pageUri) {
     // open requested page in the built-in simple browser webview
-    commands.executeCommand(Commands.ShowSimpleBrowser,
-      pageUri.toString(true)); // skip encoding
+    commands.executeCommand(Commands.ShowSimpleBrowser, pageUri.toString(true)); // skip encoding
   }
 }
