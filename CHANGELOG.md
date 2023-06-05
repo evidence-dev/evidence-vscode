@@ -58,7 +58,7 @@
 ([#68](https://github.com/evidence-dev/evidence-vscode/issues/68))
 - Create new `/data` folder for the Evidence VS Code extension to store demo data, duckdb, parquet files, etc.
 ([#69](https://github.com/evidence-dev/evidence-vscode/issues/69))
-- Prevent built-in markdown Preview from showing for Evidence markdown documents when serer is starting and taking too long
+- Rewrite standard and Evidence markdown documents Preview rules and webviews to use
 ([#70](https://github.com/evidence-dev/evidence-vscode/issues/70))
 - Document, package, and publish `v1.1.0` release
 ([#65](https://github.com/evidence-dev/evidence-vscode/issues/65))
