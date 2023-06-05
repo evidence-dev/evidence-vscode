@@ -53,7 +53,7 @@ export function ping(url: string) {
 
     // log requsted page Url in the Evidence output channel view for troubleshooting
     const outputChannel = getOutputChannel();
-    outputChannel.appendLine(`Requested page preview: ${url}`);
+    outputChannel.appendLine(`Pinging page: ${url}`);
 
     const pingRequest = request(url, () => {
       resolve(true);
