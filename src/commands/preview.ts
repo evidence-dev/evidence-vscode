@@ -43,14 +43,14 @@ export async function preview(uri?: Uri) {
   let pageUrl: string = '/';
 
   if (uri) {
-    // log preivew page request in output channel for troubleshooting
+    // log preview page request in output channel for troubleshooting
     const outputChannel = getOutputChannel();
     if (uri.scheme === 'file ') {
-      outputChannel.appendLine(`Requested document preview: ${uri.toString(true)}`); // skip encoding
+      outputChannel.appendLine(`Requested document preview: ${uri.fsPath}`); // skip encoding
     }
     else if (uri.scheme === 'http' || uri.scheme === 'https') {
       // must be a valide http or https
-      outputChannel.appendLine(`Requested page preview: ${uri.toString(true)}`); // skip encoding
+      outputChannel.appendLine(`Requested page preview: ${uri.path}`); // skip encoding
     }
   }
 
