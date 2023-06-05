@@ -32,6 +32,7 @@ export const enum Commands {
   FocusActiveEditorGroup = 'workbench.action.focusActiveEditorGroup',
   NewWindow = 'workbench.action.newWindow',
   ReloadWindow = 'workbench.action.reloadWindow',
+  MarkdownShowPreview = 'markdown.showPreview',
   ShowSimpleBrowser = 'simpleBrowser.show',
   SetContext = 'setContext',
 
