@@ -52,7 +52,7 @@ export async function getAppPageUri(pageUrl?: string): Promise<Uri> {
     .replace(`:${defaultPort}/`, `:${_activePort}/`));
 
   const outputChannel = getOutputChannel();
-  outputChannel.appendLine(`Requested page preview: ${pageUri.toString(true)}`); // skip encoding
+  outputChannel.appendLine(`Requested app page: ${pageUri.toString(true)}`); // skip encoding
   return pageUri;
 }
 
