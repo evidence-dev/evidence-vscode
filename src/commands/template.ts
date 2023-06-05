@@ -34,7 +34,7 @@ export const gitHubUrlBase = 'https://github.com';
 /**
  * Default Evidence app template project github Url.
  */
-export const templateProjectUrl = `${gitHubUrlBase}/evidence-dev/template`;
+export const templateProjectUrl = `${gitHubUrlBase}/evidence-dev/evidence-vscode/template`;
 
 /**
  * Required Evidence template project data source configuration settings.
@@ -254,7 +254,8 @@ export async function cloneTemplateRepository(
         window.showErrorMessage(errorMessage);
       });
 
-    await timeout(15000);
+    // 10 seconds delay for the github repo cloning progress display
+    await timeout(10000);
   });
 }
 
