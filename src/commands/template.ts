@@ -48,11 +48,6 @@ const templateProjectSettings = {
 };
 
 /**
- * Evidence template project settings file path.
- */
-const templateProjectSettingsPath = '.evidence/template/evidence.settings.json';
-
-/**
  * Creates new Evidence app project from a github repository template.
  *
  * @see https://github.com/evidence-dev/template
@@ -207,12 +202,6 @@ export async function cloneTemplateRepository(
         // delete cloned template repository github files
         await deleteFolder('.github');
         await deleteFile('degit.json');
-
-        if (templateRepositoryUrl === templateProjectUrl) {
-          // create template project seettings file
-          // with the demo DuckDB data source configuration
-          await createTemplateProjectSettingsFile(templateProjectSettingsPath);
-        }
 
         // update Evidence project context and status bar
         updateProjectContext();
