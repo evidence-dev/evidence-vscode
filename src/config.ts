@@ -6,13 +6,22 @@ import {
 } from 'vscode';
 
 import { Commands } from './commands/commands';
+import { getExtensionContext } from './extensionContext';
 
 /**
  * VSCode and Evidence extension settings.
  */
 export const enum Settings {
   DefaultPort = 'defaultPort',
-  AutoStart = 'autoStart'
+  AutoStart = 'autoStart',
+  TemplateProjectUrl = 'templateProjectUrl'
+}
+
+/**
+ * Evidence extension context and state keys.
+ */
+export const enum Context {
+  HasEvidenceProject = 'evidence.hasProject'
 }
 
 /**
@@ -27,12 +36,20 @@ export function getConfig<T>(settingName: string, defaultValue?: T) {
 }
 
 /**
- * Updates Evidence project context values
- * to show available Evidence project commands in Command Palette.
+ * Updates Evidence project context values to show
+ * the available Evidence project commands in Command Palette,
+ * and determine standard markdown documents Preview webview to use.
+ *
+ * @see https://github.com/evidence-dev/evidence-vscode/issues/67
  */
 export function updateProjectContext() {
   // set Evidence has project context valule flag
-  commands.executeCommand(Commands.SetContext, 'evidence.hasProject', true);
+  // for enabledment of commands that require an open Evidence project
+  commands.executeCommand(Commands.SetContext, Context.HasEvidenceProject, true);
+
+  // set Evidence project workspace flag to check
+  // when markdown document preview is requested
+  getExtensionContext().workspaceState.update(Context.HasEvidenceProject, true);
 }
 
 /**
