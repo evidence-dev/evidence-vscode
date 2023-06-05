@@ -1,12 +1,12 @@
 import {
   commands,
-  env,
   workspace,
   Uri
 } from 'vscode';
 
 import { Commands } from './commands';
-import { getWorkspaceFolder } from '../config';
+import { getExtensionContext } from '../extensionContext';
+import { Context, getWorkspaceFolder } from '../config';
 
 import {
   getAppPageUri,
@@ -15,6 +15,7 @@ import {
 } from './server';
 
 import { waitFor } from '../utils/httpUtils';
+import { get } from 'http';
 
 /**
  * Local Evidence app url.
@@ -22,10 +23,16 @@ import { waitFor } from '../utils/httpUtils';
 export const localAppUrl = `http://localhost`;
 
 /**
- * Opens Evidence app or markdown page preview
- * in the built-in VSCode Simple Browser webview.
+ * Opens a markdown document Preview webview.
  *
- * @param uri Optional Uri of the page to preview.
+ * Uses the built-in vscode markdown document preview webview
+ * for the standard markdown documents, and .md documents
+ * not in the Evidence /pages/ folder.
+ *
+ * For the Evidence markdown documents in the /pages/ folder,
+ * opens the requested app page in the built-in simple browser webview.
+ *
+ * @param uri Optional Uri of the markdown document to preview.
  *
  * @see Simple browser extension implementation:
  *  https://github.com/microsoft/vscode/pull/109276
@@ -33,6 +40,19 @@ export const localAppUrl = `http://localhost`;
 export async function preview(uri?: Uri) {
   // default page url
   let pageUrl: string = '/';
+
+  // check if the open workspace has an Evidence project
+  const isEvidenceProject =
+    getExtensionContext().workspaceState.get(Context.HasEvidenceProject);
+
+  // check for a regular markdown document, like README.md, etc.
+  // in an open workspace without or with an Evidence project folder
+  // @see https://github.com/evidence-dev/evidence-vscode/issues/67
+  if (!isEvidenceProject || !uri?.path.includes('/pages/')) {
+    // show standard markdown document preview
+    commands.executeCommand(Commands.MarkdownShowPreview, uri);
+    return;
+  }
 
   // create web page url from page Uri
   if (uri && (uri.scheme === 'http' || uri.scheme === 'https')) {
