@@ -82,6 +82,7 @@ Evidence extension provides a number of custom VS Code shortcut commands for Evi
 
 | Command | Title | Description |
 | --- | --- | --- |
+| `newProject` | New Evidence Project | Create new Evidence project in the open workspace, or the selected folder in VS Code File Explorer. |
 | `createProjectFromTemplate` | Create Project from Template | Create new Evidence app project from [template](https://github.com/evidence-dev/template). |
 | `openSettings` | Open Settings File | Open Evidence app settings file in VS Code JSON editor. |
 | `installDependencies` | Install Dependencies | Install Evidence app NodeJS modules. |
