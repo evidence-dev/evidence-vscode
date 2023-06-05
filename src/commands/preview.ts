@@ -7,6 +7,7 @@ import {
 import { Commands } from './commands';
 import { getExtensionContext } from '../extensionContext';
 import { Context, getWorkspaceFolder } from '../config';
+import { getOutputChannel } from '../output';
 
 import {
   getAppPageUri,
@@ -15,7 +16,7 @@ import {
 } from './server';
 
 import { waitFor } from '../utils/httpUtils';
-import { get } from 'http';
+
 
 /**
  * Local Evidence app url.
@@ -40,6 +41,18 @@ export const localAppUrl = `http://localhost`;
 export async function preview(uri?: Uri) {
   // default page url
   let pageUrl: string = '/';
+
+  if (uri) {
+    // log preivew page request in output channel for troubleshooting
+    const outputChannel = getOutputChannel();
+    if (uri.scheme === 'file ') {
+      outputChannel.appendLine(`Requested document preview: ${uri.toString(true)}`); // skip encoding
+    }
+    else if (uri.scheme === 'http' || uri.scheme === 'https') {
+      // must be a valide http or https
+      outputChannel.appendLine(`Requested page preview: ${uri.toString(true)}`); // skip encoding
+    }
+  }
 
   // check if the open workspace has an Evidence project
   const isEvidenceProject =
