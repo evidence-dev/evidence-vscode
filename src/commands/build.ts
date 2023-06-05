@@ -10,7 +10,7 @@ import { sendCommand } from '../terminal';
 import { timeout } from '../utils/timer';
 import { isServerRunning, stopServer } from './server';
 import { statusBar } from '../statusBar';
-import { getWorkspaceFolder } from '../config';
+import { getWorkspaceFolder, updateProjectContext } from '../config';
 
 /**
  * Node modules folder name to check in the open project workspace
@@ -39,6 +39,11 @@ export async function installDependencies() {
     stopServer();
     await timeout(1000);
   }
+  else {
+    // update open workspace context
+    updateProjectContext();
+  }
+
   sendCommand('npm install');
   await timeout(1000);
   statusBar.showInstalling();
