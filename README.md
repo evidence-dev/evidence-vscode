@@ -24,14 +24,15 @@ This extension provides language support, Evidence project and dev server shortc
   - SQL Query Blocks
   - Templating (Loops, Conditionals)
 - Evidence commands to:
-  - Create new project from a template
+  - Create new project
   - Install dependencies
   - Start and stop dev server
-  - Update to latest version
-  - View settings page and file
+  - Update to the latest version
+  - Open app settings file
+  - View extension settings
   - Clear app data and queries cache
   - Build app for deployment to production
-  - Preview app and markdown files in built-in browser
+  - Preview Evidence markdown documents
 
 ## Requirements
 
