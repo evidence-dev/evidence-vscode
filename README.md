@@ -117,11 +117,11 @@ All Evidence extension settings start with `evidence.` prefix. You can overwrite
 
 The following Evidence project workspace `/.vscode/settings.json` example sets different default Evidence dev server port, overwrites new dev server `autostart` setting, and uses a local copy of the Evidence [`template`](https://github.com/evidence-dev/template) project with `file://` Uri to speed up creation of new projects.
 
-```json
+```
 {
   "evidence.defaultPort": 5000,
   "evidence.autoStart": "false",
-  "evidence.templateProjectUrl: "file://E:/projects/evidence.devtemplate"
+  "evidence.templateProjectUrl: "file://E:/projects/evidence.dev/template"
 }
 ```
 
