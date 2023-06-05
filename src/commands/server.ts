@@ -1,4 +1,4 @@
-import { commands, env, Uri } from 'vscode';
+import { commands, env, workspace, Uri } from 'vscode';
 
 import { Commands } from './commands';
 import { executeCommand } from './build';
@@ -7,8 +7,9 @@ import { getOutputChannel } from '../output';
 import { closeTerminal, sendCommand } from '../terminal';
 import { localAppUrl, preview } from './preview';
 import { getNodeVersion, isSupportedNodeVersion } from '../node';
-import { timeout } from '../utils/timer';
+import { showInstallDependencies } from '../views/prompts';
 import { statusBar } from '../statusBar';
+import { timeout } from '../utils/timer';
 import { tryPort } from '../utils/httpUtils';
 
 const localhost = 'localhost';
@@ -69,6 +70,14 @@ export async function startServer(pageUri?: Uri) {
   // check supported node version prior to server start
   const nodeVersion = await getNodeVersion();
   if (isSupportedNodeVersion(nodeVersion, 16, 14)) {
+
+    // check for /node_modules before starting dev server
+    const nodeModules = await workspace.findFiles('**/node_modules/**/*.*');
+    if (nodeModules.length === 0) {
+      // prompt a user to install Evidence node.js dependencies
+      showInstallDependencies();
+      return;
+    }
 
     if (!_running) {
       // use the last saved active port number to start dev server
