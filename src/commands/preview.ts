@@ -57,13 +57,26 @@ export async function preview(uri?: Uri) {
     startServer(pageUri);
   }
   else {
-    // open web page in the built-in simple browser webview
+    // open requested page in the built-in simple browser webview
+    openPageView(pageUri);
+
+    // wait for the server to load the page
+    await waitFor(pageUri.toString(true), 1000, 30000); // encoding, ms interval, max total wait time ms
+
+    // call the built-in simple browser once more to load page conent
+    openPageView(pageUri);
+  }
+}
+
+/**
+ * Opens a page in the built-in VSCode Simple Browser webview.
+ *
+ * @param pageUri Uri of the page to open.
+ */
+async function openPageView(pageUri: Uri) {
+  if (pageUri) {
+    // open requested page in the built-in simple browser webview
     commands.executeCommand(Commands.ShowSimpleBrowser,
       pageUri.toString(true)); // skip encoding
-
-    // use waitFor(url) with ping from our http utils
-    // to hit the Evidence dev server and have it
-    // load the requested page when it is done rebuilding pages
-    await waitFor(pageUri.toString(true), 1000, 30000); // encoding, ms interval, max total wait time ms
   }
 }
