@@ -4,11 +4,11 @@ Build polished data products with SQL and Markdown.
 
 ## Connect the Tutorial Database
 
-👉 In the [settings menu](/settings), choose **DuckDB** and enter the filename `needful_things.duckdb`. 
+👉 In the [settings menu](/settings), choose **DuckDB** and enter the filename `needful_things.duckdb`.
 
 Evidence also supports Snowflake, BigQuery, Redshift, Postgres, SQLite, CSVs & [more](https://docs.evidence.dev/core-concepts/data-sources/#how-to-query-a-csv-file)!
 
-![Connecting a data source](connect-data-source.gif)
+![Connecting a data source](https://raw.githubusercontent.com/evidence-dev/template/main/static/connect-data-source.gif?raw=true)
 
 ## Write Markdown
 
@@ -47,7 +47,7 @@ You can see both the SQL and the query results by interacting with the query abo
 
 If you are using the DuckDB or CSV connector, you can query a CSV file using SQL. Just add a folder to the root of your project called `/sources` and add your CSV files to that folder.
 
-To query a CSV file, use the syntax below. 
+To query a CSV file, use the syntax below.
 
 `select * from 'sources/myfile.csv'`
 
@@ -99,7 +99,7 @@ You can also generate a PDF of an Evidence page - use the top right menu to sele
 ## Download CSVs & Images
 If you need to share individual pieces of information, Evidence data viz components come with buttons for CSV download and chart image download - hover over a component to see these options.
 
-# Get Support 
+# Get Support
 
 - Message us on [Slack](https://join.slack.com/t/evidencedev/shared_invite/zt-uda6wp6a-hP6Qyz0LUOddwpXW5qG03Q)
 - See all the charts and components in the [component library](https://docs.evidence.dev/components/all-components)
