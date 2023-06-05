@@ -172,7 +172,7 @@
         {
           "command": "markdown.showPreview",
           "when": "!notebookEditorFocused && resourceLangId == emd",
-          "group": "navigation"
+          "group": "1_open"
         },
         {
           "command": "markdown.showPreviewToSide",
