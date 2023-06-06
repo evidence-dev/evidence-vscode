@@ -3,6 +3,7 @@ import {
   workspace,
   RelativePattern,
   Uri,
+  WorkspaceFolder,
   OutputChannel
 } from 'vscode';
 
@@ -147,18 +148,21 @@ async function createProjectFolder(templateFolder: Uri, projectFolder: Uri) {
   const projectFolderCreated: boolean = await copyFolder(templateFolder, projectFolder);
   if (projectFolderCreated) {
 
-    // check if new Evidence project was created in the top workspace folder
-    const workspaceFolder = getWorkspaceFolder();
+    // check if new Evidence project was created in the open workspace folder
+    const workspaceFolder: WorkspaceFolder | undefined = getWorkspaceFolder();
     if (workspaceFolder?.uri.fsPath === projectFolder.fsPath) {
       // update Evidence project context and status bar
       // to enable all the Evidence project commands, etc
       updateProjectContext();
       statusBar.showInstall();
     }
-
-    // display Open Folder prompt to open newly created Evidence project
-    // in a new VS Code workspace window and enable all Evidence extensioin commands
-    // in the open workspace with an Evidence project for the app and markdown pages development
-    showOpenFolder(projectFolder);
+    else {
+      // prompt to open created Evidence project subfolder
+      // in a new VS Code workspace window
+      // to enable all Evidence extensioin commands
+      // and custom Evidence markdown Preview handling
+      // for the Evidence app and markdown pages development
+      showOpenFolder(projectFolder);
+    }
   }
 }
