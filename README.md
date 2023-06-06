@@ -58,7 +58,7 @@ cd evidence-app
 code .
 ```
 
-2. Use `Evidence: New Evidence Project` from VS Code `View -> Command Palette..` menu to  create new Evidence project using the built-in extension [/template](https://github.com/evidence-dev/evidence-vscode/tree/main/template) app project.
+2. Find and use new `Evidence: New Evidence Project` command shortcut in VS Code `View -> Command Palette..` menu to  create new Evidence project using the built-in extension [/template](https://github.com/evidence-dev/evidence-vscode/tree/main/template) app project.
 
 ![Create Evidence Project from Template](https://raw.githubusercontent.com/evidence-dev/evidence-vscode/main/docs/images/evidence-project-from-template.gif?raw=true)
 
