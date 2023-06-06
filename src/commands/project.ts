@@ -17,7 +17,7 @@ import { getOutputChannel } from '../output';
 import { statusBar } from '../statusBar';
 import { cloneTemplateRepository } from './template';
 import { getExtensionFileUri } from '../extensionContext';
-import { folderExists } from '../utils/fsUtils';
+import { folderExists, copyFolder } from '../utils/fsUtils';
 
 import {
   showSelectFolderDialog,
@@ -160,30 +160,5 @@ async function createProjectFolder(templateFolder: Uri, projectFolder: Uri) {
     // in a new VS Code workspace window and enable all Evidence extensioin commands
     // in the open workspace with an Evidence project for the app and markdown pages development
     showOpenFolder(projectFolder);
-  }
-}
-
-/**
- * Copies template folder to the destination project folder.
- *
- * @param templateFolder Template folder Uri.
- * @param destinationFolder Destination folder Uri.
- */
-async function copyFolder(templateFolder: Uri, destinationFolder: Uri): Promise<boolean> {
-  // display folder copy progress in the output channel
-  const outputChannel: OutputChannel = getOutputChannel();
-  outputChannel.show();
-  outputChannel.appendLine('\nCreating project from template ...');
-  outputChannel.appendLine(`- Template Project: ${templateFolder.fsPath}\n`);
-
-  try {
-    await workspace.fs.copy(templateFolder, destinationFolder, { overwrite: false });
-    outputChannel.appendLine(`✔ New project created successfully.`);
-    return true;
-  }
-  catch (error) {
-    outputChannel.appendLine('✗ Error copying template project:');
-    outputChannel.appendLine(` ${error}`);
-    return false;
   }
 }

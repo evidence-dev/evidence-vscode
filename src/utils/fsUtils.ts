@@ -1,9 +1,11 @@
 import {
   workspace,
   FileType,
+  OutputChannel,
   Uri
 } from 'vscode';
 
+import { getOutputChannel } from '../output';
 /**
  * Checks if the given folder exists using workspace.fs API.
  *
@@ -20,6 +22,31 @@ export async function folderExists(folder: Uri): Promise<boolean> {
     return false;
   }
   return false;
+}
+
+/**
+ * Copies template folder to the destination project folder.
+ *
+ * @param templateFolder Template folder Uri.
+ * @param destinationFolder Destination folder Uri.
+ */
+export async function copyFolder(templateFolder: Uri, destinationFolder: Uri): Promise<boolean> {
+  // display folder copy progress in the output channel
+  const outputChannel: OutputChannel = getOutputChannel();
+  outputChannel.show();
+  outputChannel.appendLine('\nCreating project from template ...');
+  outputChannel.appendLine(`- Template Project: ${templateFolder.fsPath}\n`);
+
+  try {
+    await workspace.fs.copy(templateFolder, destinationFolder, { overwrite: false });
+    outputChannel.appendLine(`✔ New project created successfully.`);
+    return true;
+  }
+  catch (error) {
+    outputChannel.appendLine('✗ Error copying template project:');
+    outputChannel.appendLine(` ${error}`);
+    return false;
+  }
 }
 
 /**
