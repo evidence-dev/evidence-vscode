@@ -10,7 +10,7 @@ Evidence is a Markdown-based business intelligence tool. Connect to your databas
 
 This extension provides language support, Evidence project and dev server shortcut commands, markdown Preview and autocomplete for the Evidence Markdown files.
 
-![Evidence App Run](https://raw.githubusercontent.com/evidence-dev/evidence-vscode/main/docs/images/vscode-evidence-app-run.gif?raw=true)
+![Evidence Project Start](https://raw.githubusercontent.com/evidence-dev/evidence-vscode/main/docs/images/evidence-project-start.gif?raw=true)
 
 ## Features
 
@@ -60,7 +60,7 @@ code .
 
 2. Find and use new `Evidence: New Evidence Project` command shortcut in VS Code `View -> Command Palette..` menu to  create new Evidence project using the built-in extension [/template](https://github.com/evidence-dev/evidence-vscode/tree/main/template) app project.
 
-![Create Evidence Project from Template](https://raw.githubusercontent.com/evidence-dev/evidence-vscode/main/docs/images/evidence-project-from-template.gif?raw=true)
+![Evidence Project Start](https://raw.githubusercontent.com/evidence-dev/evidence-vscode/main/docs/images/evidence-project-start.gif?raw=true)
 
 3. Use `Evidence:` VS Code commands described below to install dependencies, start and stop dev server, and preview Evidence BI app content.
 
