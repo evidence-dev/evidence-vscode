@@ -117,7 +117,7 @@ Edit your settings in `./vscode/settings.json` by opening the `Command Palette..
 
 All Evidence extension settings start with `evidence.` prefix. You can overwrite default Evidence extension settings in the open workspace directly by opening and changing `/.vscode/settings.json` in your project.
 
-The following Evidence project workspace `/.vscode/settings.json` example sets different default Evidence dev server port, overwrites new dev server `autoStart` setting, and uses a modified local copy of the Evidence [`/template`](https://github.com/evidence-dev/evidence-vscode/tree/main/template) project with `file://` Uri to create new Evidence projects.
+The following Evidence project workspace `/.vscode/settings.json` example sets different default Evidence dev server port, overwrites new dev server `autoStart` setting, and uses a modified local copy of the built-in Evidence [`/template`](https://github.com/evidence-dev/evidence-vscode/tree/main/template) project with `file://` Uri to create new Evidence projects.
 
 ```
 {
@@ -133,7 +133,7 @@ Evidence extension `v1.1.0` now has two new settings to allow overwriting defaul
 | --- | --- | -- | -- | -- |
 | `evidence.defaultPort` | number | `3000` | Default Port | Default Evidence app dev server port. |
 | `evidence.autoStart` | boolean | `true` | Auto Start | Automatically start Evidence app dev server when opening a project. |
-| `evidence.templateProjectUrl` | Url string | [`/template`](https://github.com/evidence-dev/evidence-vscode/tree/main/template) | Template Project Url | Evidence `template` project GitHub URL or local `file://` path to the project template folder to use when creating new Evidence projects. Defaults to the built-in Evidence extension [`/template`](https://github.com/evidence-dev/evidence-vscode/tree/main/template) project that ships with this extenstion for faster New Evidence Project scaffolding. |
+| `evidence.templateProjectUrl` | Url string | [`/template`](https://github.com/evidence-dev/evidence-vscode/tree/main/template) | Template Project Url | Evidence `template` project GitHub Url or local `file://` path to the project template folder to use when creating new Evidence projects. Defaults to the built-in Evidence extension [`/template`](https://github.com/evidence-dev/evidence-vscode/tree/main/template) project that ships with this extenstion for faster `New Evidence Project` scaffolding. |
 
 You can request new Evidence extension settings to enhance this extension user experience in VS Code by submitting a [feature request](https://github.com/evidence-dev/evidence-vscode/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=) or [pull request](https://github.com/evidence-dev/evidence-vscode/pulls).
 
