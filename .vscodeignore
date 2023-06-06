@@ -3,6 +3,7 @@
 
 out/**
 node_modules/**
+data/**
 src/**
 
 docs/images/**
