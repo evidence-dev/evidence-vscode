@@ -232,7 +232,7 @@ export async function cloneTemplateRepository(
         window.showErrorMessage(errorMessage);
       });
 
-    // 10 seconds delay for the github repo cloning progress display
-    await timeout(10000);
+    // 15 seconds delay for the github repo cloning progress display
+    await timeout(15000);
   });
 }
