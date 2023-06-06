@@ -109,8 +109,17 @@ export async function preview(uri?: Uri) {
  */
 async function openPageView(pageUri: Uri) {
   if (pageUri) {
-    // open requested page in the built-in simple browser webview to the side
-    commands.executeCommand(Commands.ShowSimpleBrowser, pageUri.toString(true), {
+    // open requested page in the built-in simple browser webview
+    // commands.executeCommand(Commands.ShowSimpleBrowser, 
+    //   pageUri.toString(true), 
+    //   {
+    //     options: {
+    //       viewColumn: ViewColumn.Two
+    //     }
+    //   }
+    // );
+
+    commands.executeCommand('simpleBrowser.api.open', pageUri.toString(true), {
       viewColumn: ViewColumn.Beside,
       preserveFocus: true
     });
