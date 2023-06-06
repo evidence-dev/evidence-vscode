@@ -204,7 +204,7 @@
         "evidence.templateProjectUrl": {
           "type": "string",
           "default": "/template",
-          "description": "Evidence template project GitHub URL or local file:// path to the project template folder to use when creating new Evidence projects. Defaults to the built-in /template project Url form the Evidence VS Code repository."
+          "description": "Evidence template project GitHub URL or local file:// path to the project template folder to use when creating new Evidence projects. Defaults to the built-in Evidence extension /template project Url."
         }
       }
     },
