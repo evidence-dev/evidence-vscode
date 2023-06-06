@@ -19,6 +19,7 @@ import { statusBar } from '../statusBar';
 import { cloneTemplateRepository } from './template';
 import { getExtensionFileUri } from '../extensionContext';
 import { folderExists, copyFolder } from '../utils/fsUtils';
+import { showInstallDependencies } from '../views/prompts';
 
 import {
   showSelectFolderDialog,
@@ -152,9 +153,12 @@ async function createProjectFolder(templateFolder: Uri, projectFolder: Uri) {
     const workspaceFolder: WorkspaceFolder | undefined = getWorkspaceFolder();
     if (workspaceFolder?.uri.fsPath === projectFolder.fsPath) {
       // update Evidence project context and status bar
-      // to enable all the Evidence project commands, etc
+      // to enable all the Evidence project commands, etc.
       updateProjectContext();
       statusBar.showInstall();
+
+      // prompt to install Evidence app dependencis in the open workspace
+      showInstallDependencies();
     }
     else {
       // prompt to open created Evidence project subfolder
