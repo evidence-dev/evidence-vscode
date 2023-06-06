@@ -177,7 +177,7 @@ async function copyFolder(templateFolder: Uri, destinationFolder: Uri): Promise<
   outputChannel.appendLine(`- Template Project: ${templateFolder.fsPath}\n`);
 
   try {
-    await workspace.fs.copy(templateFolder, destinationFolder, { overwrite: true });
+    await workspace.fs.copy(templateFolder, destinationFolder, { overwrite: false });
     outputChannel.appendLine(`✔ New project created successfully.`);
     return true;
   }
