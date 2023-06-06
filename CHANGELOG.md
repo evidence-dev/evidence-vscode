@@ -60,6 +60,8 @@
 ([#69](https://github.com/evidence-dev/evidence-vscode/issues/69))
 - Rewrite standard and Evidence markdown documents Preview rules and webviews to use
 ([#70](https://github.com/evidence-dev/evidence-vscode/issues/70))
+- Copy files and subfolders instead of using `workspace.fs.copy` to copy `/template` project into an open workspace root folder
+([#72](https://github.com/evidence-dev/evidence-vscode/issues/72))
 - Document, package, and publish `v1.1.0` release
 ([#65](https://github.com/evidence-dev/evidence-vscode/issues/65))
 
