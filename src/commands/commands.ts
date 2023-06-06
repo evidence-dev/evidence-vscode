@@ -34,6 +34,7 @@ export const enum Commands {
   ReloadWindow = 'workbench.action.reloadWindow',
   MarkdownShowPreview = 'markdown.showPreview',
   ShowSimpleBrowser = 'simpleBrowser.show',
+  OpenSimpleBrowser = 'simpleBrowser.api.open',
   SetContext = 'setContext',
 
   // Evidence extension commands
