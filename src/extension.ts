@@ -28,7 +28,7 @@ export async function activate(context: ExtensionContext) {
   // register markdown symbol provider
   const markdownLanguage = { language: 'emd', scheme: 'file' };
   const provider = new MarkdownSymbolProvider();
-  languages.registerDocumentSymbolProvider(markdownLanguage, provider);
+  // languages.registerDocumentSymbolProvider(markdownLanguage, provider);
 
   // load package.json
   const workspacePackageJson = await loadPackageJson();
