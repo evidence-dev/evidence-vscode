@@ -37,17 +37,6 @@ export const gitHubUrlBase = 'https://github.com';
 export const templateProjectUrl = `${gitHubUrlBase}/evidence-dev/evidence-vscode/template`;
 
 /**
- * Required Evidence template project data source configuration settings.
- */
-const templateProjectSettings = {
-  "database": "duckdb",
-  "credentials": {
-    "filename": "needful_things.duckdb",
-    "gitignoreDuckdb": null
-  }
-};
-
-/**
  * Creates new Evidence app project from a github repository template.
  *
  * @see https://github.com/evidence-dev/template
@@ -246,28 +235,4 @@ export async function cloneTemplateRepository(
     // 10 seconds delay for the github repo cloning progress display
     await timeout(10000);
   });
-}
-
-/**
- * Creates Evidence template project settings configuration file
- * in the current project workspace.
- *
- * @param templateProjectSettingsPath Destination project settings file path.
- */
-async function createTemplateProjectSettingsFile(templateProjectSettingsPath: string) {
-  // get open workspace folder
-  const workspaceFolder: WorkspaceFolder | undefined = getWorkspaceFolder();
-
-  // check for at least one workspace folder and writable workspace file system
-  if (workspaceFolder && workspace.fs.isWritableFileSystem('file')) {
-
-    // create template settings file uri
-    const templateSettingsFileUri: Uri =
-      Uri.joinPath(workspaceFolder.uri, templateProjectSettingsPath);
-
-    // write template sesttings to file
-    const templateSettingsFileContent: string = JSON.stringify(templateProjectSettings, null, 2);
-    await workspace.fs.writeFile(templateSettingsFileUri,
-      Buffer.from(templateSettingsFileContent, 'utf-8'));
-  }
 }
