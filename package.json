@@ -203,8 +203,8 @@
         },
         "evidence.templateProjectUrl": {
           "type": "string",
-          "default": "https://github.com/evidence-dev/evidence-vscode/template",
-          "description": "Evidence template project GitHub URL or local file:// path to the project template folder to use when creating new Evidence projects."
+          "default": "/template",
+          "description": "Evidence template project GitHub URL or local file:// path to the project template folder to use when creating new Evidence projects. Defaults to the built-in /template project Url form the Evidence VS Code repository."
         }
       }
     },
