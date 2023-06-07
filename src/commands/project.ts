@@ -61,8 +61,7 @@ export async function createNewProject(projectFolder?: Uri) {
   }
 
   // get the list of files and folders in the selected new project folder
-  const projectFiles = await workspace.findFiles(
-    new RelativePattern(projectFolder.fsPath, '**/*'));
+  const projectFiles = await workspace.fs.readDirectory(projectFolder);
 
   console.log(projectFiles);
 
@@ -71,7 +70,7 @@ export async function createNewProject(projectFolder?: Uri) {
 
     // prompt to select an empty new project folder
     window.showErrorMessage(
-     'Select an empty folder to create a new Evidence project.');
+     'Selected folder must be empty to create a new Evidence project.', {modal: true});
 
     // display create new project dialog again
     createNewProject();
@@ -111,7 +110,7 @@ export async function createNewProject(projectFolder?: Uri) {
     else {
       // template folder specified in evidence.templateProjectUrl settings doesn't exist
       showInvalidTemplateProjectUrlErrorMessage(projectTemplateUrl);
-      outputChannel.appendLine(`✗ Ivalid Template Project Folder: ${projectTemplateUrl}`);
+      outputChannel.appendLine(`✗ Invalid Template Project Folder: ${projectTemplateUrl}`);
     }
   }
   else if (projectTemplateUrl === templateProjectUrlSetting) {
@@ -128,13 +127,13 @@ export async function createNewProject(projectFolder?: Uri) {
     else {
       // invalid built-in /template folder path
       showInvalidTemplateProjectUrlErrorMessage(templateFolder.fsPath);
-      outputChannel.appendLine(`✗ Ivalid Template Project Folder: ${templateFolder.fsPath}`);
+      outputChannel.appendLine(`✗ Invalid Template Project Folder: ${templateFolder.fsPath}`);
     }
   }
   else {
     // invalid template project Uri scheme
     showInvalidTemplateProjectUrlErrorMessage(projectTemplateUrl);
-    outputChannel.appendLine(`✗ Ivalid Template Project Folder: ${projectTemplateUrl}`);
+    outputChannel.appendLine(`✗ Invalid Template Project Folder: ${projectTemplateUrl}`);
   }
 }
 
