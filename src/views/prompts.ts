@@ -34,7 +34,7 @@ export async function showSelectFolderDialog(): Promise<Uri[] | undefined> {
     canSelectFiles: false,
     canSelectFolders: true,
     canSelectMany: false,
-    openLabel: 'Select an empty folder to create new Evidence project.'
+    openLabel: 'Select folder'
   });
 }
 
