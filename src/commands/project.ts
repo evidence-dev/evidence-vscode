@@ -61,8 +61,7 @@ export async function createNewProject(projectFolder?: Uri) {
   }
 
   // get the list of files and folders in the selected new project folder
-  const projectFiles = await workspace.findFiles(
-    new RelativePattern(projectFolder.fsPath, '**/*'));
+  const projectFiles = await workspace.fs.readDirectory(projectFolder);
 
   console.log(projectFiles);
 
