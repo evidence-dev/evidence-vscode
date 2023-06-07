@@ -14,6 +14,8 @@ import {
   updateProjectContext
 } from '../config';
 
+import * as fs from 'fs';
+
 import { getOutputChannel } from '../output';
 import { statusBar } from '../statusBar';
 import { cloneTemplateRepository } from './template';
@@ -60,21 +62,18 @@ export async function createNewProject(projectFolder?: Uri) {
     }
   }
 
-  // get the list of files and folders in the selected new project folder
-  const projectFiles = await workspace.findFiles(
-    new RelativePattern(projectFolder.fsPath, '**/*'));
-
-  console.log(projectFiles);
-
-  // check if the selected folder is empty
-  if (projectFiles.length > 0 ) {
-
-    // prompt to select an empty new project folder
-    window.showErrorMessage(
-     'Select an empty folder to create a new Evidence project.');
-
-    // display create new project dialog again
-    createNewProject();
+  // Check if the selected folder is empty
+  try {
+    const files = await fs.promises.readdir(projectFolder.fsPath);
+    if (files.length > 0) {
+      // The folder is not empty
+      window.showErrorMessage('Select an empty folder to create a new Evidence project.');
+      createNewProject();
+      return;
+    }
+  } catch (error) {
+    // Handle error while reading the folder
+    console.error(`Error reading folder: ${error}`);
     return;
   }
 
