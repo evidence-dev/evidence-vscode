@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.1.2 - 2023-06-08
+
+- Fix for new project template gitignore issue
+
 ## 1.1.1 - 2023-06-07
 
 - Fixes issue for new projects created in non-empty folders

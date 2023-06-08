@@ -2,7 +2,7 @@
   "name": "evidence-vscode",
   "displayName": "Evidence",
   "description": "Evidence language support for VS Code",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
   "engines": {
     "vscode": "^1.52.0"
