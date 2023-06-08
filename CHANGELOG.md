@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.1.1 - 2023-06-07
+
+- Fixes issue for new projects created in non-empty folders
+
 ## 1.1.0 - 2023-06-06
 
 - Add `Dev` to `Evidence:` `Start Server` and `Stop Server` command titles
