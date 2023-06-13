@@ -81,13 +81,13 @@
       },
       {
         "command": "evidence.startServer",
-        "title": "Start Dev Server",
+        "title": "Start Evidence Server",
         "category": "Evidence",
         "enablement": "evidence.hasProject"
       },
       {
         "command": "evidence.stopServer",
-        "title": "Stop Dev Server",
+        "title": "Stop Evidence Server",
         "category": "Evidence",
         "enablement": "evidence.hasProject"
       },
@@ -119,6 +119,32 @@
         "command": "evidence.buildStrict",
         "title": "Build Strict",
         "category": "Evidence",
+        "enablement": "evidence.hasProject"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "evidence.startServer",
+        "key": "ctrl+R",
+        "mac": "cmd+R",
+        "enablement": "evidence.hasProject"
+      },
+      {
+        "command": "evidence.stopServer",
+        "key": "ctrl+shift+R",
+        "mac": "cmd+shift+R",
+        "enablement": "evidence.hasProject"
+      },
+      {
+        "command": "evidence.build",
+        "key": "ctrl+shift+B",
+        "mac": "cmd+shift+B",
+        "enablement": "evidence.hasProject"
+      },
+      {
+        "command": "evidence.buildStrict",
+        "key": "ctrl+shift+alt+B",
+        "mac": "cmd+shift+alt+B",
         "enablement": "evidence.hasProject"
       }
     ],
@@ -182,13 +208,13 @@
       "properties": {
         "evidence.autoStart": {
           "type": "boolean",
-          "default": true,
-          "description": "Autostart Evidence dev server when VS Code opens Evidence project workspace."
+          "default": false,
+          "description": "Autostart Evidence server when VS Code opens Evidence project workspace."
         },
         "evidence.defaultPort": {
           "type": "number",
           "default": 3000,
-          "description": "Default Evidence dev server port."
+          "description": "Default Evidence server port."
         },
         "evidence.templateProjectUrl": {
           "type": "string",
