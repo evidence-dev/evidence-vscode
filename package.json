@@ -62,11 +62,6 @@
         "category": "Evidence"
       },
       {
-        "command": "evidence.createProjectFromTemplate",
-        "title": "Create Project from Template",
-        "category": "Evidence"
-      },
-      {
         "command": "evidence.openSettings",
         "title": "Open Settings File",
         "category": "Evidence",
@@ -123,12 +118,6 @@
       {
         "command": "evidence.buildStrict",
         "title": "Build Strict",
-        "category": "Evidence",
-        "enablement": "evidence.hasProject"
-      },
-      {
-        "command": "evidence.showOutput",
-        "title": "Show Output",
         "category": "Evidence",
         "enablement": "evidence.hasProject"
       }
