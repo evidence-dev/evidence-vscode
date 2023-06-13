@@ -14,7 +14,8 @@ import { getExtensionContext } from './extensionContext';
 export const enum Settings {
   DefaultPort = 'defaultPort',
   AutoStart = 'autoStart',
-  TemplateProjectUrl = 'templateProjectUrl'
+  TemplateProjectUrl = 'templateProjectUrl',
+  PreviewType = 'previewType'
 }
 
 /**
