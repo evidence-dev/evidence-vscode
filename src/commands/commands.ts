@@ -13,7 +13,7 @@ import {
   buildProjectStrict
 } from './build';
 
-import { createNewProject } from './project';
+import { createNewProject, openIndex } from './project';
 import { createProjectFromTemplate } from './template';
 import { startServer, stopServer} from './server';
 import { preview } from './preview';
@@ -51,6 +51,7 @@ export const enum Commands {
   BuildProject = 'evidence.build',
   BuildProjectStrict = 'evidence.buildStrict',
   ShowOutput = 'evidence.showOutput',
+  OpenIndex = 'evidence.openIndex'
 }
 
 let _context: ExtensionContext;
@@ -78,6 +79,7 @@ export function registerCommands(context: ExtensionContext) {
   registerCommand(Commands.BuildProject, buildProject);
   registerCommand(Commands.BuildProjectStrict, buildProjectStrict);
   registerCommand(Commands.ShowOutput, showOutput);
+  registerCommand(Commands.OpenIndex, openIndex);
 }
 
 /**
