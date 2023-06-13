@@ -60,6 +60,19 @@ export async function showOpenFolder(projectFolder: Uri) {
 }
 
 /**
+ * Automatically opens new project folder
+ * in a new VS Code window
+ *
+ * @param projectFolder Project folder to open.
+ */
+export async function openNewProjectFolder(projectFolder: Uri) {
+  // true = open in new window
+  // false = open in current window
+  // SET TO FALSE FOR TESTING ONLY - CHANGE TO TRUE BEFORE RELEASE
+  commands.executeCommand(Commands.OpenFolder, projectFolder, false);
+}
+
+/**
  * Displays invalid template project Url message.
  *
  * @param templateUrl The provided template project Url.

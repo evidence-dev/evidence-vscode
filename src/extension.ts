@@ -52,26 +52,16 @@ export async function activate(context: ExtensionContext) {
 
       if (autoStart) {
         startServer();
-
-        // show spinning progress bar for 25 seconds
-        window.withProgress({
-          location: ProgressLocation.Notification,
-          title: 'Starting Evidence dev server ...',
-          cancellable: false
-        }, async (progress) => {
-          for (let i = 0; i < 25; i++) {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            progress.report({ increment: 4 });
-          }
-        });
       }
     }
     else {
       // show install node modules status
-      statusBar.showInstall();
+      // statusBar.showInstall();
 
       // prompt a user to install Evidence node.js dependencies
-      showInstallDependencies();
+      // showInstallDependencies();
+
+      statusBar.showStart();
     }
   }
 }
