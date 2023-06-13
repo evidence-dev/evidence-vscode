@@ -1,6 +1,7 @@
 import {
   window,
   workspace,
+  commands,
   RelativePattern,
   Uri,
   WorkspaceFolder,
@@ -62,8 +63,6 @@ export async function createNewProject(projectFolder?: Uri) {
 
   // get the list of files and folders in the selected new project folder
   const projectFiles = await workspace.fs.readDirectory(projectFolder);
-
-  console.log(projectFiles);
 
   // check if the selected folder is empty
   if (projectFiles.length > 0 ) {
@@ -170,3 +169,20 @@ async function createProjectFolder(templateFolder: Uri, projectFolder: Uri) {
   }
 }
 
+/**
+ * Opens index.md if no other files are open in the VS Code Workspace
+ *
+ */
+export async function openIndex() {
+  // This requires error handling for situations where an index file does not exist.
+  // In that case, it should not execute anything.
+
+  let openFiles = workspace.textDocuments;
+
+  if(openFiles.length === 0){
+    const folderPath = getWorkspaceFolder();
+    const filePath = folderPath?.uri + '/pages/index.md';
+    const fileUri = Uri.parse(filePath);
+    await commands.executeCommand('vscode.open', fileUri);  
+  }
+}

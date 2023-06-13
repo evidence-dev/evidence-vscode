@@ -13,6 +13,7 @@ import { loadPackageJson, hasDependency } from './utils/jsonUtils';
 import { Settings, getConfig, updateProjectContext } from './config';
 import { showInstallDependencies } from './views/prompts';
 import { startServer } from './commands/server';
+import { openIndex } from './commands/project';
 import { statusBar } from './statusBar';
 import { closeTerminal } from './terminal';
 
@@ -50,6 +51,9 @@ export async function activate(context: ExtensionContext) {
       // show start dev server status
       statusBar.showStart();
 
+      // open index.md if no other files are open
+      openIndex();
+
       if (autoStart) {
         startServer();
       }
@@ -62,6 +66,9 @@ export async function activate(context: ExtensionContext) {
       // showInstallDependencies();
 
       statusBar.showStart();
+
+      // open index.md if no other files are open
+      openIndex();
     }
   }
 }
