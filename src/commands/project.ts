@@ -19,7 +19,7 @@ import { statusBar } from '../statusBar';
 import { cloneTemplateRepository } from './template';
 import { getExtensionFileUri } from '../extensionContext';
 import { folderExists, copyFolder } from '../utils/fsUtils';
-import { showInstallDependencies } from '../views/prompts';
+import { openNewProjectFolder, showInstallDependencies } from '../views/prompts';
 
 import {
   showSelectFolderDialog,
@@ -165,7 +165,8 @@ async function createProjectFolder(templateFolder: Uri, projectFolder: Uri) {
       // to enable all Evidence extensioin commands
       // and custom Evidence markdown Preview handling
       // for the Evidence app and markdown pages development
-      showOpenFolder(projectFolder);
+      openNewProjectFolder(projectFolder);
     }
   }
 }
+

@@ -99,9 +99,9 @@ export async function buildProjectStrict() {
  * @param command Terminal command to execute.
  */
 export async function runCommandWithDepInstall(command: string) {
-  // if (!(await hasDependencies())) {
-  //   await installDependencies();
-  // }
+  if (!(await hasDependencies())) {
+    await installDependencies();
+  }
   sendCommand(command);
 }
 

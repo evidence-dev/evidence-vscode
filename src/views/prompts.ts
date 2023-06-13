@@ -46,22 +46,30 @@ export async function showSelectFolderDialog(): Promise<Uri[] | undefined> {
  * @param projectFolder Project folder to open.
  */
 export async function showOpenFolder(projectFolder: Uri) {
+  // display Open Folder notification message
+  window.showInformationMessage(
+    `Evidence project created in: ${projectFolder.fsPath}`,
+    'Open Folder'
+  ).then((selection: string | undefined) => {
+    if (selection === 'Open Folder') {
+      // open created project folder in a new VS Code window
+      // if the user selected the Open Folder option
+      commands.executeCommand(Commands.OpenFolder, projectFolder, true);
+    }
+  });
+}
+
+/**
+ * Automatically opens new project folder
+ * in a new VS Code window
+ *
+ * @param projectFolder Project folder to open.
+ */
+export async function openNewProjectFolder(projectFolder: Uri) {
   // true = open in new window
   // false = open in current window
   // SET TO FALSE FOR TESTING ONLY - CHANGE TO TRUE BEFORE RELEASE
-  commands.executeCommand(Commands.OpenFolder, projectFolder, true);
-
-  // display Open Folder notification message
-  // window.showInformationMessage(
-  //   `Evidence project created in: ${projectFolder.fsPath}`,
-  //   'Open Folder'
-  // ).then((selection: string | undefined) => {
-  //   if (selection === 'Open Folder') {
-  //     // open created project folder in a new VS Code window
-  //     // if the user selected the Open Folder option
-  //     commands.executeCommand(Commands.OpenFolder, projectFolder, true);
-  //   }
-  // });
+  commands.executeCommand(Commands.OpenFolder, projectFolder, false);
 }
 
 /**
