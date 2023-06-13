@@ -66,6 +66,8 @@ export async function startServer(pageUri?: Uri) {
     pageUri = await getAppPageUri('/');
   }
 
+  const previewType: string = <string>getConfig(Settings.PreviewType);
+
   // check supported node version prior to server start
   const nodeVersion = await getNodeVersion();
   let dependencyCommand = "";
@@ -91,8 +93,13 @@ export async function startServer(pageUri?: Uri) {
         devServerHostParameter = ' --host 0.0.0.0';
       }
 
+      let previewParameter: string = '';
+      if(previewType === 'external'){
+        previewParameter = ' --open /';
+      }
+
       // start dev server via terminal command
-      sendCommand(`${dependencyCommand}npm exec evidence dev --${devServerHostParameter}${serverPortParameter}`);
+      sendCommand(`${dependencyCommand}npm exec evidence dev --${devServerHostParameter}${serverPortParameter}${previewParameter}`);
     }
 
     // update server status and show running status bar icon
@@ -108,8 +115,12 @@ export async function startServer(pageUri?: Uri) {
     // set focus back to the active vscode editor group
     commands.executeCommand(Commands.FocusActiveEditorGroup);
 
-    // open app preview
-    preview(pageUri);
+    // open app preview if previewType is set to internal (simple browser)
+    if(previewType === 'internal' || previewType === 'internal - side-by-side'){
+      preview(pageUri);
+    }
+
+    // change button to stop server
     statusBar.showStop();
   }
 }

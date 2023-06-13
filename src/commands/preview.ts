@@ -1,12 +1,13 @@
 import {
   commands,
   workspace,
-  Uri
+  Uri,
+  ViewColumn
 } from 'vscode';
 
 import { Commands } from './commands';
 import { getExtensionContext } from '../extensionContext';
-import { Context, getWorkspaceFolder } from '../config';
+import { Settings, Context, getWorkspaceFolder, getConfig } from '../config';
 import { getOutputChannel } from '../output';
 
 import {
@@ -55,7 +56,7 @@ export async function preview(uri?: Uri) {
     await waitFor(homePage.toString(true), 1000, 30000); // encoding, ms interval, max total wait time ms
 
     // call the built-in simple browser once more
-    // to load the home page conent on server startup
+    // to load the home page content on server startup
     openPageView(homePage);
     return;
   }
@@ -107,8 +108,13 @@ export async function preview(uri?: Uri) {
  * @param pageUri Uri of the page to open.
  */
 async function openPageView(pageUri: Uri) {
+  const previewType: string = <string>getConfig(Settings.PreviewType);
+
   if (pageUri) {
-    // open requested page in the built-in simple browser webview
-    commands.executeCommand(Commands.ShowSimpleBrowser, pageUri.toString(true)); // skip encoding
+    // open requested page in the built-in simple browser webview to side 
+    commands.executeCommand(Commands.OpenSimpleBrowser, pageUri.toString(true), {
+      viewColumn: previewType === 'internal' ? ViewColumn.Active : ViewColumn.Beside,
+      preserveFocus: true
+    });  
   }
 }

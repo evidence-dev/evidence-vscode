@@ -51,7 +51,8 @@ export const enum Commands {
   BuildProject = 'evidence.build',
   BuildProjectStrict = 'evidence.buildStrict',
   ShowOutput = 'evidence.showOutput',
-  OpenIndex = 'evidence.openIndex'
+  OpenIndex = 'evidence.openIndex',
+  OpenSimpleBrowser = 'simpleBrowser.api.open'
 }
 
 let _context: ExtensionContext;

@@ -194,6 +194,23 @@
           "type": "string",
           "default": "/template",
           "description": "Evidence template project GitHub URL or local file:// path to the project template folder to use when creating new Evidence projects. Defaults to the built-in Evidence extension /template project."
+        },
+        "evidence.previewType": {
+          "type": "string",
+          "markdownDescription": "Preview location",
+          "enum": [
+            "internal",
+            "internal - side-by-side",
+            "external",
+            "none"
+          ],
+          "default": "internal",
+          "markdownEnumDescriptions": [
+            "VS Code default browser - full width",
+            "VS Code default browser - split-screen",
+            "Open in external web browser",
+            "No automatic preview shown"
+          ]
         }
       }
     },
