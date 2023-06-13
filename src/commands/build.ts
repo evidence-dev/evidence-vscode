@@ -99,7 +99,7 @@ export async function buildProjectStrict() {
  * @param command Terminal command to execute.
  */
 export async function runCommandWithDepInstall(command: string) {
-  let depCommand;
+  let depCommand = "";
   if (!(await hasDependencies())) {
     depCommand = `npm install && `;
   }
