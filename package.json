@@ -133,6 +133,32 @@
         "enablement": "evidence.hasProject"
       }
     ],
+    "keybindings": [
+      {
+        "command": "evidence.startServer",
+        "key": "ctrl+R",
+        "mac": "cmd+R",
+        "enablement": "evidence.hasProject"
+      },
+      {
+        "command": "evidence.stopServer",
+        "key": "ctrl+shift+R",
+        "mac": "cmd+shift+R",
+        "enablement": "evidence.hasProject"
+      },
+      {
+        "command": "evidence.build",
+        "key": "ctrl+shift+B",
+        "mac": "cmd+shift+B",
+        "enablement": "evidence.hasProject"
+      },
+      {
+        "command": "evidence.buildStrict",
+        "key": "ctrl+shift+alt+B",
+        "mac": "cmd+shift+alt+B",
+        "enablement": "evidence.hasProject"
+      }
+    ],
     "menus": {
       "explorer/context": [
         {
