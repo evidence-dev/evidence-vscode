@@ -29,8 +29,8 @@ class StatusBar {
    * Sets app server status display to install dependencies.
    */
   showInstall(): void {
-    this.statusBarItem.text = '$(debug-start) Evidence';
-    this.statusBarItem.tooltip = 'Install dependencies';
+    this.statusBarItem.text = '$(cloud-download) Install Evidence';
+    this.statusBarItem.tooltip = 'Install required Evidence dependencies';
     this.statusBarItem.command = Commands.InstallDependencies;
     this.statusBarItem.show();
   }
@@ -39,8 +39,8 @@ class StatusBar {
    * Sets installing dependencies app server status.
    */
   showInstalling(): void {
-    this.statusBarItem.text = '$(sync~spin) Evidence';
-    this.statusBarItem.tooltip = 'Installing dependencies ...';
+    this.statusBarItem.text = '$(sync~spin) Installing Evidence';
+    this.statusBarItem.tooltip = 'Installing Evidence dependencies ...';
     this.statusBarItem.command = Commands.InstallDependencies;
     this.statusBarItem.show();
   }
@@ -49,8 +49,8 @@ class StatusBar {
    * Sets app server status display to running.
    */
   showStart(): void {
-    this.statusBarItem.text = '$(debug-start) Evidence';
-    this.statusBarItem.tooltip = 'Start dev server';
+    this.statusBarItem.text = '$(debug-start) Start Evidence';
+    this.statusBarItem.tooltip = 'Start Evidence server';
     this.statusBarItem.command = Commands.StartServer;
     this.statusBarItem.show();
   }
@@ -59,8 +59,8 @@ class StatusBar {
    * Sets app server status display to running.
    */
   showRunning(): void {
-    this.statusBarItem.text = '$(sync~spin) Evidence';
-    this.statusBarItem.tooltip = 'Starting dev server ...';
+    this.statusBarItem.text = '$(sync~spin) Starting Evidence';
+    this.statusBarItem.tooltip = 'Starting Evidence server ...';
     this.statusBarItem.command = Commands.StopServer;
     this.statusBarItem.show();
   }
@@ -69,8 +69,8 @@ class StatusBar {
    * Sets app server status display to stop.
    */
   showStop(): void {
-    this.statusBarItem.text = '$(debug-disconnect) Evidence';
-    this.statusBarItem.tooltip = 'Stop dev server';
+    this.statusBarItem.text = '$(debug-disconnect) Stop Evidence';
+    this.statusBarItem.tooltip = 'Stop Evidence server';
     this.statusBarItem.command = Commands.StopServer;
     this.statusBarItem.show();
   }
