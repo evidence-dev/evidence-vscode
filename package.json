@@ -204,7 +204,7 @@
             "external",
             "none"
           ],
-          "default": "internal",
+          "default": "internal - side-by-side",
           "markdownEnumDescriptions": [
             "VS Code default browser - full width",
             "VS Code default browser - split-screen",
