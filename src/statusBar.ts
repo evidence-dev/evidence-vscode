@@ -49,8 +49,8 @@ class StatusBar {
    * Sets app server status display to running.
    */
   showStart(): void {
-    this.statusBarItem.text = '$(debug-start) Evidence';
-    this.statusBarItem.tooltip = 'Start dev server';
+    this.statusBarItem.text = '$(debug-start) Run Evidence';
+    this.statusBarItem.tooltip = 'Start Evidence server';
     this.statusBarItem.command = Commands.StartServer;
     this.statusBarItem.show();
   }
@@ -59,8 +59,8 @@ class StatusBar {
    * Sets app server status display to running.
    */
   showRunning(): void {
-    this.statusBarItem.text = '$(sync~spin) Evidence';
-    this.statusBarItem.tooltip = 'Starting dev server ...';
+    this.statusBarItem.text = '$(sync~spin) Starting Evidence';
+    this.statusBarItem.tooltip = 'Starting Evidence server ...';
     this.statusBarItem.command = Commands.StopServer;
     this.statusBarItem.show();
   }
@@ -69,8 +69,8 @@ class StatusBar {
    * Sets app server status display to stop.
    */
   showStop(): void {
-    this.statusBarItem.text = '$(debug-disconnect) Evidence';
-    this.statusBarItem.tooltip = 'Stop dev server';
+    this.statusBarItem.text = '$(debug-disconnect) Evidence Running (Click to Stop)';
+    this.statusBarItem.tooltip = 'Stop Evidence server';
     this.statusBarItem.command = Commands.StopServer;
     this.statusBarItem.show();
   }
