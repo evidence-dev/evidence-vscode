@@ -40,7 +40,7 @@ async function getTerminal(context: ExtensionContext, workingDirectory?: string)
   if (_terminal === undefined) {
     _terminal = window.createTerminal(terminalName);
     _terminal.show(false);
-    _terminal.sendText('node -v');
+    // _terminal.sendText('node -v');
     _nodeVersion = await getNodeVersion();
     _outputChannel.appendLine(`Using node ${_nodeVersion}`);
 

@@ -1,7 +1,6 @@
 import { commands, env, workspace, Uri } from 'vscode';
 
 import { Commands } from './commands';
-import { executeCommand } from './build';
 import { Settings, getConfig } from '../config';
 import { getOutputChannel } from '../output';
 import { closeTerminal, sendCommand } from '../terminal';
@@ -69,14 +68,17 @@ export async function startServer(pageUri?: Uri) {
 
   // check supported node version prior to server start
   const nodeVersion = await getNodeVersion();
+  let dependencyCommand = "";
   if (isSupportedNodeVersion(nodeVersion, 16, 14)) {
 
     // check for /node_modules before starting dev server
     const nodeModules = await workspace.findFiles('**/node_modules/**/*.*');
     if (nodeModules.length === 0) {
       // prompt a user to install Evidence node.js dependencies
-      showInstallDependencies();
-      return;
+      // showInstallDependencies();
+      // return;
+
+      dependencyCommand = `npm install && `;
     }
 
     if (!_running) {
@@ -90,7 +92,7 @@ export async function startServer(pageUri?: Uri) {
       }
 
       // start dev server via terminal command
-      executeCommand(`npm exec evidence dev --${devServerHostParameter}${serverPortParameter}`);
+      sendCommand(`${dependencyCommand}npm exec evidence dev --${devServerHostParameter}${serverPortParameter}`);
     }
 
     // update server status and show running status bar icon

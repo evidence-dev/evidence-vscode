@@ -74,7 +74,7 @@ export async function buildProject() {
     stopServer();
     await timeout(1000);
   }
-  executeCommand('npm run build');
+  runCommandWithDepInstall('npm run build');
 }
 
 /**
@@ -87,7 +87,7 @@ export async function buildProjectStrict() {
     stopServer();
     await timeout(1000);
   }
-  executeCommand('npm run build:strict');
+  runCommandWithDepInstall('npm run build:strict');
 }
 
 /**
@@ -98,10 +98,10 @@ export async function buildProjectStrict() {
  *
  * @param command Terminal command to execute.
  */
-export async function executeCommand(command: string) {
-  if (!(await hasDependencies())) {
-    await installDependencies();
-  }
+export async function runCommandWithDepInstall(command: string) {
+  // if (!(await hasDependencies())) {
+  //   await installDependencies();
+  // }
   sendCommand(command);
 }
 

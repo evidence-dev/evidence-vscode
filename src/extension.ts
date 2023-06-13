@@ -68,10 +68,12 @@ export async function activate(context: ExtensionContext) {
     }
     else {
       // show install node modules status
-      statusBar.showInstall();
+      // statusBar.showInstall();
 
       // prompt a user to install Evidence node.js dependencies
-      showInstallDependencies();
+      // showInstallDependencies();
+
+      statusBar.showStart();
     }
   }
 }

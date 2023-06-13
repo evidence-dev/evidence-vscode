@@ -211,17 +211,19 @@ export async function cloneTemplateRepository(
 
           // check if open workspace folder is the same as the created project folder
           if (workspaceFolder && workspaceFolder.uri.fsPath !== projectFolderPath) {
+            commands.executeCommand(Commands.OpenFolder, Uri.file(projectFolderPath), true);
+
             // display Open Folder notification message
-            window.showInformationMessage(
-              `Evidence project created in: ${projectFolderPath}.`,
-              'Open Folder'
-            ).then((selection: string | undefined) => {
-              if (selection === 'Open Folder') {
-                // open created project folder in a new VS Code window
-                // if the user selected the Open Folder option
-                commands.executeCommand(Commands.OpenFolder, Uri.file(projectFolderPath), true);
-              }
-            });
+            // window.showInformationMessage(
+            //   `Evidence project created in: ${projectFolderPath}.`,
+            //   'Open Folder'
+            // ).then((selection: string | undefined) => {
+            //   if (selection === 'Open Folder') {
+            //     // open created project folder in a new VS Code window
+            //     // if the user selected the Open Folder option
+            //     commands.executeCommand(Commands.OpenFolder, Uri.file(projectFolderPath), true);
+            //   }
+            // });
           }
         }
       })
