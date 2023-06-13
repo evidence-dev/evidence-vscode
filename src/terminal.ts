@@ -82,7 +82,7 @@ export async function sendCommand(command: string,
 
   // check node version
   // @see https://docs.evidence.dev/getting-started/install-evidence#system-requirements
-  if (isSupportedNodeVersion(_nodeVersion!, 16, 14)) {
+  if (isSupportedNodeVersion(_nodeVersion!)) {
     // execute terminal command
     terminal.sendText(command, true); // add new line
 
@@ -96,7 +96,7 @@ export async function sendCommand(command: string,
   else {
     // prompt to download and install the required NodeJS version
     const downloadNodeNotification = window.showInformationMessage(
-      'Evidence application requires NodeJS v16.14 or greater.', {
+      'Evidence requires NodeJS v16.14 or greater.', {
         title: downloadNodeJs
       });
 
