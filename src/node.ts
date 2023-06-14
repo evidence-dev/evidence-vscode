@@ -7,7 +7,13 @@ import { window } from 'vscode';
  * @returns The NodeJS version.
  */
 export async function getNodeVersion() {
-  return await executeCommand('node --version');
+  let nodeVersion;
+  try {
+    nodeVersion = await executeCommand('node --version');
+  } catch(e) {
+    nodeVersion = "none";
+  }
+  return nodeVersion;
 }
 
 /**
