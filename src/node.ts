@@ -77,13 +77,3 @@ export function executeCommand(command: string): Promise<string> {
     });
   });
 }
-
-
-export async function nodeCheck() {
-  const nodeVersion = await getNodeVersion();
-  const isSupported = isSupportedNodeVersion(nodeVersion);
-
-  if(!isSupported){
-    window.showErrorMessage(`Not right NodeJS!`);
-  }
-}
