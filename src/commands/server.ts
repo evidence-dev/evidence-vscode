@@ -1,4 +1,4 @@
-import { commands, env, workspace, Uri } from 'vscode';
+import { commands, env, workspace, Uri, window } from 'vscode';
 
 import { Commands } from './commands';
 import { Settings, getConfig } from '../config';
@@ -14,6 +14,9 @@ import { tryPort } from '../utils/httpUtils';
 const localhost = 'localhost';
 let _running: boolean = false;
 let _activePort: number = <number>getConfig(Settings.DefaultPort);
+
+const downloadNodeJs = 'Download NodeJS';
+const downloadNodeJsUrl = 'https://nodejs.org/en/download';
 
 /**
  * Creates Evidence app page Uri from the provided pageUrl,
@@ -70,10 +73,23 @@ export async function startServer(pageUri?: Uri) {
 
   // check supported node version prior to server start
   const nodeVersion = await getNodeVersion();
-  let dependencyCommand = "";
-  if (isSupportedNodeVersion(nodeVersion, 16, 14)) {
+  if (!isSupportedNodeVersion(nodeVersion)) {
+      // prompt to download and install the required NodeJS version
+      const downloadNodeNotification = window.showErrorMessage(
+        'Evidence requires NodeJS v16.14 or greater.', {
+          title: downloadNodeJs
+        });
+  
+      downloadNodeNotification.then(async (result) => {
+        if (result?.title === downloadNodeJs) {
+          env.openExternal(Uri.parse(downloadNodeJsUrl));
+        }
+      });
+
+  } else {
 
     // check for /node_modules before starting dev server
+    let dependencyCommand = "";
     const nodeModules = await workspace.findFiles('**/node_modules/**/*.*');
     if (nodeModules.length === 0) {
       // prompt a user to install Evidence node.js dependencies

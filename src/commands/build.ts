@@ -3,13 +3,16 @@ import {
   FileStat,
   FileType,
   Uri,
-  WorkspaceFolder
+  WorkspaceFolder,
+  window,
+  env
 } from 'vscode';
 
 import { sendCommand } from '../terminal';
 import { timeout } from '../utils/timer';
 import { isServerRunning, stopServer } from './server';
 import { statusBar } from '../statusBar';
+import { getNodeVersion, isSupportedNodeVersion } from '../node';
 import { getWorkspaceFolder, updateProjectContext } from '../config';
 
 /**
@@ -19,6 +22,9 @@ import { getWorkspaceFolder, updateProjectContext } from '../config';
  * @see https://docs.evidence.dev/getting-started/install-evidence
  */
 const nodeModules = `node_modules`;
+
+const downloadNodeJs = 'Download NodeJS';
+const downloadNodeJsUrl = 'https://nodejs.org/en/download';
 
 /**
  * Evidence node modules to update to the latest version.
@@ -35,20 +41,37 @@ const evidencePackages: string[] = [
  * @see https://docs.evidence.dev/getting-started/install-evidence
  */
 export async function installDependencies() {
-  if (isServerRunning()) {
-    stopServer();
-    await timeout(1000);
-  }
-  else {
-    // update open workspace context
-    updateProjectContext();
-  }
 
-  sendCommand('npm install');
-  await timeout(1000);
-  statusBar.showInstalling();
-  await timeout(25000);
-  statusBar.showStart();
+  // check supported node version prior to server start
+  const nodeVersion = await getNodeVersion();
+  if (!isSupportedNodeVersion(nodeVersion)) {
+     // prompt to download and install the required NodeJS version
+     const downloadNodeNotification = window.showErrorMessage(
+       'Evidence requires NodeJS v16.14 or greater.', {
+         title: downloadNodeJs
+       });
+
+     downloadNodeNotification.then(async (result) => {
+       if (result?.title === downloadNodeJs) {
+         env.openExternal(Uri.parse(downloadNodeJsUrl));
+       }
+     });
+ } else {   
+    if (isServerRunning()) {
+      stopServer();
+      await timeout(1000);
+    }
+    else {
+      // update open workspace context
+      updateProjectContext();
+    }
+
+    sendCommand('npm install');
+    await timeout(1000);
+    statusBar.showInstalling();
+    await timeout(25000);
+    statusBar.showStart();
+  }
 }
 
 /**
@@ -99,11 +122,28 @@ export async function buildProjectStrict() {
  * @param command Terminal command to execute.
  */
 export async function runCommandWithDepInstall(command: string) {
-  let depCommand = "";
-  if (!(await hasDependencies())) {
-    depCommand = `npm install && `;
+
+   // check supported node version prior to server start
+   const nodeVersion = await getNodeVersion();
+   if (!isSupportedNodeVersion(nodeVersion)) {
+      // prompt to download and install the required NodeJS version
+      const downloadNodeNotification = window.showErrorMessage(
+        'Evidence requires NodeJS v16.14 or greater.', {
+          title: downloadNodeJs
+        });
+
+      downloadNodeNotification.then(async (result) => {
+        if (result?.title === downloadNodeJs) {
+          env.openExternal(Uri.parse(downloadNodeJsUrl));
+        }
+      });
+  } else {   
+    let depCommand = "";
+    if (!(await hasDependencies())) {
+      depCommand = `npm install && `;
+    }
+    sendCommand(depCommand + command);
   }
-  sendCommand(depCommand + command);
 }
 
 /**

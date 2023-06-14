@@ -1,4 +1,5 @@
 import { exec } from 'child_process';
+import { window } from 'vscode';
 
 /**
  * Gets NodeJS version.
@@ -14,14 +15,16 @@ export async function getNodeVersion() {
  * meets the major and minor version requirements.
  *
  * @param nodeVersion NodeJS version string to check.
- * @param majorVersion Major version number.
- * @param minorVersion Minor version number.
  *
- * @returns Trus if NodeJS version is equal or greater
+ * @returns True if NodeJS version is equal or greater
  *  than the major and minor version numbers, and false otherwise.
  */
-export function isSupportedNodeVersion(nodeVersion: string,
-  majorVersion: number, minorVersion: number): boolean {
+export function isSupportedNodeVersion(nodeVersion: string): boolean {
+
+  // Minimum version of NodeJS required for Evidence:
+  const majorVersion = 26;
+  const minorVersion = 14;
+
   // check node version
   if (nodeVersion && nodeVersion.startsWith('v')) {
     const nodeVersionNumbers = nodeVersion.replace('v', '').split('.');
@@ -67,4 +70,14 @@ export function executeCommand(command: string): Promise<string> {
       }
     });
   });
+}
+
+
+export async function nodeCheck() {
+  const nodeVersion = await getNodeVersion();
+  const isSupported = isSupportedNodeVersion(nodeVersion);
+
+  if(!isSupported){
+    window.showErrorMessage(`Not right NodeJS!`);
+  }
 }
