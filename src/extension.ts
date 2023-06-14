@@ -44,31 +44,17 @@ export async function activate(context: ExtensionContext) {
     // set Evidence project context
     updateProjectContext();
 
-    // check for node modules and auto start dev server
-    const nodeModules = await workspace.findFiles('**/node_modules/**/*.*');
+    // get autoStart setting:
     const autoStart: boolean = <boolean>getConfig(Settings.AutoStart);
-    if (nodeModules.length > 0) {
-      // show start dev server status
-      statusBar.showStart();
 
-      // open index.md if no other files are open
-      openIndex();
+    // show start dev server status
+    statusBar.showStart();
 
-      if (autoStart) {
-        startServer();
-      }
-    }
-    else {
-      // show install node modules status
-      // statusBar.showInstall();
+    // open index.md if no other files are open
+    openIndex();
 
-      // prompt a user to install Evidence node.js dependencies
-      // showInstallDependencies();
-
-      statusBar.showStart();
-
-      // open index.md if no other files are open
-      openIndex();
+    if (autoStart) {
+      startServer();
     }
   }
 }
