@@ -11,7 +11,6 @@ import { setExtensionContext } from './extensionContext';
 import { registerCommands } from './commands/commands';
 import { loadPackageJson, hasDependency } from './utils/jsonUtils';
 import { Settings, getConfig, updateProjectContext } from './config';
-import { showInstallDependencies } from './views/prompts';
 import { startServer } from './commands/server';
 import { openIndex } from './commands/project';
 import { statusBar } from './statusBar';

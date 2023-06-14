@@ -1,5 +1,14 @@
 import { exec } from 'child_process';
-import { window } from 'vscode';
+import { 
+  window, 
+  env, 
+  Uri } from 'vscode';
+import { showRestartPrompt } from './views/prompts';
+
+
+const downloadNodeJs = 'Download NodeJS';
+const downloadNodeJsUrl = 'https://nodejs.org/en/download';
+
 
 /**
  * Gets NodeJS version.
@@ -76,4 +85,17 @@ export function executeCommand(command: string): Promise<string> {
       }
     });
   });
+}
+
+export async function promptToInstallNodeJsAndRestart() {
+  const downloadNodeNotification = await window.showErrorMessage(
+    'Evidence requires NodeJS v16.14 or greater.',
+    { title: downloadNodeJs }
+  );
+
+  if (downloadNodeNotification?.title === downloadNodeJs) {
+    env.openExternal(Uri.parse(downloadNodeJsUrl));
+  }
+  
+  showRestartPrompt();
 }

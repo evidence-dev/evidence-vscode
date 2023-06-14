@@ -1,5 +1,5 @@
 import {
-  window
+  window,
 } from 'vscode';
 
 import { commands, Uri } from 'vscode';
@@ -21,6 +21,13 @@ export async function showInstallDependencies() {
     });
 
 }
+
+/** Displays a dialog to reload VS Code window. */
+export async function showRestartPrompt() {
+  // prompt a user to reload VS Code window
+  window.showInformationMessage(
+    'You need to manually quit and restart VSCode after installing Node.\n(On Windows a computer restart may be required.)', { modal: true }, 'Okay');
+  }
 
 /**
  * Displays a dialog to select a folder.

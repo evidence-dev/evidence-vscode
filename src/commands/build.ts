@@ -3,16 +3,14 @@ import {
   FileStat,
   FileType,
   Uri,
-  WorkspaceFolder,
-  window,
-  env
+  WorkspaceFolder
 } from 'vscode';
 
 import { sendCommand } from '../terminal';
 import { timeout } from '../utils/timer';
 import { isServerRunning, stopServer } from './server';
 import { statusBar } from '../statusBar';
-import { getNodeVersion, isSupportedNodeVersion } from '../node';
+import { getNodeVersion, isSupportedNodeVersion, promptToInstallNodeJsAndRestart } from '../node';
 import { getWorkspaceFolder, updateProjectContext } from '../config';
 
 /**
@@ -23,8 +21,7 @@ import { getWorkspaceFolder, updateProjectContext } from '../config';
  */
 const nodeModules = `node_modules`;
 
-const downloadNodeJs = 'Download NodeJS';
-const downloadNodeJsUrl = 'https://nodejs.org/en/download';
+
 
 /**
  * Evidence node modules to update to the latest version.
@@ -45,17 +42,7 @@ export async function installDependencies() {
   // check supported node version prior to server start
   const nodeVersion = await getNodeVersion();
   if (!isSupportedNodeVersion(nodeVersion)) {
-     // prompt to download and install the required NodeJS version
-     const downloadNodeNotification = window.showErrorMessage(
-       'Evidence requires NodeJS v16.14 or greater.', {
-         title: downloadNodeJs
-       });
-
-     downloadNodeNotification.then(async (result) => {
-       if (result?.title === downloadNodeJs) {
-         env.openExternal(Uri.parse(downloadNodeJsUrl));
-       }
-     });
+    promptToInstallNodeJsAndRestart();
  } else {   
     if (isServerRunning()) {
       stopServer();
@@ -126,17 +113,7 @@ export async function runCommandWithDepInstall(command: string) {
    // check supported node version prior to server start
    const nodeVersion = await getNodeVersion();
    if (!isSupportedNodeVersion(nodeVersion)) {
-      // prompt to download and install the required NodeJS version
-      const downloadNodeNotification = window.showErrorMessage(
-        'Evidence requires NodeJS v16.14 or greater.', {
-          title: downloadNodeJs
-        });
-
-      downloadNodeNotification.then(async (result) => {
-        if (result?.title === downloadNodeJs) {
-          env.openExternal(Uri.parse(downloadNodeJsUrl));
-        }
-      });
+      promptToInstallNodeJsAndRestart();
   } else {   
     let depCommand = "";
     if (!(await hasDependencies())) {
