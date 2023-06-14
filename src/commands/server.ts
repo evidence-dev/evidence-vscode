@@ -121,23 +121,26 @@ export async function startServer(pageUri?: Uri) {
     // update server status and show running status bar icon
     statusBar.showRunning();
 
+    _running = true;
+
     // wait for the dev server to start
     await timeout(1000);
-    _running = true;
 
     // wait for the server to process pages
     await timeout(5000);
 
-    // set focus back to the active vscode editor group
-    commands.executeCommand(Commands.FocusActiveEditorGroup);
+    if(_running === true){
+      // set focus back to the active vscode editor group
+      commands.executeCommand(Commands.FocusActiveEditorGroup);
 
-    // open app preview if previewType is set to internal (simple browser)
-    if(previewType === 'internal' || previewType === 'internal - side-by-side'){
-      preview(pageUri);
+      // open app preview if previewType is set to internal (simple browser)
+      if(previewType === 'internal' || previewType === 'internal - side-by-side'){
+        preview(pageUri);
+      }
+
+      // change button to stop server
+      statusBar.showStop();
     }
-
-    // change button to stop server
-    statusBar.showStop();
   }
 }
 
@@ -164,7 +167,7 @@ export function getActivePort() {
  * resets active port number,
  * and closes Evidence app terminal.
  */
-export function stopServer() {
+export async function stopServer() {
   if (_running) {
     sendCommand('q', '', false);
   }
