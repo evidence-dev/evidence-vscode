@@ -22,7 +22,7 @@ export async function getNodeVersion() {
 export function isSupportedNodeVersion(nodeVersion: string): boolean {
 
   // Minimum version of NodeJS required for Evidence:
-  const majorVersion = 26;
+  const majorVersion = 16;
   const minorVersion = 14;
 
   // check node version
