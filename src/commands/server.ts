@@ -6,10 +6,10 @@ import { getOutputChannel } from '../output';
 import { closeTerminal, sendCommand } from '../terminal';
 import { localAppUrl, preview } from './preview';
 import { getNodeVersion, isSupportedNodeVersion } from '../node';
-import { showInstallDependencies } from '../views/prompts';
 import { statusBar } from '../statusBar';
 import { timeout } from '../utils/timer';
 import { tryPort } from '../utils/httpUtils';
+import { hasDependencies } from './build';
 
 const localhost = 'localhost';
 let _running: boolean = false;
@@ -90,13 +90,11 @@ export async function startServer(pageUri?: Uri) {
 
     // check for /node_modules before starting dev server
     let dependencyCommand = "";
-    const nodeModules = await workspace.findFiles('**/node_modules/**/*.*');
-    if (nodeModules.length === 0) {
-      // prompt a user to install Evidence node.js dependencies
-      // showInstallDependencies();
-      // return;
-
+    let depTimeout = 0;
+    if(!(await hasDependencies())){
+      // prepend server run command with dependency install command:
       dependencyCommand = `npm install && `;
+      depTimeout = 2500;
     }
 
     if (!_running) {
@@ -117,6 +115,10 @@ export async function startServer(pageUri?: Uri) {
       // start dev server via terminal command
       sendCommand(`${dependencyCommand}npm exec evidence dev --${devServerHostParameter}${serverPortParameter}${previewParameter}`);
     }
+
+    statusBar.showInstalling();
+    await timeout(depTimeout);
+
 
     // update server status and show running status bar icon
     statusBar.showRunning();

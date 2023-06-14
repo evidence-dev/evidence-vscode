@@ -7,7 +7,13 @@ import { window } from 'vscode';
  * @returns The NodeJS version.
  */
 export async function getNodeVersion() {
-  return await executeCommand('node --version');
+  let nodeVersion;
+  try {
+    nodeVersion = await executeCommand('node --version');
+  } catch(e) {
+    nodeVersion = "none";
+  }
+  return nodeVersion;
 }
 
 /**
@@ -70,14 +76,4 @@ export function executeCommand(command: string): Promise<string> {
       }
     });
   });
-}
-
-
-export async function nodeCheck() {
-  const nodeVersion = await getNodeVersion();
-  const isSupported = isSupportedNodeVersion(nodeVersion);
-
-  if(!isSupported){
-    window.showErrorMessage(`Not right NodeJS!`);
-  }
 }
