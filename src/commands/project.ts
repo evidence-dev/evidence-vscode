@@ -15,6 +15,7 @@ import {
   updateProjectContext
 } from '../config';
 
+import { Commands } from './commands';
 import { getOutputChannel } from '../output';
 import { statusBar } from '../statusBar';
 import { cloneTemplateRepository } from './template';
@@ -185,4 +186,9 @@ export async function openIndex() {
     const fileUri = Uri.parse(filePath);
     await commands.executeCommand('vscode.open', fileUri);  
   }
+}
+
+
+export async function openWalkthrough(){
+  await commands.executeCommand(Commands.OpenWalkthrough, `Evidence.evidence-vscode#getStarted`, false);
 }

@@ -13,7 +13,7 @@ import {
   buildProjectStrict
 } from './build';
 
-import { createNewProject, openIndex } from './project';
+import { createNewProject, openIndex, openWalkthrough } from './project';
 import { createProjectFromTemplate } from './template';
 import { startServer, stopServer} from './server';
 import { preview } from './preview';
@@ -35,6 +35,7 @@ export const enum Commands {
   MarkdownShowPreview = 'markdown.showPreview',
   ShowSimpleBrowser = 'simpleBrowser.show',
   SetContext = 'setContext',
+  OpenWalkthrough = 'workbench.action.openWalkthrough',
 
   // Evidence extension commands
   NewProject = 'evidence.newProject',
@@ -52,6 +53,7 @@ export const enum Commands {
   BuildProjectStrict = 'evidence.buildStrict',
   ShowOutput = 'evidence.showOutput',
   OpenIndex = 'evidence.openIndex',
+  OpenEvidenceWalkthrough = 'evidence.openWalkthrough',
   OpenSimpleBrowser = 'simpleBrowser.api.open'
 }
 
@@ -81,6 +83,7 @@ export function registerCommands(context: ExtensionContext) {
   registerCommand(Commands.BuildProjectStrict, buildProjectStrict);
   registerCommand(Commands.ShowOutput, showOutput);
   registerCommand(Commands.OpenIndex, openIndex);
+  registerCommand(Commands.OpenEvidenceWalkthrough, openWalkthrough);
 }
 
 /**
