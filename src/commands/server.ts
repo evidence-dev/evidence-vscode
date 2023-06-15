@@ -80,7 +80,7 @@ export async function startServer(pageUri?: Uri) {
     let depTimeout = 0;
     if(!(await hasDependencies())){
       // prepend server run command with dependency install command:
-      dependencyCommand = `npm install && `;
+      dependencyCommand = `npm install ; `;
       depTimeout = 2500;
     }
 
