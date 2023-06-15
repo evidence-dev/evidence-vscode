@@ -113,7 +113,7 @@ async function openPageView(pageUri: Uri) {
   if (pageUri) {
     // open requested page in the built-in simple browser webview to side 
     commands.executeCommand(Commands.OpenSimpleBrowser, pageUri.toString(true), {
-      viewColumn: previewType === 'internal' ? ViewColumn.Active : ViewColumn.Beside,
+      viewColumn: previewType === 'internal' ? ViewColumn.Active : ViewColumn.Two,
       preserveFocus: true
     });  
   }
