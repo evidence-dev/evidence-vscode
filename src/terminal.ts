@@ -9,15 +9,13 @@ import {
 } from 'vscode';
 
 import { getExtensionContext } from './extensionContext';
-import { getNodeVersion, isSupportedNodeVersion } from './node';
+import { getNodeVersion, isSupportedNodeVersion, promptToInstallNodeJsAndRestart } from './node';
 import { getOutputChannel } from './output';
 
 /**
  * Evidence terminal title.
  */
 const terminalName = 'Evidence';
-const downloadNodeJs = 'Download NodeJS';
-const downloadNodeJsUrl = 'https://nodejs.org/en/download';
 
 /**
  * Evidence terminal instance.
@@ -94,17 +92,7 @@ export async function sendCommand(command: string,
     }
   }
   else {
-    // prompt to download and install the required NodeJS version
-    const downloadNodeNotification = window.showInformationMessage(
-      'Evidence requires NodeJS v16.14 or greater.', {
-        title: downloadNodeJs
-      });
-
-    downloadNodeNotification.then(async (result) => {
-      if (result?.title === downloadNodeJs) {
-        env.openExternal(Uri.parse(downloadNodeJsUrl));
-      }
-    });
+    promptToInstallNodeJsAndRestart();
   }
 }
 

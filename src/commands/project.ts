@@ -156,7 +156,7 @@ async function createProjectFolder(templateFolder: Uri, projectFolder: Uri) {
       updateProjectContext();
       statusBar.showInstall();
 
-      // prompt to install Evidence app dependencis in the open workspace
+      // prompt to install Evidence app dependencies in the open workspace
       showInstallDependencies();
     }
     else {

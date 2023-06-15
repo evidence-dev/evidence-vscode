@@ -36,6 +36,7 @@ export const enum Commands {
   ShowSimpleBrowser = 'simpleBrowser.show',
   SetContext = 'setContext',
   OpenWalkthrough = 'workbench.action.openWalkthrough',
+  ReloadTerminal = 'workbench.action.terminal.restart',
 
   // Evidence extension commands
   NewProject = 'evidence.newProject',
