@@ -1,5 +1,25 @@
 # Change Log
 
+## 1.2.0 - 2023-06-15
+
+- Automatically open folder when new project created
+([#81](https://github.com/evidence-dev/evidence-vscode/issues/82))
+- Automatically open `index.md` and walkthrough on new project creatio
+([#85](https://github.com/evidence-dev/evidence-vscode/issues/85))
+- Add keyboard shortcuts 
+([#89](https://github.com/evidence-dev/evidence-vscode/issues/89))
+- Simplify CLI output
+([#92](https://github.com/evidence-dev/evidence-vscode/issues/92))
+- Automatically install dependencies when needed
+([#95](https://github.com/evidence-dev/evidence-vscode/pull/95))
+- Add setting for default preview position
+([#102](https://github.com/evidence-dev/evidence-vscode/pull/102))
+- Improve NodeJS dependency check and download prompt
+([#105](https://github.com/evidence-dev/evidence-vscode/pull/105))
+- Add getting started walkthrough 
+([#109](https://github.com/evidence-dev/evidence-vscode/pull/109))
+
+
 ## 1.1.2 - 2023-06-08
 
 - Fix for new project template gitignore issue
