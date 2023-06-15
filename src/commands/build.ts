@@ -117,7 +117,7 @@ export async function runCommandWithDepInstall(command: string) {
   } else {   
     let depCommand = "";
     if (!(await hasDependencies())) {
-      depCommand = `npm install && `;
+      depCommand = `npm install ; `;
     }
     sendCommand(depCommand + command);
   }
