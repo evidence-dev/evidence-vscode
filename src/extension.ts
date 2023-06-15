@@ -12,7 +12,7 @@ import { registerCommands } from './commands/commands';
 import { loadPackageJson, hasDependency } from './utils/jsonUtils';
 import { Settings, getConfig, updateProjectContext } from './config';
 import { startServer } from './commands/server';
-import { openIndex } from './commands/project';
+import { openIndex, openWalkthrough } from './commands/project';
 import { statusBar } from './statusBar';
 import { closeTerminal } from './terminal';
 

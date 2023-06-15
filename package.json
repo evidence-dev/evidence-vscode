@@ -322,11 +322,11 @@
         "description": "Create a new Evidence project and get it running",
         "steps": [
           {
-            "id": "createProject",
-            "title": "1. Create an Evidence Project",
-            "description": "Click below to create a new Evidence project.\n[$(plus)Create Project](command:evidence.newProject)",
+            "id": "startApp",
+            "title": "Start Evidence",
+            "description": "Click below to start Evidence.\n[$(play)Start Evidence](command:evidence.startServer)",
             "media": { "markdown": "media/start_app.md" },
-            "completionEvents": ["onCommand:newProject"]
+            "completionEvents": ["onCommand:startServer"]
           }
         ]
       }
