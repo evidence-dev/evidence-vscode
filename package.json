@@ -319,21 +319,14 @@
       {
         "id": "getStarted",
         "title": "Get Started with Evidence",
-        "description": "It takes just two simple steps to get started with Evidence.",
+        "description": "Create a new Evidence project and get it running",
         "steps": [
           {
             "id": "createProject",
             "title": "1. Create an Evidence Project",
-            "description": "Click below to create a new Evidence project.\n[Create Project](command:evidence.newProject)",
-            "media": { "markdown": "media/create_project.md" },
-            "completionEvents": ["onCommand:newProject"]
-          },
-          {
-            "id": "startApp",
-            "title": "2. Start Your App",
-            "description": "Run your app and see a preview in VS Code's built-in browser.\nUse the Start Evidence button or the keyboard shortcut (Cmd + R on Mac | Ctrl + R on Windows)",
+            "description": "Click below to create a new Evidence project.\n[$(plus)Create Project](command:evidence.newProject)",
             "media": { "markdown": "media/start_app.md" },
-            "completionEvents": ["onCommand:evidence.startServer"]
+            "completionEvents": ["onCommand:newProject"]
           }
         ]
       }
