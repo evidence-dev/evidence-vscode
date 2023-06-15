@@ -319,7 +319,7 @@
       {
         "id": "getStarted",
         "title": "Get Started with Evidence",
-        "description": "Create a new Evidence project and get it running",
+        "description": "Preview your markdown files in VSCode.",
         "steps": [
           {
             "id": "startApp",
