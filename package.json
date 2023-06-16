@@ -125,6 +125,12 @@
         "title": "Build Strict",
         "category": "Evidence",
         "enablement": "evidence.hasProject"
+      },
+      {
+        "command": "evidence.runQuery",
+        "title": "Run Query",
+        "category": "Evidence",
+        "enablement": "evidence.hasProject"
       }
     ],
     "keybindings": [

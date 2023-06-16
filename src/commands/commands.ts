@@ -20,6 +20,7 @@ import { preview } from './preview';
 import { openSettingsFile, viewExtensionSettings, viewAppSettings } from './settings';
 import { clearCache} from './cache';
 import { showOutput } from '../output';
+import { runQuery } from './query';
 
 /**
  * VSCode and Evidence extension commands.
@@ -55,6 +56,7 @@ export const enum Commands {
   ShowOutput = 'evidence.showOutput',
   OpenIndex = 'evidence.openIndex',
   OpenEvidenceWalkthrough = 'evidence.openWalkthrough',
+  RunQuery = 'evidence.runQuery',
   OpenSimpleBrowser = 'simpleBrowser.api.open'
 }
 
@@ -85,6 +87,7 @@ export function registerCommands(context: ExtensionContext) {
   registerCommand(Commands.ShowOutput, showOutput);
   registerCommand(Commands.OpenIndex, openIndex);
   registerCommand(Commands.OpenEvidenceWalkthrough, openWalkthrough);
+  registerCommand(Commands.RunQuery, runQuery);
 }
 
 /**

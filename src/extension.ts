@@ -7,6 +7,7 @@ import {
 } from 'vscode';
 
 import { MarkdownSymbolProvider } from './providers/markdownSymbolProvider';
+import { MarkdownCodeLensProvider } from './providers/markdownCodeLensProvider';
 import { setExtensionContext } from './extensionContext';
 import { registerCommands } from './commands/commands';
 import { loadPackageJson, hasDependency } from './utils/jsonUtils';
@@ -29,6 +30,13 @@ export async function activate(context: ExtensionContext) {
   const markdownLanguage = { language: 'emd', scheme: 'file' };
   const provider = new MarkdownSymbolProvider();
   // languages.registerDocumentSymbolProvider(markdownLanguage, provider);
+
+
+  // register markdown code lens provider
+  const codeLensProvider = new MarkdownCodeLensProvider();
+  context.subscriptions.push(
+    languages.registerCodeLensProvider({ language: 'emd' }, codeLensProvider)
+);  
 
   // load package.json
   const workspacePackageJson = await loadPackageJson();
