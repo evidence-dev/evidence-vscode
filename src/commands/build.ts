@@ -28,8 +28,7 @@ const nodeModules = `node_modules`;
  */
 const evidencePackages: string[] = [
   '@evidence-dev/evidence@latest',
-  '@evidence-dev/preprocess@latest',
-  '@evidence-dev/components@latest'
+  '@evidence-dev/core-components@latest'
 ];
 
 /**
