@@ -322,11 +322,20 @@
         "description": "Preview your markdown files in VSCode.",
         "steps": [
           {
+            "id": "createProject",
+            "title": "1. Create Project",
+            "description": "Click to create a new Evidence project.\n[$(plus) Create Project](command:evidence.newProject)",
+            "media": { "markdown": "media/new_project.md" },
+            "completionEvents": ["onCommand:newProject"],
+            "when": "evidence.hasProject == false"
+          },
+          {
             "id": "startApp",
             "title": "Start Evidence",
             "description": "Click below to start Evidence.\n[$(play)Start Evidence](command:evidence.startServer)",
             "media": { "markdown": "media/start_app.md" },
-            "completionEvents": ["onCommand:startServer"]
+            "completionEvents": ["onCommand:startServer"],
+            "when": "evidence.hasProject == true"
           }
         ]
       }
