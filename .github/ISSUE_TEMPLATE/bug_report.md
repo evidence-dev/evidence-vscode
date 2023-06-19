@@ -1,8 +1,8 @@
 ---
-name: Issue report
+name: Bug report
 about: Report an issue to help us improve the VSCode Extension
 title: ''
-labels: 'review'
+labels: 'review', 'bug'
 assignees: ''
 ---
 
