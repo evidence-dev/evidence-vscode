@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.2.1 - 2023-06-19
+
+- Add walkthrough step to create a new project when one isn't detected
+([#117](https://github.com/evidence-dev/evidence-vscode/pull/117))
+- Modify settings command names
+
 ## 1.2.0 - 2023-06-15
 
 - Automatically open folder when new project created
