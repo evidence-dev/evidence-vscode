@@ -2,7 +2,7 @@
 name: Bug report
 about: Report an issue to help us improve the VSCode Extension
 title: ''
-labels: 'review', 'bug'
+labels: 'review, bug'
 assignees: ''
 ---
 
