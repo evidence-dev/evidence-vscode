@@ -68,7 +68,7 @@
       },
       {
         "command": "evidence.openSettings",
-        "title": "Open Settings File",
+        "title": "Open Project Settings File",
         "category": "Evidence",
         "enablement": "evidence.hasProject"
       },
@@ -105,7 +105,7 @@
       },
       {
         "command": "evidence.viewSettings",
-        "title": "View Settings",
+        "title": "VS Code Extension Settings",
         "category": "Evidence"
       },
       {
