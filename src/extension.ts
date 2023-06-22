@@ -3,7 +3,11 @@ import {
   window,
   workspace,
   ExtensionContext,
-  ProgressLocation
+  ProgressLocation,
+  TextEditor,
+  DecorationOptions,
+  Range,
+  Position
 } from 'vscode';
 
 import { MarkdownSymbolProvider } from './providers/markdownSymbolProvider';
@@ -16,6 +20,34 @@ import { openIndex, openWalkthrough } from './commands/project';
 import { statusBar } from './statusBar';
 import { closeTerminal } from './terminal';
 
+const decorationType = window.createTextEditorDecorationType({
+  after: {
+    contentText: "Press / for commands...",
+    color: '#99999959'
+  }
+});
+
+
+function decorate(editor: TextEditor) {
+  let decorationsArray: DecorationOptions[] = [];
+  const {text} = editor.document.lineAt(editor.selection.active.line);
+
+  const position = editor.selection.active;
+
+  let range = new Range(
+    new Position(position.line, 1),
+    new Position(position.line, 1)
+  );
+
+  let decoration = { range };
+
+  if(!text){
+    decorationsArray.push(decoration);
+  }
+
+    editor.setDecorations(decorationType, decorationsArray);
+}
+
 /**
  * Activates Evidence vscode extension.
  *
@@ -24,6 +56,15 @@ import { closeTerminal } from './terminal';
 export async function activate(context: ExtensionContext) {
   setExtensionContext(context);
   registerCommands(context);
+
+  window.onDidChangeTextEditorSelection(
+    () => {
+      const openEditor = window.activeTextEditor;
+      if(openEditor){
+        decorate(openEditor);
+      }
+    }
+  );
 
   // register markdown symbol provider
   const markdownLanguage = { language: 'emd', scheme: 'file' };
