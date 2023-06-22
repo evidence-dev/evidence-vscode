@@ -26,14 +26,20 @@ export async function runQuery(name: string, query: string) {
       console.error('Error executing query with SQLTools:', error);
     }
   } else {
-    // Prompt user to install SQLTools
-    window.showInformationMessage('Running queries in VSCode requires the SQLTools extension, install?', 'Install', 'View In Marketplace').then(choice => {
-      if (choice === 'Install') {
-        commands.executeCommand('workbench.extensions.installExtension', 'mtxr.sqltools');
-      } else if (choice === 'View In Marketplace') {
-        commands.executeCommand('workbench.extensions.action.showExtensionsWithIds', ['mtxr.sqltools']);
-      }
-    }
-    );
+    // Auto Install SQLTools
+    await commands.executeCommand('workbench.extensions.installExtension', 'mtxr.sqltools');
+    // show a message to the user
+    window.showInformationMessage('Installing SQLTools extension, please try again in a few seconds.');
+
+
+    // Prompt the user to install SQLTools
+    // // window.showInformationMessage('Running queries in VSCode requires the SQLTools extension, install?', 'Install', 'View In Marketplace').then(choice => {
+    // //   if (choice === 'Install') {
+    // //     commands.executeCommand('workbench.extensions.installExtension', 'mtxr.sqltools');
+    // //   } else if (choice === 'View In Marketplace') {
+    // //     commands.executeCommand('workbench.extensions.action.showExtensionsWithIds', ['mtxr.sqltools']);
+    // //   }
+    // // }
+    // // );
   }
 }
