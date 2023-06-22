@@ -8,6 +8,7 @@ import {
 
 import { MarkdownSymbolProvider } from './providers/markdownSymbolProvider';
 import { MarkdownCodeLensProvider } from './providers/markdownCodeLensProvider';
+import { SqlCodeLensProvider } from './providers/sqlCodeLensProvider';
 import { setExtensionContext } from './extensionContext';
 import { registerCommands } from './commands/commands';
 import { loadPackageJson, hasDependency } from './utils/jsonUtils';
@@ -33,10 +34,16 @@ export async function activate(context: ExtensionContext) {
 
 
   // register markdown code lens provider
-  const codeLensProvider = new MarkdownCodeLensProvider();
+  const markdownProvider = new MarkdownCodeLensProvider();
   context.subscriptions.push(
-    languages.registerCodeLensProvider({ language: 'emd' }, codeLensProvider)
-);  
+    languages.registerCodeLensProvider({ language: 'emd' }, markdownProvider)
+  );  
+
+  // register sql code lens provider
+  const sqlProvider = new SqlCodeLensProvider();
+  context.subscriptions.push(
+    languages.registerCodeLensProvider({ language: 'sql' }, sqlProvider)
+  );
 
   // load package.json
   const workspacePackageJson = await loadPackageJson();
