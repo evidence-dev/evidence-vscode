@@ -129,6 +129,24 @@
     ],
     "keybindings": [
       {
+        "command": "runCommands",
+        "key": "/",
+        "enablement": "evidence.hasProject",
+        "args": { 
+          "commands": [
+            {
+              "command": "type",
+              "args": {
+                "text": "/"
+              }
+            },
+            {
+              "command": "editor.action.triggerSuggest"
+            }
+          ]
+        }
+      },         
+      {
         "command": "evidence.startServer",
         "key": "ctrl+R",
         "mac": "cmd+R",
