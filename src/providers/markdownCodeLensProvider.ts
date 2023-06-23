@@ -1,10 +1,6 @@
 import * as vscode from 'vscode';
 
 export class MarkdownCodeLensProvider implements vscode.CodeLensProvider {
-    constructor() {
-        console.log('Markdown CodeLens provider instantiated'); // Add this line to check instantiation
-    }
-
     provideCodeLenses(document: vscode.TextDocument): vscode.CodeLens[] | Thenable<vscode.CodeLens[]> {
         const codeLenses: vscode.CodeLens[] = [];
 

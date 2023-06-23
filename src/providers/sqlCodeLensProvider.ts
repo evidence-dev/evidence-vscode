@@ -11,10 +11,6 @@ import {
 import { IExtension, IExtensionPlugin, IDriverExtensionApi } from '@sqltools/types';
 
 export class SqlCodeLensProvider implements CodeLensProvider {
-  constructor() {
-    console.log('SQL CodeLens provider instantiated'); // Add this line to check instantiation
-  }
-
   // check if mtxr/sqltools is installed and if so diable the code lens
   async provideCodeLenses(document: TextDocument, token: CancellationToken): Promise<CodeLens[]> {
     // check
