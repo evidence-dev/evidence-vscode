@@ -29,7 +29,7 @@ export const enum Context {
 
 const decorationType = window.createTextEditorDecorationType({
   after: {
-    contentText: "Press / for commands...",
+    contentText: " Press / for commands...",
     color: '#99999959'
   }
 });

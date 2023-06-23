@@ -81,7 +81,7 @@
   "Value": {
     "prefix": "/Value",
     "body": [
-      "<Value data={${1:query_name}} column=${2:column_name} fmt=${3:usd}/>\n\n"
+      "<Value data={${1:query_name}} column=${2:column_name} fmt=${3:usd}/>"
     ],
     "description": "Value Component"
   },

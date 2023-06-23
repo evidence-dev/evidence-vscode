@@ -307,7 +307,7 @@
         "editor.wordWrap": "on",
         "editor.suggest.showWords": false,
         "editor.quickSuggestions": {
-          "other": true,
+          "other": false,
           "comments": false,
           "strings": false
         },
