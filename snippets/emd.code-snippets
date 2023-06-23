@@ -1,6 +1,6 @@
 {
   "SQL Query Block": {
-    "prefix": "/SQL query block",
+    "prefix": "/SQL Query Block",
     "body": [
       "```sql ${1:query_name}",
       "\t${2:}",
@@ -69,7 +69,7 @@
     "body": [
       "<Column id=${1:column_name}/>"
     ],
-    "description": "Insert Column (within DataTable)"
+    "description": "[Must be used within DataTable] Insert Column"
   },
   "Data Table with Columns": {
     "prefix": "/DataTableWithColumns",
@@ -107,7 +107,7 @@
     "description": "Insert IfElse Block"
   },
   "Markdown Table": {
-    "prefix": "/table",
+    "prefix": "/Markdown Table",
     "body": [
       "| ${1:Column 1} | ${2:Column 2} | ${3:Column 3} |\n| -------- | -------- | -------- |\n| ${4:   1    } | ${5:   2    } | ${6:   3    } |\n| ${7:   4    } | ${8:   5    } | ${9:   6    } |\n\n"
     ],
@@ -130,14 +130,14 @@
   "Alert": {
     "prefix": "/Alert",
     "body": [
-      "<Alert>\n\t${1:Alert Content}\n</Alert>\n\n"
+      "<Alert status=${1|none,info,success,warning,danger|}>\n\t${2:Alert Content}\n</Alert>\n\n"
     ],
     "description": "Insert Alert"
   },
   "Tabs": {
     "prefix": "/Tabs",
     "body": [
-      "<Tabs>\n\t<Tab label='${1:Tab One}'>\n\t\tTab One Content\n\t</Tab>\n\t<Tab label='${2:Tab Two}'>\n\t\tTab Two Content\n\t</Tab>\n</Tabs>\n\n"
+      "<Tabs>\n\t<Tab label='${1:Tab One}'>\n\t\t${2:Tab One Content}\n\t</Tab>\n\t<Tab label='${3:Tab Two}'>\n\t\t${4:Tab Two Content}\n\t</Tab>\n</Tabs>\n\n"
     ],
     "description": "Insert Tabs"
   },
@@ -153,14 +153,14 @@
     "body": [
       "<ReferenceArea xMin=${1:value} xMax=${2:value} label=${4:Label} />"
     ],
-    "description": "Insert Reference Area"
+    "description": "[Must be used within a chart] Insert Reference Area"
   },
   "Reference Line": {
     "prefix": "/ReferenceLine",
     "body": [
       "<ReferenceLine y=${1:value} label=${2:Label} />"
     ],
-    "description": "Insert Reference Line"
+    "description": "[Must be used within a chart] Insert Reference Line"
   },
   "US Map": {
     "prefix": "/USMap",
@@ -168,5 +168,96 @@
       "<USMap\n\tdata={${1:query_name}}\n\tstate=${2:column}\n\tvalue=${3:column}\n\tabbreviations=${4:false}\n/>\n\n"
     ],
     "description": "Insert US Map"
+  },
+  "Today's Date": {
+    "prefix": "/today",
+    "body": [
+      "${CURRENT_MONTH_NAME} ${CURRENT_DATE}, ${CURRENT_YEAR}"
+    ],
+    "description": "Insert today's date"
+  },
+  "Block Quote": {
+    "prefix": "/BlockQuote",
+    "body": [
+      "> Quote Content\n>\n> -- _Author_"
+    ],
+    "description": "Insert Block Quote"
+  },
+  "Link": {
+    "prefix": "/Link",
+    "body": [
+      "[${1:label}](${2:/path/to/page})"
+    ],
+    "description": "Insert Link"
+  },
+  "Image": {
+    "prefix": "/Image",
+    "body": [
+      "![${1:image_name}](${2:my-image.png})"
+    ],
+    "description": "Insert Image"
+  },
+  "Numbered List": {
+    "prefix": "/NumberedList",
+    "body": [
+      "1. ${1:One}\n2. ${2:Two}\n3. ${3:Three}"
+    ],
+    "description": "Insert Numbered List"
+  },
+  "Bulleted List": {
+    "prefix": "/BulletedList",
+    "body": [
+      "- ${1:One}\n- ${2:Two}\n- ${3:Three}"
+    ],
+    "description": "Insert Bulleted List"
+  },
+  "Page Parameter": {
+    "prefix": "/Page Parameter",
+    "body": [
+      "{\\$page.params.${TM_FILENAME_BASE/[\\[\\]]//gi}}"
+    ],
+    "description": "[For Templated Pages Only] Insert Page Parameter"
+  },
+  "Divider": {
+    "prefix": "/Divider",
+    "body": [
+      "---"
+    ],
+    "description": "Insert a Horizontal Divider"
+  },
+  "Highlight": {
+    "prefix": "/Highlight",
+    "body": [
+      "<mark>${1:text}</mark>"
+    ],
+    "description": "Highlight Text"
+  },
+  "ECharts": {
+    "prefix": "/ECharts",
+    "body": [
+      "<ECharts config={\n\t{\n\t\ttooltip: {\n\t\t\tformatter: '{b}: {c}'\n\t\t},\n\t\tseries: [\n\t\t\t{\n\t\t\t\ttype: 'funnel',\n\t\t\t\tdata: funnel_data,\n\t\t\t}\n\t\t]\n\t}\n}/>"
+    ],
+    "description": "Highlight Text"
+  },
+  "Strikethrough": {
+    "prefix": "/Strikethrough",
+    "body": [
+      "~~${1:text}~~"
+    ],
+    "description": "Add strikethrough to text"
+  },
+  "Superscript": {
+    "prefix": "/Superscript",
+    "body": [
+      "<sup>${1:text}</sup>"
+    ],
+    "description": "Add superscript text"
+  },
+  "Subscript": {
+    "prefix": "/Subscript",
+    "body": [
+      "<sub>${1:text}</sub>"
+    ],
+    "description": "Add subscript text"
   }
 }

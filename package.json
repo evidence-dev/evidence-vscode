@@ -132,6 +132,7 @@
         "command": "runCommands",
         "key": "/",
         "enablement": "evidence.hasProject",
+        "when": "evidence.isNewLine == true",
         "args": { 
           "commands": [
             {
