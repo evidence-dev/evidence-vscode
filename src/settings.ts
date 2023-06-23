@@ -5,7 +5,6 @@ export async function readEvidenceSettingsFile() {
   const settingsFile = await workspace.findFiles('.evidence/template/evidence.settings.json');
   if (settingsFile.length > 0) {
     const settings = await workspace.fs.readFile(settingsFile[0]);
-    console.log("Read" + settings.toString());
     return JSON.parse(settings.toString());
   }
   else {
@@ -57,29 +56,23 @@ function transformSettings(settings: EvidenceSettings) {
 
 async function writeSettingsFile(settings: object) {
   // check if settings file exists
-  console.log("Checking for existing settings file...");
   const settingsFiles = await workspace.findFiles('.vscode/settings.json');
   // there should only be one settings file
   const settingsFile = settingsFiles[0];
   if (settingsFile) {
-    console.log("Found settings file, overwriting...");
     await workspace.fs.writeFile(settingsFile, Buffer.from(JSON.stringify(settings, null, 2)));
-    console.log("Wrote" + JSON.stringify(settings));
   } else {
-    console.log("No settings file found, creating...");
     const workspaceFolder = workspace.workspaceFolders?.[0];
     if (!workspaceFolder) {
       throw new Error("No workspace folder found");
     }
     const settingsFilePath = Uri.joinPath(workspaceFolder.uri, '.vscode/settings.json');
     await workspace.fs.writeFile(settingsFilePath, Buffer.from(JSON.stringify(settings, null, 2)));
-    console.log("Wrote" + JSON.stringify(settings));
   }
 }
 
 // sync evidence credentials file to sqltools credentials file
 export async function syncSettings() {
-  console.log("Syncing settings...");
   let evidenceSettings: EvidenceSettings = await readEvidenceSettingsFile();
   let sqlToolsSettings: SqlToolsSettings;
   if (evidenceSettings) {
@@ -88,7 +81,7 @@ export async function syncSettings() {
       writeSettingsFile(sqlToolsSettings);
     } catch (error) {
       // show info prompt
-      window.showInformationMessage(error.message);
+      window.showInformationMessage(`Error: ${error}`);
     }
     
   }
