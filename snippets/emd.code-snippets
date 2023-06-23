@@ -259,5 +259,12 @@
       "<sub>${1:text}</sub>"
     ],
     "description": "Add subscript text"
+  },
+  "Filtered Query Result": {
+    "prefix": "/Filtered Query Result",
+    "body": [
+      "${1:query_name}.filter(d => d.${2:column} === '${3:value}')"
+    ],
+    "description": "Insert a filtered query result"
   }
 }
