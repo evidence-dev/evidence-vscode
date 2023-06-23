@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.3.0 - 2023-06-23
+
+- Add new autocomplete options and a slash command to open menu of available components 
+([#119](https://github.com/evidence-dev/evidence-vscode/pull/119))
+
 ## 1.2.1 - 2023-06-19
 
 - Add walkthrough step to create a new project when one isn't detected

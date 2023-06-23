@@ -3,8 +3,15 @@ import {
   window,
   workspace,
   ExtensionContext,
-  ProgressLocation
+  ProgressLocation,
+  TextEditor,
+  DecorationOptions,
+  Range,
+  Position,
+  commands
 } from 'vscode';
+
+import { Commands } from './commands/commands';
 
 import { MarkdownSymbolProvider } from './providers/markdownSymbolProvider';
 import { setExtensionContext } from './extensionContext';
@@ -16,6 +23,41 @@ import { openIndex, openWalkthrough } from './commands/project';
 import { statusBar } from './statusBar';
 import { closeTerminal } from './terminal';
 
+export const enum Context {
+  isNewLine = 'evidence.isNewLine'
+}
+
+const decorationType = window.createTextEditorDecorationType({
+  after: {
+    contentText: " Press / for commands...",
+    color: '#99999959'
+  }
+});
+
+
+function decorate(editor: TextEditor) {
+  let decorationsArray: DecorationOptions[] = [];
+  const {text} = editor.document.lineAt(editor.selection.active.line);
+  const position = editor.selection.active;
+
+  let range = new Range(
+    new Position(position.line, position.character),
+    new Position(position.line, position.character)
+  );
+
+  let decoration = { range };
+
+  // new lines are defined as empty (undefined) lines of code, plus any lines that are solely whitespace characters (spaces and tabs)
+  if (text === undefined || /^\s*$/.test(text)) {
+    decorationsArray.push(decoration);
+    commands.executeCommand(Commands.SetContext, Context.isNewLine, true);  
+  } else {
+    commands.executeCommand(Commands.SetContext, Context.isNewLine, false);  
+  }
+
+    editor.setDecorations(decorationType, decorationsArray);
+}
+
 /**
  * Activates Evidence vscode extension.
  *
@@ -24,6 +66,15 @@ import { closeTerminal } from './terminal';
 export async function activate(context: ExtensionContext) {
   setExtensionContext(context);
   registerCommands(context);
+
+  window.onDidChangeTextEditorSelection(
+    () => {
+      const openEditor = window.activeTextEditor;
+      if(openEditor){
+        decorate(openEditor);
+      }
+    }
+  );
 
   // register markdown symbol provider
   const markdownLanguage = { language: 'emd', scheme: 'file' };

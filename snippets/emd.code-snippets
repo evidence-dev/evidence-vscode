@@ -1,102 +1,270 @@
 {
-  "Insert SQL query block": {
-    "prefix": "SQL query block",
+  "SQL Query Block": {
+    "prefix": "/SQL Query Block",
     "body": [
-      "```${1:query_name}",
+      "```sql ${1:query_name}",
       "\t${2:}",
       "```\n\n"
     ],
     "description": "Insert SQL query block"
   },
-  "Insert <Chart>": {
-    "prefix": "Chart",
+  "Chart": {
+    "prefix": "/Chart",
     "body": [
       "<Chart data={${1:query_name}} x=${2:column} y=${3:column}>\n\t${4:}\n</Chart>\n\n"
     ],
     "description": "Insert Chart"
   },
-  "Insert <LineChart/>": {
-    "prefix": "LineChart",
+  "Line Chart": {
+    "prefix": "/LineChart",
     "body": [
       "<LineChart\n\tdata={${1:query_name}}\n\tx=${2:column}\n\ty=${3:column}\n/>\n\n"
     ],
-    "description": "Insert LineChart"
+    "description": "Insert Line Chart"
   },
-  "Insert <AreaChart/>": {
-    "prefix": "AreaChart",
+  "Area Chart": {
+    "prefix": "/AreaChart",
     "body": [
       "<AreaChart\n\tdata={${1:query_name}}\n\tx=${2:column}\n\ty=${3:column}\n/>\n\n"
     ],
-    "description": "Insert AreaChart"
+    "description": "Insert Area Chart"
   },
-  "Insert <BarChart/>": {
-    "prefix": "BarChart",
+  "Bar Chart": {
+    "prefix": "/BarChart",
     "body": [
-      "<BarChart\n\tdata={${1:query_name}}\n\tx=${2:column}\n\ty=${3:column}\n/>\n\n"
+      "<BarChart\n\tdata={${1:query_name}}\n\tx=${2:column_name}\n\ty=${3:column_name}\n/>\n\n"
     ],
-    "description": "Insert BarChart"
+    "description": "Insert Bar Chart"
   },
-  "Insert <ScatterPlot/>": {
-    "prefix": "ScatterPlot",
+  "Scatter Plot": {
+    "prefix": "/ScatterPlot",
     "body": [
       "<ScatterPlot\n\tdata={${1:query_name}}\n\tx=${2:column}\n\ty=${3:column}\n/>\n\n"
     ],
-    "description": "Insert ScatterPlot"
+    "description": "Insert Scatter Plot"
   },
-  "Insert <BubbleChart/>": {
-    "prefix": "BubbleChart",
+  "Bubble Chart": {
+    "prefix": "/BubbleChart",
     "body": [
       "<BubbleChart\n\tdata={${1:query_name}}\n\tx=${2:column}\n\ty=${3:column}\n\tsize=${4:column}\n/>\n\n"
     ],
-    "description": "Insert BubbleChart"
+    "description": "Insert Bubble Chart"
   },
-  "Insert <Histogram/>": {
-    "prefix": "Histogram",
+  "Histogram": {
+    "prefix": "/Histogram",
     "body": [
       "<Histogram data={${1:query_name}} x=${2:column}/>\n\n"
     ],
     "description": "Insert Histogram"
   },
-  "Insert <DataTable/>": {
-    "prefix": "DataTable",
+  "Data Table": {
+    "prefix": "/DataTable",
     "body": [
       "<DataTable data={${1:query_name}}/>\n\n"
     ],
-    "description": "Insert DataTable"
+    "description": "Insert Data Table"
   },
-  "Insert <Value/>": {
-    "prefix": "Value",
+  "Column": {
+    "prefix": "/Column",
     "body": [
-      "<Value data={${1:query_name}}/>\n\n"
+      "<Column id=${1:column_name}/>"
     ],
-    "description": "Insert Value"
+    "description": "[Must be used within DataTable] Insert Column"
   },
-  "Insert Each Block": {
-    "prefix": "Each Block",
+  "Data Table with Columns": {
+    "prefix": "/DataTableWithColumns",
+    "body": [
+      "<DataTable data={${1:query_name}}>\n\t<Column id=${2:column_name}/>\n\t<Column id=${3:column_name}/>\n</DataTable>"
+    ],
+    "description": "Insert Data Table"
+  },
+  "Value": {
+    "prefix": "/Value",
+    "body": [
+      "<Value data={${1:query_name}} column=${2:column_name} fmt=${3:usd}/>"
+    ],
+    "description": "Value Component"
+  },
+  "Loop": {
+    "prefix": "/Loop",
     "body": [
       "{#each ${1:query_name} as ${2:row_name}}\n\n\t${4:}\n\n{/each}\n\n"
     ],
     "description": "Insert Each Block"
   },
-  "Insert If Block": {
-    "prefix": "If Block",
+  "If Block": {
+    "prefix": "/If Block",
     "body": [
       "{#if ${1:condition}}\n\n\t${2:}\n\n{/if}\n\n"
     ],
     "description": "Insert If Block"
   },
-  "Insert IfElse Block": {
-    "prefix": "IfElse Block",
+  "IfElse Block": {
+    "prefix": "/IfElse Block",
     "body": [
       "{#if ${1:condition}}\n\n\t${2:}\n\n{:else}\n\n\t${3:}\n\n{/if}\n\n"
     ],
     "description": "Insert IfElse Block"
   },
-  "Insert markdown table": {
-    "prefix": "table",
+  "Markdown Table": {
+    "prefix": "/Markdown Table",
     "body": [
       "| ${1:Column 1} | ${2:Column 2} | ${3:Column 3} |\n| -------- | -------- | -------- |\n| ${4:   1    } | ${5:   2    } | ${6:   3    } |\n| ${7:   4    } | ${8:   5    } | ${9:   6    } |\n\n"
     ],
     "description": "Insert Markdown Table"
+  },
+  "Sankey Diagram": {
+    "prefix": "/SankeyDiagram",
+    "body": [
+      "<SankeyDiagram\n\tdata={${1:query_name}}\n\tsourceCol=${2:column}\n\ttargetCol=${3:column}\n\tvalueCol=${4:column}\n/>\n\n"
+    ],
+    "description": "Insert Sankey Diagram"
+  },
+  "Funnel Chart": {
+    "prefix": "/FunnelChart",
+    "body": [
+      "<FunnelChart\n\tdata={${1:query_name}}\n\tnameCol=${2:column}\n\tvalueCol=${3:column}\n/>\n\n"
+    ],
+    "description": "Insert Funnel Chart"
+  },
+  "Alert": {
+    "prefix": "/Alert",
+    "body": [
+      "<Alert status=${1|none,info,success,warning,danger|}>\n\t${2:Alert Content}\n</Alert>\n\n"
+    ],
+    "description": "Insert Alert"
+  },
+  "Tabs": {
+    "prefix": "/Tabs",
+    "body": [
+      "<Tabs>\n\t<Tab label='${1:Tab One}'>\n\t\t${2:Tab One Content}\n\t</Tab>\n\t<Tab label='${3:Tab Two}'>\n\t\t${4:Tab Two Content}\n\t</Tab>\n</Tabs>\n\n"
+    ],
+    "description": "Insert Tabs"
+  },
+  "Big Value": {
+    "prefix": "/BigValue",
+    "body": [
+      "<BigValue\n\tdata={${1:query_name}}\n\tvalue=${2:column}\n\tcomparison=${3:column}\n/>\n\n"
+    ],
+    "description": "Insert Big Value"
+  },
+  "Reference Area": {
+    "prefix": "/ReferenceArea",
+    "body": [
+      "<ReferenceArea xMin=${1:value} xMax=${2:value} label=${4:Label} />"
+    ],
+    "description": "[Must be used within a chart] Insert Reference Area"
+  },
+  "Reference Line": {
+    "prefix": "/ReferenceLine",
+    "body": [
+      "<ReferenceLine y=${1:value} label=${2:Label} />"
+    ],
+    "description": "[Must be used within a chart] Insert Reference Line"
+  },
+  "US Map": {
+    "prefix": "/USMap",
+    "body": [
+      "<USMap\n\tdata={${1:query_name}}\n\tstate=${2:column}\n\tvalue=${3:column}\n\tabbreviations=${4:false}\n/>\n\n"
+    ],
+    "description": "Insert US Map"
+  },
+  "Today's Date": {
+    "prefix": "/today",
+    "body": [
+      "${CURRENT_MONTH_NAME} ${CURRENT_DATE}, ${CURRENT_YEAR}"
+    ],
+    "description": "Insert today's date"
+  },
+  "Block Quote": {
+    "prefix": "/BlockQuote",
+    "body": [
+      "> Quote Content\n>\n> -- _Author_"
+    ],
+    "description": "Insert Block Quote"
+  },
+  "Link": {
+    "prefix": "/Link",
+    "body": [
+      "[${1:label}](${2:/path/to/page})"
+    ],
+    "description": "Insert Link"
+  },
+  "Image": {
+    "prefix": "/Image",
+    "body": [
+      "![${1:image_name}](${2:my-image.png})"
+    ],
+    "description": "Insert Image"
+  },
+  "Numbered List": {
+    "prefix": "/NumberedList",
+    "body": [
+      "1. ${1:One}\n2. ${2:Two}\n3. ${3:Three}"
+    ],
+    "description": "Insert Numbered List"
+  },
+  "Bulleted List": {
+    "prefix": "/BulletedList",
+    "body": [
+      "- ${1:One}\n- ${2:Two}\n- ${3:Three}"
+    ],
+    "description": "Insert Bulleted List"
+  },
+  "Page Parameter": {
+    "prefix": "/Page Parameter",
+    "body": [
+      "{\\$page.params.${TM_FILENAME_BASE/[\\[\\]]//gi}}"
+    ],
+    "description": "[For Templated Pages Only] Insert Page Parameter"
+  },
+  "Divider": {
+    "prefix": "/Divider",
+    "body": [
+      "---"
+    ],
+    "description": "Insert a Horizontal Divider"
+  },
+  "Highlight": {
+    "prefix": "/Highlight",
+    "body": [
+      "<mark>${1:text}</mark>"
+    ],
+    "description": "Highlight Text"
+  },
+  "ECharts": {
+    "prefix": "/ECharts",
+    "body": [
+      "<ECharts config={\n\t{\n\t\ttooltip: {\n\t\t\tformatter: '{b}: {c}'\n\t\t},\n\t\tseries: [\n\t\t\t{\n\t\t\t\ttype: 'funnel',\n\t\t\t\tdata: funnel_data,\n\t\t\t}\n\t\t]\n\t}\n}/>"
+    ],
+    "description": "Highlight Text"
+  },
+  "Strikethrough": {
+    "prefix": "/Strikethrough",
+    "body": [
+      "~~${1:text}~~"
+    ],
+    "description": "Add strikethrough to text"
+  },
+  "Superscript": {
+    "prefix": "/Superscript",
+    "body": [
+      "<sup>${1:text}</sup>"
+    ],
+    "description": "Add superscript text"
+  },
+  "Subscript": {
+    "prefix": "/Subscript",
+    "body": [
+      "<sub>${1:text}</sub>"
+    ],
+    "description": "Add subscript text"
+  },
+  "Filtered Query Result": {
+    "prefix": "/Filtered Query Result",
+    "body": [
+      "${1:query_name}.filter(d => d.${2:column} === '${3:value}')"
+    ],
+    "description": "Insert a filtered query result"
   }
 }
