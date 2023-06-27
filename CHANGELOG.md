@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.3.4 - 2023-06-27
+
+- Update Evidence template project
+
 ## 1.3.3 - 2023-06-27
 
 - Refine scope of slash commands and suggestions to only markdown files
