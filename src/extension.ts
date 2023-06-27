@@ -67,10 +67,26 @@ export async function activate(context: ExtensionContext) {
   setExtensionContext(context);
   registerCommands(context);
 
+  // decorate slash command on activation if the active file is a markdown file
+  const openEditor = window.activeTextEditor;
+  if(openEditor && openEditor.document.fileName.endsWith('.md')){
+    decorate(openEditor);
+  }
+
   window.onDidChangeTextEditorSelection(
     () => {
       const openEditor = window.activeTextEditor;
-      if(openEditor){
+      if(openEditor && openEditor.document.fileName.endsWith('.md')){
+        decorate(openEditor);
+      }
+    }
+  );
+
+  // Needed for delete key events which are not captured by the onDidChangeTextEditorSelection event
+  workspace.onDidChangeTextDocument(
+    () => {
+      const openEditor = window.activeTextEditor;
+      if(openEditor && openEditor.document.fileName.endsWith('.md')){
         decorate(openEditor);
       }
     }
