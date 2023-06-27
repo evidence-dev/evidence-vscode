@@ -1,13 +1,17 @@
 # Change Log
 
 ## 1.3.3 - 2023-06-27
+
 - Refine scope of slash commands and suggestions to only markdown files
+([#124](https://github.com/evidence-dev/evidence-vscode/pull/124))
 
 ## 1.3.2 - 2023-06-26
+
 - Patch release: Update template for new projects
 ([#123](https://github.com/evidence-dev/evidence-vscode/pull/123))
 
 ## 1.3.1 - 2023-06-26
+
 - Refines availability of slash commands to only active text documents
 ([#122](https://github.com/evidence-dev/evidence-vscode/pull/122))
 
