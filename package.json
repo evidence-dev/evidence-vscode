@@ -132,7 +132,7 @@
         "command": "runCommands",
         "key": "/",
         "enablement": "evidence.hasProject",
-        "when": "editorTextFocus && evidence.isNewLine == true && resourceLangId == 'emd'",
+        "when": "editorTextFocus && evidence.isNewLine == true && resourceLangId == 'emd' && evidence.isPagesDirectory == true",
         "args": { 
           "commands": [
             {
