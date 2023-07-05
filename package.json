@@ -176,7 +176,7 @@
       "explorer/context": [
         {
           "command": "evidence.newProject",
-          "group": "navigation",
+          "group": "2_workspace",
           "when": "explorerResourceIsFolder && !isVirtualResource"
         },
         {
