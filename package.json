@@ -175,6 +175,11 @@
     "menus": {
       "explorer/context": [
         {
+          "command": "evidence.newProject",
+          "group": "2_workspace",
+          "when": "explorerResourceIsFolder && !isVirtualResource"
+        },
+        {
           "command": "evidence.preview",
           "when": "resourceLangId == emd",
           "group": "navigation"
