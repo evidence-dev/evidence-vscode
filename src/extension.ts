@@ -24,7 +24,8 @@ import { statusBar } from './statusBar';
 import { closeTerminal } from './terminal';
 
 export const enum Context {
-  isNewLine = 'evidence.isNewLine'
+  isNewLine = 'evidence.isNewLine',
+  isPagesDirectory = 'evidence.isPagesDirectory'
 }
 
 const decorationType = window.createTextEditorDecorationType({
@@ -58,6 +59,20 @@ function decorate(editor: TextEditor) {
     editor.setDecorations(decorationType, decorationsArray);
 }
 
+function isPagesDirectory(){
+  const openEditor = window.activeTextEditor;
+  let pageContext = false;
+  // Set context for pages directory (only use Evidence markdown features within those files):
+  if(openEditor && openEditor.document.uri.fsPath.includes("/pages/")){
+   commands.executeCommand(Commands.SetContext, Context.isPagesDirectory, true);  
+   pageContext = true;
+  } else {
+   commands.executeCommand(Commands.SetContext, Context.isPagesDirectory, false); 
+   pageContext = false; 
+  }
+  return pageContext;
+}
+
 /**
  * Activates Evidence vscode extension.
  *
@@ -66,17 +81,17 @@ function decorate(editor: TextEditor) {
 export async function activate(context: ExtensionContext) {
   setExtensionContext(context);
   registerCommands(context);
-
+  
   // decorate slash command on activation if the active file is a markdown file
   const openEditor = window.activeTextEditor;
-  if(openEditor && openEditor.document.fileName.endsWith('.md')){
+  if(openEditor && openEditor.document.fileName.endsWith('.md') && isPagesDirectory()){
     decorate(openEditor);
   }
 
   window.onDidChangeTextEditorSelection(
     () => {
       const openEditor = window.activeTextEditor;
-      if(openEditor && openEditor.document.fileName.endsWith('.md')){
+      if(openEditor && openEditor.document.fileName.endsWith('.md') && isPagesDirectory()){
         decorate(openEditor);
       }
     }
@@ -86,7 +101,7 @@ export async function activate(context: ExtensionContext) {
   workspace.onDidChangeTextDocument(
     () => {
       const openEditor = window.activeTextEditor;
-      if(openEditor && openEditor.document.fileName.endsWith('.md')){
+      if(openEditor && openEditor.document.fileName.endsWith('.md')  && isPagesDirectory()){
         decorate(openEditor);
       }
     }
