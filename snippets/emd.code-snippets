@@ -11,9 +11,9 @@
   "Chart": {
     "prefix": "/Chart",
     "body": [
-      "<Chart data={${1:query_name}} x=${2:column} y=${3:column}>\n\t${4:}\n</Chart>\n\n"
+      "<Chart data={${1:query_name}} x=${2:column} y=${3:column}>\n\t${4:<Line/>}\n</Chart>\n\n"
     ],
-    "description": "Insert Chart"
+    "description": "Insert Composable Chart"
   },
   "Line Chart": {
     "prefix": "/LineChart",
@@ -21,6 +21,13 @@
       "<LineChart\n\tdata={${1:query_name}}\n\tx=${2:column}\n\ty=${3:column}\n/>\n\n"
     ],
     "description": "Insert Line Chart"
+  },
+  "Line Chart with Annotations": {
+    "prefix": "/LineChartWithAnnotations",
+    "body": [
+      "<LineChart data={${1:query_name}} x=${2:column} y=${3:column}>\n\t<ReferenceLine y=5400000 label='Target'/>\n\t<ReferenceArea xMin='2002-03-14' xMax='2003-04-23' label='Recession'/>\n</LineChart>\n\n"
+    ],
+    "description": "Insert Line Chart With Annotations"
   },
   "Area Chart": {
     "prefix": "/AreaChart",
@@ -88,21 +95,21 @@
   "Loop": {
     "prefix": "/Loop",
     "body": [
-      "{#each ${1:query_name} as ${2:row_name}}\n\n\t${4:}\n\n{/each}\n\n"
+      "{#each ${1:query_name} as row}\n\n\t- <Value data={row} column=${4:column_name}/>\n\t- {row.${5:column_name}}\n\n{/each}\n\n"
     ],
     "description": "Insert Each Block"
   },
   "If Block": {
     "prefix": "/If Block",
     "body": [
-      "{#if ${1:condition}}\n\n\t${2:}\n\n{/if}\n\n"
+      "{#if ${1:query_name.length > 10}}\n\n\t${2:There are more than 10 observations}\n\n{/if}\n\n"
     ],
     "description": "Insert If Block"
   },
   "IfElse Block": {
     "prefix": "/IfElse Block",
     "body": [
-      "{#if ${1:condition}}\n\n\t${2:}\n\n{:else}\n\n\t${3:}\n\n{/if}\n\n"
+      "{#if ${1:query_name.length > 1000}}\n\n\t${2:This is a high volume orders day}\n\n{:else}\n\n\t${3:This is a low volume orders day}\n\n{/if}\n\n"
     ],
     "description": "Insert IfElse Block"
   },
@@ -151,14 +158,14 @@
   "Reference Area": {
     "prefix": "/ReferenceArea",
     "body": [
-      "<ReferenceArea xMin=${1:value} xMax=${2:value} label=${4:Label} />"
+      "<ReferenceArea ${1|xMin,yMin|}=${3:value} ${2|xMax,yMax|}=${4:value} label=${5:Label} />"
     ],
     "description": "[Must be used within a chart] Insert Reference Area"
   },
   "Reference Line": {
     "prefix": "/ReferenceLine",
     "body": [
-      "<ReferenceLine y=${1:value} label=${2:Label} />"
+      "<ReferenceLine ${1|x,y|}=${2:value} label=${3:Label} />"
     ],
     "description": "[Must be used within a chart] Insert Reference Line"
   },
