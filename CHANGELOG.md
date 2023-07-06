@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.3.5 - 2023-07-05
+
+- Move position of "New Evidence Project" option lower in the explorer menu
+- Limit scope of slash commands to markdown files inside the Evidence pages directory
+- Update snippets to include more detailed examples
+
 ## 1.3.4 - 2023-06-27
 
 - Update Evidence template project

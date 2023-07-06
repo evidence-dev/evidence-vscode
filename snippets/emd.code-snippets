@@ -81,7 +81,7 @@
   "Data Table with Columns": {
     "prefix": "/DataTableWithColumns",
     "body": [
-      "<DataTable data={${1:query_name}}>\n\t<Column id=${2:column_name}/>\n\t<Column id=${3:column_name}/>\n</DataTable>"
+      "<DataTable data={${1:query_name}}>\n\t<Column id=${2:column_name} fmt=usd/>\n\t<Column id=${3:column_name} contentType=link align=center/>\n</DataTable>"
     ],
     "description": "Insert Data Table"
   },
