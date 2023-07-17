@@ -273,5 +273,33 @@
       "${1:query_name}.filter(d => d.${2:column} === '${3:value}')"
     ],
     "description": "Insert a filtered query result"
-  }
+  },
+  "Modal": {
+    "prefix": "/Modal",
+    "body": [
+      "<Modal title=${1:'Modal Title'} buttonText=${2:'Button Text'}>\n\t${3:Modal Content}\n</Modal>\n\n"
+    ],
+    "description": "Insert Modal"
+  },
+  "Accordion": {
+    "prefix": "/Accordion",
+    "body": [
+      "<Accordion>\n\t<AccordionItem title='${1:Item One}'>\n\t\t${2:Item One Content}\n\t</AccordionItem>\n\t<AccordionItem title='${3:Item Two}'>\n\t\t${4:Item Two Content}\n\t</AccordionItem>\n</Accordion>\n\n"
+    ],
+    "description": "Insert Accordion"
+  },
+  "LinkButton": {
+    "prefix": "/LinkButton",
+    "body": [
+      "<LinkButton url=${2:'/other-page'}>\n\t${3:Button Label}\n</LinkButton>\n\n"
+    ],
+    "description": "Insert LinkButton"
+  },
+  "BigLink": {
+    "prefix": "/BigLink",
+    "body": [
+      "<BigLink href=${1:'/other-page'}>\n\t${3:Link Label}\n</BigLink>\n\n"
+    ],
+    "description": "Insert BigLink"
+  },
 }

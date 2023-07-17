@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.3.6 - 2023-07-17
+
+- Adds slash commands for new UI components: Accordion, Modal, LinkButton, and BigLink
+
 ## 1.3.5 - 2023-07-05
 
 - Move position of "New Evidence Project" option lower in the explorer menu
