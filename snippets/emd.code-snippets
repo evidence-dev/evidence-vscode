@@ -302,4 +302,20 @@
     ],
     "description": "Insert BigLink"
   },
+  "Details": {
+    "prefix": "/Details",
+    "body": [
+      "<Details title=${1:'More Details'}>\n\t${2:Details Content}\n</Details>\n\n"
+    ],
+    "description": "Insert Details"
+  },
+  "Code Block": {
+    "prefix": "/Code Block",
+    "body": [
+      "```${1:python}",
+      "\t${2:}",
+      "```\n\n"
+    ],
+    "description": "Insert code block"
+  },
 }
