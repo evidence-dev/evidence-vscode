@@ -1,5 +1,8 @@
 # Change Log
 
+## 1.3.8 - 2023-07-25
+
+- Bumps Evidence to v20.0.1
 ## 1.3.6 - 2023-07-17
 
 - Adds slash commands for new UI components: Accordion, Modal, LinkButton, and BigLink
