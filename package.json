@@ -125,6 +125,12 @@
         "title": "Build Strict",
         "category": "Evidence",
         "enablement": "evidence.hasProject"
+      },
+      {
+        "command": "evidence.runQuery",
+        "title": "Run Query",
+        "category": "Evidence",
+        "enablement": "evidence.hasProject"
       }
     ],
     "keybindings": [
@@ -390,6 +396,7 @@
   ],
   "dependencies": {
     "tiged": "^2.12.5",
-    "vsce": "^2.11.0"
+    "vsce": "^2.11.0",
+    "@sqltools/types": "0.1.7"
   }
 }

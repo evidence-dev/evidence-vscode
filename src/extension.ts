@@ -14,6 +14,8 @@ import {
 import { Commands } from './commands/commands';
 
 import { MarkdownSymbolProvider } from './providers/markdownSymbolProvider';
+import { MarkdownCodeLensProvider } from './providers/markdownCodeLensProvider';
+import { SqlCodeLensProvider } from './providers/sqlCodeLensProvider';
 import { setExtensionContext } from './extensionContext';
 import { registerCommands } from './commands/commands';
 import { loadPackageJson, hasDependency } from './utils/jsonUtils';
@@ -111,6 +113,19 @@ export async function activate(context: ExtensionContext) {
   const markdownLanguage = { language: 'emd', scheme: 'file' };
   const provider = new MarkdownSymbolProvider();
   // languages.registerDocumentSymbolProvider(markdownLanguage, provider);
+
+
+  // register markdown code lens provider
+  const markdownProvider = new MarkdownCodeLensProvider();
+  context.subscriptions.push(
+    languages.registerCodeLensProvider({ language: 'emd' }, markdownProvider)
+  );  
+
+  // register sql code lens provider
+  const sqlProvider = new SqlCodeLensProvider();
+  context.subscriptions.push(
+    languages.registerCodeLensProvider({ language: 'sql' }, sqlProvider)
+  );
 
   // load package.json
   const workspacePackageJson = await loadPackageJson();
