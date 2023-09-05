@@ -3,7 +3,7 @@
     "prefix": "/SQL Query Block",
     "body": [
       "```sql ${1:query_name}",
-      "\t${2:}",
+      "${0:query}",
       "```\n\n"
     ],
     "description": "Insert SQL query block"
