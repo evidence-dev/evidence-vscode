@@ -3,6 +3,7 @@
 
 out/**
 node_modules/**
+template/node_modules/**
 data/**
 src/**
 
