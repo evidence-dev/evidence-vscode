@@ -184,12 +184,13 @@ export async function openIndex() {
     const folderPath = getWorkspaceFolder();
     const filePath = folderPath?.uri + '/pages/index.md';
     const fileUri = Uri.parse(filePath);
-    await commands.executeCommand('vscode.open', fileUri);  
+    await commands.executeCommand('vscode.open', fileUri, 1);  
+    await commands.executeCommand('vscode.open', fileUri, 2);  
     openWalkthrough();
   }
 }
 
 
 export async function openWalkthrough(){
-  await commands.executeCommand(Commands.OpenWalkthrough, `Evidence.evidence-vscode#getStarted`, true);
+  await commands.executeCommand(Commands.OpenWalkthrough, `Evidence.evidence-vscode#getStarted`, false);
 }
