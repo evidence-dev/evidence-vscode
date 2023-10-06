@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.3.17 - 2023-10-06
+
+- Bumps Evidence to v22.0.0
+
 ## 1.3.8 - 2023-07-25
 
 - Bumps Evidence to v20.0.1
