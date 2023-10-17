@@ -43,6 +43,13 @@
     ],
     "description": "Insert Bar Chart"
   },
+  "Box Plot": {
+    "prefix": "/BoxPlot",
+    "body": [
+      "<BoxPlot\n\tdata={${1:query_name}}\n\tname=${2:column_name}\n\tmin=${3:column_name}\n\tintervalBottom=${4:column_name}\n\tmidpoint=${5:column_name}\n\tintervalTop=${6:column_name}\n\tmax=${7:column_name}\n/>\n\n"
+    ],
+    "description": "Insert Box Plot"
+  },
   "Scatter Plot": {
     "prefix": "/ScatterPlot",
     "body": [
