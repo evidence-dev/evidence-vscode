@@ -6,7 +6,7 @@ import {
 import { showRestartPrompt } from './views/prompts';
 
 
-const downloadNodeJs = 'Download NodeJS';
+const downloadNodeJs = 'Download NodeJS (LTS Version)';
 const downloadNodeJsUrl = 'https://nodejs.org/en/download';
 
 
@@ -37,8 +37,12 @@ export async function getNodeVersion() {
 export function isSupportedNodeVersion(nodeVersion: string): boolean {
 
   // Minimum version of NodeJS required for Evidence:
-  const majorVersion = 16;
-  const minorVersion = 14;
+  const minMajorVersion = 16;
+  const minMinorVersion = 14;
+
+  // Maximum version of NodeJS required for Evidence:
+  const maxMajorVersion = 20;
+  const maxMinorVersion = 9;
 
   // check node version
   if (nodeVersion && nodeVersion.startsWith('v')) {
@@ -46,13 +50,29 @@ export function isSupportedNodeVersion(nodeVersion: string): boolean {
     const majorVersionNumber = parseInt(nodeVersionNumbers[0]);
     const minorVersionNumber = parseInt(nodeVersionNumbers[1]);
 
-    if (majorVersionNumber > majorVersion) {
-      return true;
+    let aboveMinVersion = false;
+    let aboveMaxVersion = false;
+
+    // Check if above min version:
+    if (majorVersionNumber > minMajorVersion) {
+      aboveMinVersion = true;
     }
-    else if (majorVersionNumber === majorVersion &&
-      minorVersionNumber >= minorVersion) {
-      return true;
+    else if (majorVersionNumber === minMajorVersion &&
+      minorVersionNumber >= minMinorVersion) {
+      aboveMinVersion = true;
     }
+
+    // Check if below max version:
+    if (majorVersionNumber < maxMajorVersion) {
+      aboveMaxVersion = true;
+    }
+    else if (majorVersionNumber === maxMajorVersion &&
+      minorVersionNumber <= maxMinorVersion) {
+      aboveMaxVersion = true;
+    }
+
+    return aboveMinVersion && aboveMaxVersion;
+ 
   }
   return false;
 }
@@ -89,7 +109,7 @@ export function executeCommand(command: string): Promise<string> {
 
 export async function promptToInstallNodeJsAndRestart() {
   const downloadNodeNotification = await window.showErrorMessage(
-    'Evidence requires NodeJS v16.14 or greater.',
+    'Evidence requires NodeJS v16.14 to v20.9',
     { title: downloadNodeJs }
   );
 
