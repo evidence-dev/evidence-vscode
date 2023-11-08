@@ -5,9 +5,11 @@ import {
   RelativePattern,
   Uri,
   WorkspaceFolder,
-  OutputChannel
+  OutputChannel,
+  env
 } from 'vscode';
-
+import { promises as fs } from 'fs';
+import * as path from 'path';
 import {
   Settings,
   getConfig,
@@ -147,6 +149,16 @@ async function createProjectFolder(templateFolder: Uri, projectFolder: Uri) {
   // copy template folder to the new project folder
   const projectFolderCreated: boolean = await copyFolder(templateFolder, projectFolder);
   if (projectFolderCreated) {
+
+    // If the environment is not Codespaces, remove the .devcontainer folder
+    if (env.remoteName !== 'codespaces') {
+      const devContainerPath = path.join(projectFolder.fsPath, '.devcontainer');
+      try {
+        await fs.rm(devContainerPath, { recursive: true, force: true });
+      } catch (error) {
+        // fail silently - leave the devcontainer folder in
+      }
+    }
 
     // check if new Evidence project was created in the open workspace folder
     const workspaceFolder: WorkspaceFolder | undefined = getWorkspaceFolder();
