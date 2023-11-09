@@ -82,6 +82,10 @@ export async function startServer(pageUri?: Uri) {
       // prepend server run command with dependency install command:
       dependencyCommand = `npm install ; `;
       depTimeout = 15000;
+      // install takes longer on windows
+      if(process.platform === 'win32'){
+        depTimeout += 5000;
+      }
     }
 
     if (!_running) {
