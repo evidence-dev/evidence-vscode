@@ -81,10 +81,10 @@ export async function startServer(pageUri?: Uri) {
     if(!(await hasDependencies())){
       // prepend server run command with dependency install command:
       dependencyCommand = `npm install ; `;
-      depTimeout = 15000;
+      depTimeout = 25000;
       // install takes longer on windows
       if(process.platform === 'win32'){
-        depTimeout += 5000;
+        depTimeout += 20000;
       }
     }
 
@@ -121,6 +121,11 @@ export async function startServer(pageUri?: Uri) {
 
     // wait for the server to process pages
     await timeout(5000);
+
+    // server start takes longer on windows
+    if(process.platform === 'win32'){
+        await timeout(20000);
+    }
 
     if(_running === true){
       // set focus back to the active vscode editor group
