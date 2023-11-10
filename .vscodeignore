@@ -4,6 +4,9 @@
 out/**
 node_modules/**
 template/node_modules/**
+template/build/**
+template/.evidence/**
+!template/.evidence/template/evidence.settings.json
 data/**
 src/**
 
@@ -17,3 +20,5 @@ webpack.config.js
 **/.eslintrc.json
 **/*.map
 **/*.ts
+
+.github/**
