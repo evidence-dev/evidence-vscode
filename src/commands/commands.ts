@@ -13,7 +13,7 @@ import {
   buildProjectStrict
 } from './build';
 
-import { createNewProject, openIndex, openWalkthrough } from './project';
+import { createNewProject, openIndex, openWalkthrough, copyProject } from './project';
 import { createProjectFromTemplate } from './template';
 import { startServer, stopServer} from './server';
 import { preview } from './preview';
@@ -25,7 +25,7 @@ import { showOutput } from '../output';
  * VSCode and Evidence extension commands.
  */
 export const enum Commands {
-  // VS Code and built-in extenions commands
+  // VS Code and built-in extensions commands
   Open = 'vscode.open',
   OpenFolder = 'vscode.openFolder',
   OpenSettings = 'workbench.action.openSettings',
@@ -41,6 +41,7 @@ export const enum Commands {
   // Evidence extension commands
   NewProject = 'evidence.newProject',
   CreateProjectFromTemplate = 'evidence.createProjectFromTemplate',
+  CopyProject = 'evidence.copyProject',
   OpenProjectSettings = 'evidence.openSettings',
   InstallDependencies = 'evidence.installDependencies',
   UpdateDependencies = 'evidence.updateDependencies',
@@ -68,9 +69,10 @@ let _context: ExtensionContext;
 export function registerCommands(context: ExtensionContext) {
   _context = context;
 
-  // regiester Evidence extension commands
+  // register Evidence extension commands
   registerCommand(Commands.NewProject, createNewProject);
   registerCommand(Commands.CreateProjectFromTemplate, createProjectFromTemplate);
+  registerCommand(Commands.CopyProject, copyProject);
   registerCommand(Commands.OpenProjectSettings, openSettingsFile);
   registerCommand(Commands.InstallDependencies, installDependencies);
   registerCommand(Commands.UpdateDependencies, updateDependencies);

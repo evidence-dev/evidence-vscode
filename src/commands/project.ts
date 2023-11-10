@@ -49,8 +49,9 @@ const templateProjectUrlSetting = '/template';
  * Creates a new Evidence project.
  *
  * @param {Uri} projectFolder Optional project folder Uri to create the project in.
+ * @param {string} projectUrl Optional template project url to copy the project from. If not provided, the template project will be used.
  */
-export async function createNewProject(projectFolder?: Uri) {
+export async function createNewProject(projectFolder?: Uri, projectUrl?: string) {
 
   if (!projectFolder) {
     const selectedFolders: Uri[] | undefined = await showSelectFolderDialog();
@@ -92,10 +93,12 @@ export async function createNewProject(projectFolder?: Uri) {
   // @see https://github.com/evidence-dev/evidence-vscode/issues/62
   const templateProjectUrl =
     <string>getConfig(Settings.TemplateProjectUrl, templateProjectUrlSetting);
-  const projectTemplateUrl = templateProjectUrl;
+  
+  // if the projectUrl is defined, use that instead of the templateProjectUrl
+  const projectTemplateUrl = projectUrl ? projectUrl : templateProjectUrl;
 
   if (projectTemplateUrl.startsWith('https://')) {
-    // attemplt to clone an Evidence template project from a github repository
+    // attempt to clone an Evidence template project from a github repository
     // into the selected new Evidence project folder
     await cloneTemplateRepository(projectTemplateUrl, projectFolderPath);
   }
@@ -140,6 +143,22 @@ export async function createNewProject(projectFolder?: Uri) {
 }
 
 /**
+ * Copies an existing Evidence project from a remote repository, without retaining the git history.
+ */
+export async function copyProject(){
+  // ask the user for the remote repository url
+  const projectUrl = await window.showInputBox({
+    prompt: 'Enter an Evidence repository URL to copy',
+    ignoreFocusOut: true
+  });
+  // if the user cancelled the input box, return
+  if(!projectUrl) {
+    return;
+  };
+  createNewProject(undefined, projectUrl);
+}
+
+/**
  * Creates new Evidence project folder from a local template project folder.
  *
  * @param templateFolder Template folder Uri.
@@ -174,7 +193,7 @@ async function createProjectFolder(templateFolder: Uri, projectFolder: Uri) {
     else {
       // prompt to open created Evidence project subfolder
       // in a new VS Code workspace window
-      // to enable all Evidence extensioin commands
+      // to enable all Evidence extension commands
       // and custom Evidence markdown Preview handling
       // for the Evidence app and markdown pages development
       openNewProjectFolder(projectFolder);

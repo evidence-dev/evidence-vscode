@@ -61,9 +61,9 @@ export async function createProjectFromTemplate() {
   else if (!templateRepositoryUrl.startsWith(gitHubUrlBase)) {
     window.showErrorMessage(`Invalid Evidence template GitHub Url: ${templateRepositoryUrl}.\
       Evidence extension only supports template repositories hosted on GitHub.\
-      Provide a valid template repositry GitHub Url, or use the default ${templateProjectUrl} instead.`);
+      Provide a valid template repository GitHub Url, or use the default ${templateProjectUrl} instead.`);
 
-    // display this prompt again with the default template repositry Url
+    // display this prompt again with the default template repository Url
     createProjectFromTemplate();
     return;
   }
@@ -123,7 +123,7 @@ export async function cloneTemplateRepository(
   templateRepositoryUrl: string, projectFolderPath: string,
   showInstallDependenciesNotification: boolean = false) {
 
-  // creata user or organization and repository name path from github template repository Url
+  // create user or organization and repository name path from github template repository Url
   const templateRepository = templateRepositoryUrl.replace(`${gitHubUrlBase}/`, '');
 
   // display project creation progress in Evidence Output view
@@ -167,7 +167,7 @@ export async function cloneTemplateRepository(
         .replace(' to ', '\n to: '); // show destination on new line in the Output view
 
       if (!infoMessage.includes(' cache')) {
-        // show git clonning info messages in the Evidence Output view
+        // show git cloning info messages in the Evidence Output view
         outputChannel.appendLine(`- ${infoMessage}`);
       }
 
