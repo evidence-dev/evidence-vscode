@@ -63,7 +63,7 @@ function isPagesDirectory(){
   const openEditor = window.activeTextEditor;
   let pageContext = false;
   // Set context for pages directory (only use Evidence markdown features within those files):
-  if(openEditor && openEditor.document.uri.fsPath.includes("/pages/")){
+  if(openEditor && /\/pages\/|\\pages\\/.test(openEditor.document.uri.fsPath)){
    commands.executeCommand(Commands.SetContext, Context.isPagesDirectory, true);  
    pageContext = true;
   } else {

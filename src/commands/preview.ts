@@ -73,7 +73,7 @@ export async function preview(uri?: Uri) {
     }
   }
 
-  if (!isEvidenceProject || !isServerRunning() || !uri?.path.includes('/pages/')) {
+  if (!isEvidenceProject || !isServerRunning() || /\/pages\/|\\pages\\/.test(uri?.path ?? '')) {
     // show standard markdown document preview
     commands.executeCommand(Commands.MarkdownShowPreview, uri);
     return;
