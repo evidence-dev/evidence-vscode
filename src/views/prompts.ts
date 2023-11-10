@@ -41,7 +41,7 @@ export async function showSelectFolderDialog(): Promise<Uri[] | undefined> {
     canSelectFiles: false,
     canSelectFolders: true,
     canSelectMany: false,
-    openLabel: 'Select folder'
+    openLabel: 'Create project in this folder'
   });
 }
 
