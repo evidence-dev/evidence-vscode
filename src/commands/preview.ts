@@ -9,6 +9,7 @@ import { Commands } from './commands';
 import { getExtensionContext } from '../extensionContext';
 import { Settings, Context, getWorkspaceFolder, getConfig } from '../config';
 import { getOutputChannel } from '../output';
+import { telemetryService } from '../extension';
 
 import {
   getAppPageUri,
@@ -116,5 +117,6 @@ async function openPageView(pageUri: Uri) {
       viewColumn: previewType === 'internal' ? ViewColumn.Active : ViewColumn.Two,
       preserveFocus: true
     });  
+    telemetryService.sendEvent('openSimpleBrowser');
   }
 }

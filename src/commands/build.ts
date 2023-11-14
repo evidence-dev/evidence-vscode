@@ -12,6 +12,7 @@ import { isServerRunning, stopServer } from './server';
 import { statusBar } from '../statusBar';
 import { getNodeVersion, isSupportedNodeVersion, promptToInstallNodeJsAndRestart } from '../node';
 import { getWorkspaceFolder, updateProjectContext } from '../config';
+import { telemetryService } from '../extension';
 
 /**
  * Node modules folder name to check in the open project workspace
@@ -71,6 +72,8 @@ export async function updateDependencies() {
   sendCommand(`npm install ${evidencePackages.join(' ')}`);
   await timeout(5000);
   statusBar.showStart();
+
+  telemetryService.sendEvent('updateDependencies');
 }
 
 /**
@@ -84,6 +87,7 @@ export async function buildProject() {
     await timeout(1000);
   }
   runCommandWithDepInstall('npm run build');
+  telemetryService.sendEvent('build');
 }
 
 /**
@@ -97,6 +101,7 @@ export async function buildProjectStrict() {
     await timeout(1000);
   }
   runCommandWithDepInstall('npm run build:strict');
+  telemetryService.sendEvent('buildStrict');
 }
 
 /**

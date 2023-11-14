@@ -8,8 +8,11 @@ import {
   DecorationOptions,
   Range,
   Position,
-  commands
+  commands,
+  extensions
 } from 'vscode';
+
+import { TelemetryService } from './telemetryService';
 
 import { Commands } from './commands/commands';
 
@@ -27,6 +30,8 @@ export const enum Context {
   isNewLine = 'evidence.isNewLine',
   isPagesDirectory = 'evidence.isPagesDirectory'
 }
+
+export let telemetryService: TelemetryService;
 
 const decorationType = window.createTextEditorDecorationType({
   after: {
@@ -81,7 +86,20 @@ function isPagesDirectory(){
 export async function activate(context: ExtensionContext) {
   setExtensionContext(context);
   registerCommands(context);
-  
+
+  // Set up telemetry
+  const extensionId = "Evidence.evidence-vscode";
+  const extension = extensions.getExtension(extensionId)!;
+  const extensionVersion = extension.packageJSON.version;
+  const iK = '99ec224c-3fe8-4635-96ef-24c9aa5a354f'; 
+
+  // create telemetry reporter on extension activation
+  telemetryService = new TelemetryService(extensionId, extensionVersion, iK);
+  // ensure it gets properly disposed. Upon disposal the events will be flushed
+  context.subscriptions.push(telemetryService);
+
+  telemetryService.sendEvent('activate');
+
   // decorate slash command on activation if the active file is a markdown file
   const openEditor = window.activeTextEditor;
   if(openEditor && openEditor.document.fileName.endsWith('.md') && isPagesDirectory()){
@@ -137,7 +155,9 @@ export async function activate(context: ExtensionContext) {
     if (autoStart) {
       startServer();
     }
+
   }
+
 }
 
 /**

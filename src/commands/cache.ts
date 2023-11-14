@@ -4,6 +4,7 @@ import {
 } from 'vscode';
 
 import { deleteFolder } from '../utils/fsUtils';
+import { telemetryService } from '../extension';
 
 /**
  * Evidence application cache directory.
@@ -20,4 +21,5 @@ export async function clearCache() {
   else {
     window.showInformationMessage('Cache is already empty.');
   }
+  telemetryService.sendEvent('clearCache');
 }
