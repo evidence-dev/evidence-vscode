@@ -11,6 +11,7 @@ import { timeout } from '../utils/timer';
 import { tryPort } from '../utils/httpUtils';
 import { hasDependencies } from './build';
 import { open } from 'fs';
+import { telemetryService } from '../extension';
 
 const localhost = 'localhost';
 let _running: boolean = false;
@@ -140,6 +141,7 @@ export async function startServer(pageUri?: Uri) {
       statusBar.showStop();
     }
   }
+  telemetryService.sendEvent('startServer');
 }
 
 /**
@@ -177,4 +179,5 @@ export async function stopServer() {
   _running = false;
   _activePort = <number>getConfig(Settings.DefaultPort);
   statusBar.showStart();
+  telemetryService.sendEvent('stopServer');
 }
