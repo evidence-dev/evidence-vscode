@@ -3,14 +3,14 @@ import * as path from 'path';
 import {
   workspace
 } from 'vscode';
-import TelemetryReporter from 'vscode-extension-telemetry';
+import TelemetryReporter from '@vscode/extension-telemetry';
 
 export class TelemetryService {
   private reporter: TelemetryReporter;
   private commonProperties: { [key: string]: string } = {};
 
-  constructor(extensionId: string, extensionVersion: string, key: string) {
-      this.reporter = new TelemetryReporter(extensionId, extensionVersion, key);
+  constructor(key: string) {
+      this.reporter = new TelemetryReporter(key);
       this.loadCommonProperties();
   }
 

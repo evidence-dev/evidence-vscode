@@ -88,13 +88,10 @@ export async function activate(context: ExtensionContext) {
   registerCommands(context);
 
   // Set up telemetry
-  const extensionId = "Evidence.evidence-vscode";
-  const extension = extensions.getExtension(extensionId)!;
-  const extensionVersion = extension.packageJSON.version;
   const iK = '99ec224c-3fe8-4635-96ef-24c9aa5a354f'; 
 
   // create telemetry reporter on extension activation
-  telemetryService = new TelemetryService(extensionId, extensionVersion, iK);
+  telemetryService = new TelemetryService(iK);
   // ensure it gets properly disposed. Upon disposal the events will be flushed
   context.subscriptions.push(telemetryService);
 
