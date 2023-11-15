@@ -24,6 +24,7 @@ import { cloneTemplateRepository } from './template';
 import { getExtensionFileUri } from '../extensionContext';
 import { folderExists, copyFolder } from '../utils/fsUtils';
 import { openNewProjectFolder, showInstallDependencies } from '../views/prompts';
+import { telemetryService } from '../extension';
 
 import {
   showSelectFolderDialog,
@@ -140,6 +141,7 @@ export async function createNewProject(projectFolder?: Uri, projectUrl?: string)
     showInvalidTemplateProjectUrlErrorMessage(projectTemplateUrl);
     outputChannel.appendLine(`✗ Invalid Template Project Folder: ${projectTemplateUrl}`);
   }
+  telemetryService.sendEvent('createNewProject');
 }
 
 /**
@@ -156,6 +158,7 @@ export async function copyProject(){
     return;
   };
   createNewProject(undefined, projectUrl);
+  telemetryService.sendEvent('copyProject');
 }
 
 /**
@@ -219,9 +222,11 @@ export async function openIndex() {
     await commands.executeCommand('vscode.open', fileUri, 2);  
     openWalkthrough();
   }
+  telemetryService.sendEvent('openIndex');
 }
 
 
 export async function openWalkthrough(){
   await commands.executeCommand(Commands.OpenWalkthrough, `Evidence.evidence-vscode#getStarted`, false);
+  telemetryService.sendEvent('openWalkthrough');
 }
