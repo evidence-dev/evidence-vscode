@@ -15,23 +15,30 @@ export class TelemetryService {
   }
 
   private loadCommonProperties() {
-      const profilePath = path.join(workspace.rootPath || '', '.evidence', 'template', '.profile.json');
-      try {
-          if (fs.existsSync(profilePath)) {
-              const profile = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
-              if (profile) {
-                  if (profile.anonymousId) {
-                      this.commonProperties['profileID'] = profile.anonymousId;
-                  }
-                  if (profile.traits && profile.traits.projectCreated) {
-                      this.commonProperties['profileProjectCreated'] = profile.traits.projectCreated;
-                  }
-              }
-          }
-      } catch (error) {
-          // Fail silently. Possibly send failure event in the future
-      }
-  }
+    let profilePath = '';
+
+    if (workspace.workspaceFolders && workspace.workspaceFolders.length > 0) {
+        // Use the path of the first workspace folder
+        const workspaceFolder = workspace.workspaceFolders[0];
+        profilePath = path.join(workspaceFolder.uri.fsPath, '.evidence', 'template', '.profile.json');
+    }
+
+    try {
+        if (profilePath && fs.existsSync(profilePath)) {
+            const profile = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
+            if (profile) {
+                if (profile.anonymousId) {
+                    this.commonProperties['profileID'] = profile.anonymousId;
+                }
+                if (profile.traits && profile.traits.projectCreated) {
+                    this.commonProperties['profileProjectCreated'] = profile.traits.projectCreated;
+                }
+            }
+        }
+    } catch (error) {
+        // Fail silently. Possibly send failure event in the future
+    }
+}
 
   public sendEvent(eventName: string, properties?: { [key: string]: string }, measurements?: { [key: string]: number }) {
       const eventProperties = { ...this.commonProperties, ...properties };
