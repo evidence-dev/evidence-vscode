@@ -95,8 +95,6 @@ export async function activate(context: ExtensionContext) {
   // ensure it gets properly disposed. Upon disposal the events will be flushed
   context.subscriptions.push(telemetryService);
 
-  telemetryService.sendEvent('activate');
-
   // decorate slash command on activation if the active file is a markdown file
   const openEditor = window.activeTextEditor;
   if(openEditor && openEditor.document.fileName.endsWith('.md') && isPagesDirectory()){
@@ -136,6 +134,8 @@ export async function activate(context: ExtensionContext) {
   // check for evidence app files and dependencies in the loaded package.json
   if (workspace.workspaceFolders && evidenceFiles.length > 0 &&
     workspacePackageJson && hasDependency(workspacePackageJson, '@evidence-dev/evidence')) {
+    
+    telemetryService.sendEvent('activate');
 
     // set Evidence project context
     updateProjectContext();

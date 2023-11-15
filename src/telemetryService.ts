@@ -42,7 +42,7 @@ export class TelemetryService {
 
   public sendEvent(eventName: string, properties?: { [key: string]: string }, measurements?: { [key: string]: number }) {
       const eventProperties = { ...this.commonProperties, ...properties };
-      this.reporter.sendTelemetryEvent(eventName, eventProperties, measurements);
+      this.reporter.sendTelemetryEvent(eventName, Object.keys(eventProperties).length === 0 ? undefined : eventProperties, measurements);
   }
 
   public dispose() {

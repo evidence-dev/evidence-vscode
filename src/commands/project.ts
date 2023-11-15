@@ -53,6 +53,7 @@ const templateProjectUrlSetting = '/template';
  * @param {string} projectUrl Optional template project url to copy the project from. If not provided, the template project will be used.
  */
 export async function createNewProject(projectFolder?: Uri, projectUrl?: string) {
+  telemetryService.sendEvent('createNewProjectStart');
 
   if (!projectFolder) {
     const selectedFolders: Uri[] | undefined = await showSelectFolderDialog();
@@ -141,7 +142,6 @@ export async function createNewProject(projectFolder?: Uri, projectUrl?: string)
     showInvalidTemplateProjectUrlErrorMessage(projectTemplateUrl);
     outputChannel.appendLine(`✗ Invalid Template Project Folder: ${projectTemplateUrl}`);
   }
-  telemetryService.sendEvent('createNewProject');
 }
 
 /**
@@ -157,8 +157,8 @@ export async function copyProject(){
   if(!projectUrl) {
     return;
   };
-  createNewProject(undefined, projectUrl);
   telemetryService.sendEvent('copyProject');
+  createNewProject(undefined, projectUrl);
 }
 
 /**
@@ -199,6 +199,7 @@ async function createProjectFolder(templateFolder: Uri, projectFolder: Uri) {
       // to enable all Evidence extension commands
       // and custom Evidence markdown Preview handling
       // for the Evidence app and markdown pages development
+      telemetryService.sendEvent('createNewProjectComplete');
       openNewProjectFolder(projectFolder);
     }
   }
