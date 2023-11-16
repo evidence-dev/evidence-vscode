@@ -142,6 +142,7 @@ export async function createNewProject(projectFolder?: Uri, projectUrl?: string)
     showInvalidTemplateProjectUrlErrorMessage(projectTemplateUrl);
     outputChannel.appendLine(`✗ Invalid Template Project Folder: ${projectTemplateUrl}`);
   }
+  telemetryService.sendEvent('createNewProject');
 }
 
 /**
@@ -159,6 +160,7 @@ export async function copyProject(){
   };
   telemetryService.sendEvent('copyProject');
   createNewProject(undefined, projectUrl);
+  telemetryService.sendEvent('copyProject');
 }
 
 /**
