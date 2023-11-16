@@ -15,7 +15,6 @@ import { timeout } from '../utils/timer';
 import { statusBar } from '../statusBar';
 import { deleteFile, deleteFolder } from '../utils/fsUtils';
 import { getOutputChannel } from '../output';
-import { telemetryService } from '../extension';
 
 /**
  * @see https://github.com/tiged/tiged#javascript-api
@@ -213,7 +212,6 @@ export async function cloneTemplateRepository(
           // check if open workspace folder is the same as the created project folder
           if (workspaceFolder && workspaceFolder.uri.fsPath !== projectFolderPath) {
             commands.executeCommand(Commands.OpenFolder, Uri.file(projectFolderPath), true);
-            telemetryService.sendEvent('createNewProjectComplete');
             // display Open Folder notification message
             // window.showInformationMessage(
             //   `Evidence project created in: ${projectFolderPath}.`,

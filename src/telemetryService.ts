@@ -45,6 +45,25 @@ export class TelemetryService {
       this.reporter.sendTelemetryEvent(eventName, Object.keys(eventProperties).length === 0 ? undefined : eventProperties, measurements);
   }
 
+  public updateProfileDetails(profileID: string, profileProjectCreated: string) {
+    this.commonProperties['profileID'] = profileID;
+    this.commonProperties['profileProjectCreated'] = profileProjectCreated;
+  }
+
+  public clearProfileDetails() {
+    delete this.commonProperties['profileID'];
+    delete this.commonProperties['profileProjectCreated'];
+  }
+
+  public updateGitCheck(gitCheck: string) {
+    this.commonProperties['gitRepo'] = gitCheck;
+  }
+
+  public clearGitCheck() {
+    delete this.commonProperties['gitRepo'];
+  }
+
+
   public dispose() {
       this.reporter.dispose();
   }

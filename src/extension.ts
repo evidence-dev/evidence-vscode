@@ -19,12 +19,15 @@ import { Commands } from './commands/commands';
 import { MarkdownSymbolProvider } from './providers/markdownSymbolProvider';
 import { setExtensionContext } from './extensionContext';
 import { registerCommands } from './commands/commands';
-import { loadPackageJson, hasDependency } from './utils/jsonUtils';
+import { loadPackageJson, hasDependency, dependencyVersion } from './utils/jsonUtils';
 import { Settings, getConfig, updateProjectContext } from './config';
 import { startServer } from './commands/server';
 import { openIndex, openWalkthrough } from './commands/project';
 import { statusBar } from './statusBar';
 import { closeTerminal } from './terminal';
+import { isGitRepository } from './utils/gitCheck';
+import * as path from 'path';
+import * as fs from 'fs';
 
 export const enum Context {
   isNewLine = 'evidence.isNewLine',
@@ -95,6 +98,55 @@ export async function activate(context: ExtensionContext) {
   // ensure it gets properly disposed. Upon disposal the events will be flushed
   context.subscriptions.push(telemetryService);
 
+  // set up file watcher for .profile.json
+  const workspaceFolder = workspace.workspaceFolders?.[0];
+  if (workspaceFolder) {
+    const profilePath = path.join(workspaceFolder.uri.fsPath, '.evidence', 'template', '.profile.json');
+    const profileWatcher = workspace.createFileSystemWatcher(profilePath);
+    
+    const updateProfileDetailsFromJson = () => {
+        try {
+            const content = fs.readFileSync(profilePath, 'utf8');
+            const profile = JSON.parse(content);
+            telemetryService.updateProfileDetails(profile.anonymousId, profile.traits.projectCreated);
+        } catch (err) {
+            telemetryService.clearProfileDetails();
+        }
+    };
+
+  profileWatcher.onDidChange(updateProfileDetailsFromJson);
+  profileWatcher.onDidCreate(updateProfileDetailsFromJson);
+  profileWatcher.onDidDelete(() => telemetryService.clearProfileDetails());
+
+  context.subscriptions.push(profileWatcher);
+
+  // Initial check
+  updateProfileDetailsFromJson();
+
+  // Git watcher
+  const gitPath = path.join(workspaceFolder.uri.fsPath, '.git');
+  const gitWatcher = workspace.createFileSystemWatcher(gitPath);
+
+  const updateGitCheck = () => {
+    try {
+        const gitCheck = isGitRepository(workspaceFolder.uri.fsPath).toString();
+        telemetryService.updateGitCheck(gitCheck);
+    } catch (err) {
+        telemetryService.clearGitCheck();
+    }
+};
+
+  gitWatcher.onDidChange(updateGitCheck);
+  gitWatcher.onDidCreate(updateGitCheck);
+  gitWatcher.onDidDelete(() => telemetryService.clearGitCheck());
+
+  context.subscriptions.push(gitWatcher);
+
+  // initial check
+  updateGitCheck();
+}
+
+
   // decorate slash command on activation if the active file is a markdown file
   const openEditor = window.activeTextEditor;
   if(openEditor && openEditor.document.fileName.endsWith('.md') && isPagesDirectory()){
@@ -120,6 +172,17 @@ export async function activate(context: ExtensionContext) {
     }
   );
 
+    // When markdown file is saved:
+    workspace.onDidSaveTextDocument(
+      () => {
+        const openEditor = window.activeTextEditor;
+        if(openEditor && openEditor.document.fileName.endsWith('.md')  && isPagesDirectory()){
+          telemetryService.sendEvent('saveMarkdown');
+        }
+      }
+    );
+  
+
   // register markdown symbol provider
   const markdownLanguage = { language: 'emd', scheme: 'file' };
   const provider = new MarkdownSymbolProvider();
@@ -131,11 +194,14 @@ export async function activate(context: ExtensionContext) {
   // get all evidence files in workspace
   const evidenceFiles = await workspace.findFiles('**/.evidence/**/*.*');
 
+  // get evidence version
+  const evidenceVersion = dependencyVersion(workspacePackageJson, '@evidence-dev/evidence');
+
   // check for evidence app files and dependencies in the loaded package.json
   if (workspace.workspaceFolders && evidenceFiles.length > 0 &&
     workspacePackageJson && hasDependency(workspacePackageJson, '@evidence-dev/evidence')) {
     
-    telemetryService.sendEvent('activate');
+    telemetryService.sendEvent('activate', {evidenceVersion: evidenceVersion});
 
     // set Evidence project context
     updateProjectContext();
