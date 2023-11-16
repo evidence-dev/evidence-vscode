@@ -76,6 +76,10 @@ export async function startServer(pageUri?: Uri) {
     promptToInstallNodeJsAndRestart();
   } else {
 
+    // change to Evidence project root directory if needed
+    const cdToEvidence = `cd reports; `;
+    const cdBackToRoot = `; cd ..`;
+    
     // check for /node_modules before starting dev server
     let dependencyCommand = "";
     let depTimeout = 0;
@@ -105,7 +109,7 @@ export async function startServer(pageUri?: Uri) {
       }
 
       // start dev server via terminal command
-      sendCommand(`${dependencyCommand}npm exec evidence dev --${devServerHostParameter}${serverPortParameter}${previewParameter}`);
+      sendCommand(`${cdToEvidence}${dependencyCommand}npm exec evidence dev --${devServerHostParameter}${serverPortParameter}${previewParameter}${cdBackToRoot}`);
     }
 
     statusBar.showInstalling();
