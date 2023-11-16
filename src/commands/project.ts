@@ -44,7 +44,7 @@ const extensionTemplateProjectFolderName: string = 'template';
  *
  * @see https://github.com/evidence-dev/evidence-vscode/issues/62
  */
-const templateProjectUrlSetting = '/template';
+const templateProjectUrlSetting = 'https://github.com/evidence-dev/template';
 
 /**
  * Creates a new Evidence project.
