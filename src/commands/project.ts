@@ -53,6 +53,7 @@ const templateProjectUrlSetting = '/template';
  * @param {string} projectUrl Optional template project url to copy the project from. If not provided, the template project will be used.
  */
 export async function createNewProject(projectFolder?: Uri, projectUrl?: string) {
+  telemetryService.sendEvent('createNewProject');
 
   if (!projectFolder) {
     const selectedFolders: Uri[] | undefined = await showSelectFolderDialog();
@@ -157,6 +158,7 @@ export async function copyProject(){
   if(!projectUrl) {
     return;
   };
+  telemetryService.sendEvent('copyProject');
   createNewProject(undefined, projectUrl);
   telemetryService.sendEvent('copyProject');
 }

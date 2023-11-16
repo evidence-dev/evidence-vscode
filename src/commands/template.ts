@@ -212,7 +212,6 @@ export async function cloneTemplateRepository(
           // check if open workspace folder is the same as the created project folder
           if (workspaceFolder && workspaceFolder.uri.fsPath !== projectFolderPath) {
             commands.executeCommand(Commands.OpenFolder, Uri.file(projectFolderPath), true);
-
             // display Open Folder notification message
             // window.showInformationMessage(
             //   `Evidence project created in: ${projectFolderPath}.`,

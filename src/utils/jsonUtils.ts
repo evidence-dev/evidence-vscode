@@ -38,3 +38,18 @@ export function hasDependency(packageJson: any, dependencyName: string): boolean
   return Boolean(packageJson?.dependencies?.[dependencyName] ||
     packageJson?.devDependencies?.[dependencyName]);
 }
+
+
+/**
+ * Checks loaded package.json configuration devDependencies
+ * and dependencies for a dependency with the given name.
+ *
+ * @param packageJson Package json content.
+ * @param dependencyName Dependency name to check.
+ *
+ * @returns the version number of the package if it exists
+ */
+export function dependencyVersion(packageJson: any, dependencyName: string): string {
+  return packageJson.dependencies[dependencyName];
+}
+
