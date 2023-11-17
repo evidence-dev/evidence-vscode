@@ -64,6 +64,8 @@ export async function getAppPageUri(pageUrl?: string): Promise<Uri> {
  * @param pageFileUri Optional Uri of the starting page to load in preview.
  */
 export async function startServer(pageUri?: Uri) {
+  telemetryService.sendEvent('startServerInitiate');
+
   if (!pageUri) {
     pageUri = await getAppPageUri('/');
   }
@@ -74,6 +76,7 @@ export async function startServer(pageUri?: Uri) {
   const nodeVersion = await getNodeVersion();
   if (!isSupportedNodeVersion(nodeVersion)) {
     promptToInstallNodeJsAndRestart();
+    telemetryService.sendEvent('nodeVersionError');
   } else {
 
     // check for /node_modules before starting dev server
@@ -87,11 +90,12 @@ export async function startServer(pageUri?: Uri) {
       if(process.platform === 'win32'){
         depTimeout += 20000;
       }
+      telemetryService.sendEvent('installDependencies');
     }
 
     if (!_running) {
-      // use the last saved active port number to start dev server
-      const serverPortParameter = ` --port ${_activePort}`;
+      // use the last saved active port number to start dev server if using simple browser
+      let serverPortParameter = ` --port ${_activePort}`;
 
       let devServerHostParameter: string = '';
       if (!pageUri.authority.startsWith(localhost)) {
@@ -102,6 +106,7 @@ export async function startServer(pageUri?: Uri) {
       let previewParameter: string = '';
       if(previewType === 'external'){
         previewParameter = ' --open /';
+        serverPortParameter = '';
       }
 
       // start dev server via terminal command
@@ -137,11 +142,13 @@ export async function startServer(pageUri?: Uri) {
         preview(pageUri);
       }
 
+      // send event
+      telemetryService.sendEvent('startServer');
+
       // change button to stop server
       statusBar.showStop();
     }
   }
-  telemetryService.sendEvent('startServer');
 }
 
 /**
