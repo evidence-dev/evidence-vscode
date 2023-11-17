@@ -34,7 +34,7 @@ export const gitHubUrlBase = 'https://github.com';
 /**
  * Default Evidence app template project github Url.
  */
-export const templateProjectUrl = `${gitHubUrlBase}/evidence-dev/evidence-vscode/template`;
+export const templateProjectUrl = `${gitHubUrlBase}/evidence-dev/template`;
 
 /**
  * Creates new Evidence app project from a github repository template.
@@ -188,10 +188,15 @@ export async function cloneTemplateRepository(
           message: 'Finished cloning template project.'
         });
 
-        // delete cloned template repository github files
-        await deleteFolder('.github');
-        await deleteFile('degit.json');
-
+        // degit.json does not seem to be respected by tiged in this case
+        // add credentials file to .evidence/template/evidence.settings.json if it is using default template, and also delete the degit.json file
+        if (templateRepositoryUrl === templateProjectUrl) {
+          console.log('Adding credentials file to .evidence/template/evidence.settings.json');
+          let credentialsString = `{"database":"duckdb","credentials":{"filename":"needful_things.duckdb","gitignoreDuckdb":null}}`
+          await workspace.fs.writeFile(Uri.file(`${projectFolderPath}/.evidence/template/evidence.settings.json`), Buffer.from(credentialsString));
+          await workspace.fs.delete(Uri.file(`${projectFolderPath}/degit.json`));
+        }
+        
         // update Evidence project context and status bar
         updateProjectContext();
         statusBar.showInstall();
