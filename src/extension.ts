@@ -6,12 +6,16 @@ import {
   ProgressLocation,
   TextEditor,
   DecorationOptions,
+  TextDocument,
   Range,
   Position,
+  Uri,
   commands,
   extensions
 } from 'vscode';
-
+import { VirtualDocumentProvider } from './virtualDocumentProvider';
+import { LanguageServerProxy } from './languageServerProxy';
+import { MarkdownParser } from './markdownParser';
 import { TelemetryService } from './telemetryService';
 
 import { Commands } from './commands/commands';
@@ -81,6 +85,28 @@ function isPagesDirectory(){
   return pageContext;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+// This map will store URI -> Content mappings for virtual files
+let virtualFileContents = new Map();
+
+class VirtualDocumentContentProvider {
+    provideTextDocumentContent(uri: { toString: () => any; }) {
+        // Retrieve the content for the given URI
+        const content = virtualFileContents.get(uri.toString());
+        return content || 'Content not found';
+    }
+}
+
 /**
  * Activates Evidence vscode extension.
  *
@@ -89,6 +115,92 @@ function isPagesDirectory(){
 export async function activate(context: ExtensionContext) {
   setExtensionContext(context);
   registerCommands(context);
+
+  const conentProvider = new VirtualDocumentContentProvider();
+  const scheme = 'svelte'; 
+  context.subscriptions.push(workspace.registerTextDocumentContentProvider(scheme, conentProvider));
+
+
+  const virtualDocumentProvider = new VirtualDocumentProvider();
+const languageServerProxy = new LanguageServerProxy(context.extensionPath);
+const markdownParser = new MarkdownParser();
+
+languageServerProxy.startOrUpdateServer(workspace.workspaceFolders?.[0].uri);
+
+// Handle already open text documents
+workspace.textDocuments.forEach(document => {
+    if (document.languageId === 'emd') {
+        const svelteCode = markdownParser.extractSvelteCode(document);
+        const virtualUri = virtualDocumentProvider.getVirtualUri(document.uri);
+
+        // Open the virtual document
+        languageServerProxy.openDocument(virtualUri, svelteCode);
+
+    }
+});
+
+// Handle opening of markdown files
+const openTextDocumentHandler = workspace.onDidOpenTextDocument(async document => {
+    if (document.languageId === 'emd') {
+        handleDocumentOpen(document);
+    }
+});
+context.subscriptions.push(openTextDocumentHandler);
+
+// Register the virtual document provider and add to context.subscriptions
+const virtualDocProviderDisposable = workspace.registerTextDocumentContentProvider('svelte', virtualDocumentProvider);
+context.subscriptions.push(virtualDocProviderDisposable);
+
+// Subscribe to the onDidChange event for virtualDocumentProvider
+const onDidChangeDisposable = virtualDocumentProvider.onDidChange(async (uri) => {
+    const virtualDocumentContent = await virtualDocumentProvider.provideTextDocumentContent(uri);
+    virtualDocumentProvider.updateVirtualDocument(uri, virtualDocumentContent);
+    const virtualUri = virtualDocumentProvider.getVirtualUri(uri);
+    const version = virtualDocumentProvider.getDocumentVersion(virtualUri); // Get the updated document version
+    languageServerProxy.startOrUpdateServer(virtualUri, virtualDocumentContent, version);
+});
+context.subscriptions.push(onDidChangeDisposable);
+
+// Debounce setup for onDidChangeTextDocument
+let debounceTimer: NodeJS.Timeout | null = null;
+
+// Handle changes to markdown files
+const changeTextDocumentHandler = workspace.onDidChangeTextDocument(event => {
+    if (event.document.languageId === 'emd') {
+        if (debounceTimer) {
+            clearTimeout(debounceTimer);
+        }
+        debounceTimer = setTimeout(() => handleDocumentChange(event.document), 1000); // 500ms debounce time
+    }
+});
+context.subscriptions.push(changeTextDocumentHandler);
+
+// Function to handle document open
+async function handleDocumentOpen(document: TextDocument) {
+    const svelteCode = markdownParser.extractSvelteCode(document);
+    
+    // Open the document first
+    const virtualUri = virtualDocumentProvider.getVirtualUri(document.uri);
+    console.log(`virtUri=${virtualUri}`)
+    languageServerProxy.openDocument(virtualUri, svelteCode);
+    
+    // Then handle document change
+    handleDocumentChange(document);
+}
+
+// Function to handle document change
+async function handleDocumentChange(document: TextDocument) {
+    // console.log(`Document change detected: ${document.uri.toString()}`);
+    const svelteCode = markdownParser.extractSvelteCode(document);
+    // console.log(`Extracted Svelte code: ${svelteCode.substring(0, 100)}...`);
+    
+    const virtualUri = virtualDocumentProvider.getVirtualUri(document.uri);
+    const version = virtualDocumentProvider.getDocumentVersion(virtualUri);
+    virtualDocumentProvider.updateVirtualDocument(virtualUri, svelteCode);
+    
+    console.log(virtualUri.toString()); // Log the virtual URI
+    languageServerProxy.startOrUpdateServer(virtualUri, svelteCode, version);
+}
 
   // Set up telemetry
   const iK = '99ec224c-3fe8-4635-96ef-24c9aa5a354f'; 
@@ -153,24 +265,24 @@ export async function activate(context: ExtensionContext) {
     decorate(openEditor);
   }
 
-  window.onDidChangeTextEditorSelection(
-    () => {
-      const openEditor = window.activeTextEditor;
-      if(openEditor && openEditor.document.fileName.endsWith('.md') && isPagesDirectory()){
-        decorate(openEditor);
-      }
-    }
-  );
+  // window.onDidChangeTextEditorSelection(
+  //   () => {
+  //     const openEditor = window.activeTextEditor;
+  //     if(openEditor && openEditor.document.fileName.endsWith('.md') && isPagesDirectory()){
+  //       decorate(openEditor);
+  //     }
+  //   }
+  // );
 
   // Needed for delete key events which are not captured by the onDidChangeTextEditorSelection event
-  workspace.onDidChangeTextDocument(
-    () => {
-      const openEditor = window.activeTextEditor;
-      if(openEditor && openEditor.document.fileName.endsWith('.md')  && isPagesDirectory()){
-        decorate(openEditor);
-      }
-    }
-  );
+  // workspace.onDidChangeTextDocument(
+  //   () => {
+  //     const openEditor = window.activeTextEditor;
+  //     if(openEditor && openEditor.document.fileName.endsWith('.md')  && isPagesDirectory()){
+  //       decorate(openEditor);
+  //     }
+  //   }
+  // );
 
     // When markdown file is saved:
     workspace.onDidSaveTextDocument(

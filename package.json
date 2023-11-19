@@ -310,14 +310,14 @@
     "configurationDefaults": {
       "[emd]": {
         "editor.wordWrap": "on",
-        "editor.suggest.showWords": false,
+        "editor.suggest.showWords": true,
         "editor.quickSuggestions": {
-          "other": false,
-          "comments": false,
-          "strings": false
+          "other": true,
+          "comments": true,
+          "strings": true
         },
         "editor.suggest.snippetsPreventQuickSuggestions": false,
-        "editor.quickSuggestionsDelay": 300,
+        "editor.quickSuggestionsDelay": 0,
         "editor.acceptSuggestionOnEnter": "off"
       }
     },
@@ -404,7 +404,9 @@
   "dependencies": {
     "@vscode/extension-telemetry": "^0.9.0",
     "@vscode/vsce": "^2.21.1",
+    "svelte-language-server": "^0.15.22",
     "tiged": "^2.12.5",
-    "vsce": "^2.15.0"
+    "vsce": "^2.15.0",
+    "vscode-languageclient": "^8.1.0"
   }
 }
