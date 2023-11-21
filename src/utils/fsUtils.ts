@@ -9,6 +9,9 @@ import {
 import { getWorkspaceFolder } from '../config';
 import { getOutputChannel } from '../output';
 
+import * as fs from 'fs';
+import * as path from 'path';
+
 /**
  * Checks if the given folder exists using workspace.fs API.
  *
@@ -156,4 +159,54 @@ export async function deleteFile(relativeFilePath: string): Promise<boolean> {
     }
   }
   return false;
+}
+
+
+export function countFilesInDirectory(dir: string, filePattern: RegExp): number {
+    let count: number = 0;
+
+    if (!fs.existsSync(dir)) {
+        return count;
+    }
+
+    const files: string[] = fs.readdirSync(dir);
+
+    for (const file of files) {
+        const fullPath: string = path.join(dir, file);
+        const stat: fs.Stats = fs.statSync(fullPath);
+
+        if (stat.isDirectory()) {
+            count += countFilesInDirectory(fullPath, filePattern);
+        } else if (filePattern.test(file)) {
+            count++;
+        }
+    }
+
+    return count;
+}
+
+export function countTemplatedPages(dir: string): number {
+    let count: number = 0;
+
+    if (!fs.existsSync(dir)) {
+        return count;
+    }
+
+    const files: string[] = fs.readdirSync(dir);
+
+    for (const file of files) {
+        const fullPath: string = path.join(dir, file);
+        const stat: fs.Stats = fs.statSync(fullPath);
+
+        if (stat.isDirectory()) {
+            if (/\[.*\]/.test(file) && fs.existsSync(path.join(fullPath, 'index.md'))) {
+                count++;
+            }
+            count += countTemplatedPages(fullPath);
+        } else if (/\[.*\]\.md$/.test(file)) {
+            count++;
+        }
+    }
+
+    return count;
 }

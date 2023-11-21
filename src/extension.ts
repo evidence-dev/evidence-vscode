@@ -26,6 +26,7 @@ import { openIndex, openWalkthrough } from './commands/project';
 import { statusBar } from './statusBar';
 import { closeTerminal } from './terminal';
 import { isGitRepository } from './utils/gitCheck';
+import { countFilesInDirectory, countTemplatedPages } from './utils/fsUtils';
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -173,15 +174,61 @@ export async function activate(context: ExtensionContext) {
   );
 
     // When markdown file is saved:
-    workspace.onDidSaveTextDocument(
-      () => {
-        const openEditor = window.activeTextEditor;
-        if(openEditor && openEditor.document.fileName.endsWith('.md')  && isPagesDirectory()){
-          telemetryService.sendEvent('saveMarkdown');
-        }
+    workspace.onDidSaveTextDocument(document => {
+      if (document.fileName.endsWith('.md') && isPagesDirectory()) {
+        const isTemplated = /\[.+\]/.test(document.fileName);
+        const text = document.getText();
+        const codeBlockMatches = (text.match(/```/g) || []).length;
+        const numberOfCodeBlocks = codeBlockMatches / 2; // Divide by 2 because each block has opening and closing backticks
+        const eachBlocks = (text.match(/\{#each\s+[^}]+\}/g) || []).length;
+        const ifBlocks = (text.match(/\{#if\s+[^}]+\}/g) || []).length;
+        const svelteComponents = (text.match(/<\w+(\s+[^>]*)?\/>|<\w+(\s+[^>]*)?>[\s\S]*?<\/\w+>/g) || []).length;
+
+        telemetryService.sendEvent('saveMarkdown', {
+          templated: isTemplated.toString(),
+          linesInFile: document.lineCount.toString(),
+          charactersInFile: text.length.toString(),
+          codeBlocksInFile: numberOfCodeBlocks.toString(),
+          ifBlocksInFile: ifBlocks.toString(),
+          eachBlocksInFile: eachBlocks.toString(),
+          componentsInFile: svelteComponents.toString()
+        });
       }
-    );
+    });
+
+  // Track file changes in pages directory:
+  workspace.onDidCreateFiles(event => {
+    event.files.forEach(file => {
+      if (file.path.endsWith('.md') && file.path.includes('/pages/')) {
+        const isTemplated = /\[.+\]/.test(file.path);
+        telemetryService.sendEvent('createMarkdownFile', { templated: isTemplated.toString() });
+      }
+    });
+  });
   
+  workspace.onDidDeleteFiles(event => {
+    event.files.forEach(file => {
+      const isTemplated = /\[.+\]/.test(file.path);
+      const isInPagesDirectory = file.path.includes('/pages/');
+  
+      if (file.path.endsWith('.md') && isInPagesDirectory) {
+        telemetryService.sendEvent('deleteMarkdownFile', { templated: isTemplated.toString() });
+      } else if (isInPagesDirectory) {
+        // Assuming it's a directory within 'pages'
+        telemetryService.sendEvent('deleteDirectory', { templated: isTemplated.toString() });
+      }
+    });
+  });
+
+  workspace.onDidCreateFiles(event => {
+    event.files.forEach(file => {
+      if (fs.lstatSync(file.path).isDirectory() && file.path.includes('/pages/')) {
+        const isTemplated = /\[.+\]/.test(file.path);
+        telemetryService.sendEvent('createDirectory', { templated: isTemplated.toString() });
+      }
+    });
+  });
+
 
   // register markdown symbol provider
   const markdownLanguage = { language: 'emd', scheme: 'file' };
@@ -193,15 +240,37 @@ export async function activate(context: ExtensionContext) {
 
   // get all evidence files in workspace
   const evidenceFiles = await workspace.findFiles('**/.evidence/**/*.*');
-
-  // get evidence version
-  const evidenceVersion = dependencyVersion(workspacePackageJson, '@evidence-dev/evidence');
-
+  
   // check for evidence app files and dependencies in the loaded package.json
   if (workspace.workspaceFolders && evidenceFiles.length > 0 &&
     workspacePackageJson && hasDependency(workspacePackageJson, '@evidence-dev/evidence')) {
+
+    // get evidence version
+    const evidenceVersion = dependencyVersion(workspacePackageJson, '@evidence-dev/evidence');
+
+    // get information about project
+    let markdownFilesCount: number = 0;
+    let templatedPagesCount: number = 0;
+    let sourcesFilesCount: number = 0;
+    let componentsFilesCount: number = 0;
+    let evidenceFolderAtRoot: boolean = false;
+    if (workspaceFolder) {
+      markdownFilesCount = countFilesInDirectory(path.join(workspaceFolder?.uri.fsPath, 'pages'), /\.md$/);
+      templatedPagesCount = countTemplatedPages(path.join(workspaceFolder?.uri.fsPath, 'pages'));
+      sourcesFilesCount = countFilesInDirectory(path.join(workspaceFolder?.uri.fsPath, 'sources'), /.*$/);
+      componentsFilesCount = countFilesInDirectory(path.join(workspaceFolder?.uri.fsPath, 'components'), /.*$/);
+      evidenceFolderAtRoot = fs.existsSync(path.join(workspaceFolder?.uri.fsPath, '.evidence'));
+    }
+
     
-    telemetryService.sendEvent('activate', {evidenceVersion: evidenceVersion});
+    telemetryService.sendEvent('activate', {
+      evidenceVersion: evidenceVersion,
+      markdownFiles: `${markdownFilesCount}`,
+      templatedPages: `${templatedPagesCount}`,
+      sourcesFiles: `${sourcesFilesCount}`,
+      componentsFiles: `${componentsFilesCount}`,
+      evidenceFolderAtRoot: `${evidenceFolderAtRoot}`
+    });
 
     // set Evidence project context
     updateProjectContext();
