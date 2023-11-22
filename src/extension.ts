@@ -66,7 +66,8 @@ function decorate(editor: TextEditor) {
   }
 
     editor.setDecorations(decorationType, decorationsArray);
-}
+
+  }
 
 function isPagesDirectory(){
   const openEditor = window.activeTextEditor;
@@ -151,14 +152,22 @@ export async function activate(context: ExtensionContext) {
   // decorate slash command on activation if the active file is a markdown file
   const openEditor = window.activeTextEditor;
   if(openEditor && openEditor.document.fileName.endsWith('.md') && isPagesDirectory()){
-    decorate(openEditor);
+    try {
+      decorate(openEditor);
+    } catch(e) {
+      telemetryService.sendEvent('decorationError');
+    }  
   }
 
   window.onDidChangeTextEditorSelection(
     () => {
       const openEditor = window.activeTextEditor;
       if(openEditor && openEditor.document.fileName.endsWith('.md') && isPagesDirectory()){
-        decorate(openEditor);
+        try {
+          decorate(openEditor);
+        } catch(e) {
+          telemetryService.sendEvent('decorationError');
+        }
       }
     }
   );
@@ -168,7 +177,11 @@ export async function activate(context: ExtensionContext) {
     () => {
       const openEditor = window.activeTextEditor;
       if(openEditor && openEditor.document.fileName.endsWith('.md')  && isPagesDirectory()){
-        decorate(openEditor);
+        try {
+          decorate(openEditor);
+        } catch(e) {
+          telemetryService.sendEvent('decorationError');
+        }      
       }
     }
   );
