@@ -175,6 +175,7 @@ export async function activate(context: ExtensionContext) {
 
     // When markdown file is saved:
     workspace.onDidSaveTextDocument(document => {
+      try {
       if (document.fileName.endsWith('.md') && isPagesDirectory()) {
         const isTemplated = /\[.+\]/.test(document.fileName);
         const text = document.getText();
@@ -183,6 +184,14 @@ export async function activate(context: ExtensionContext) {
         const eachBlocks = (text.match(/\{#each\s+[^}]+\}/g) || []).length;
         const ifBlocks = (text.match(/\{#if\s+[^}]+\}/g) || []).length;
         const svelteComponents = (text.match(/<\w+(\s+[^>]*)?\/>|<\w+(\s+[^>]*)?>[\s\S]*?<\/\w+>/g) || []).length;
+        const expressions = (text.match(/\{[^}]+\}/g) || []).length;
+        const dataTables = (text.match(/<DataTable[\s\S]*?(<\/DataTable>|\/>)/g) || []).length;
+        const columns = (text.match(/<Column[\s\S]*?(<\/Column>|\/>)/g) || []).length;
+        const values = (text.match(/<Value[\s\S]*?(<\/Value>|\/>)/g) || []).length;
+        const bigValues = (text.match(/<BigValue[\s\S]*?(<\/BigValue>|\/>)/g) || []).length;
+        const charts = (text.match(/<\w*(Chart|Plot)\w*[\s\S]*?(<\/\w*(Chart|Plot)\w*>|\/>)/g) || []).length;
+        const annotations = (text.match(/<\w*Reference\w*[\s\S]*?(<\/\w*Reference\w*>|\/>)/g) || []).length;
+
 
         telemetryService.sendEvent('saveMarkdown', {
           templated: isTemplated.toString(),
@@ -191,10 +200,20 @@ export async function activate(context: ExtensionContext) {
           codeBlocksInFile: numberOfCodeBlocks.toString(),
           ifBlocksInFile: ifBlocks.toString(),
           eachBlocksInFile: eachBlocks.toString(),
-          componentsInFile: svelteComponents.toString()
+          componentsInFile: svelteComponents.toString(),
+          expressionsInFile: expressions.toString(),
+          dataTablesInFile: dataTables.toString(),
+          columnsInFile: columns.toString(),
+          valuesInFile: values.toString(),
+          bigValuesInFile: bigValues.toString(),
+          chartsInFile: charts.toString(),
+          annotationsInFile: annotations.toString()
         });
       }
-    });
+  } catch(e) {
+    telemetryService.sendEvent('telemetryError', { location: 'saveMarkdown'});
+  }
+});
 
   // Track file changes in pages directory:
   workspace.onDidCreateFiles(event => {
@@ -245,6 +264,7 @@ export async function activate(context: ExtensionContext) {
   if (workspace.workspaceFolders && evidenceFiles.length > 0 &&
     workspacePackageJson && hasDependency(workspacePackageJson, '@evidence-dev/evidence')) {
 
+    try{
     // get evidence version
     const evidenceVersion = dependencyVersion(workspacePackageJson, '@evidence-dev/evidence');
 
@@ -271,6 +291,10 @@ export async function activate(context: ExtensionContext) {
       componentsFiles: `${componentsFilesCount}`,
       evidenceFolderAtRoot: `${evidenceFolderAtRoot}`
     });
+
+  } catch(e) {
+    telemetryService.sendEvent('telemetryError', {location: 'activate'});
+  }
 
     // set Evidence project context
     updateProjectContext();
