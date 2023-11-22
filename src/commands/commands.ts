@@ -20,6 +20,7 @@ import { preview } from './preview';
 import { openSettingsFile, viewExtensionSettings, viewAppSettings } from './settings';
 import { clearCache} from './cache';
 import { showOutput } from '../output';
+import { createTemplatedPage } from './documents';
 
 /**
  * VSCode and Evidence extension commands.
@@ -56,7 +57,8 @@ export const enum Commands {
   ShowOutput = 'evidence.showOutput',
   OpenIndex = 'evidence.openIndex',
   OpenEvidenceWalkthrough = 'evidence.openWalkthrough',
-  OpenSimpleBrowser = 'simpleBrowser.api.open'
+  OpenSimpleBrowser = 'simpleBrowser.api.open',
+  CreateTemplatedPage = 'evidence.createTemplatedPage'
 }
 
 let _context: ExtensionContext;
@@ -87,6 +89,7 @@ export function registerCommands(context: ExtensionContext) {
   registerCommand(Commands.ShowOutput, showOutput);
   registerCommand(Commands.OpenIndex, openIndex);
   registerCommand(Commands.OpenEvidenceWalkthrough, openWalkthrough);
+  registerCommand(Commands.CreateTemplatedPage, createTemplatedPage);
 }
 
 /**
