@@ -64,7 +64,7 @@ export async function getAppPageUri(pageUrl?: string): Promise<Uri> {
  * @param pageFileUri Optional Uri of the starting page to load in preview.
  */
 export async function startServer(pageUri?: Uri) {
-  telemetryService.sendEvent('startServerInitiate');
+  telemetryService.sendEvent('startServer');
 
   if (!pageUri) {
     pageUri = await getAppPageUri('/');
@@ -85,11 +85,13 @@ export async function startServer(pageUri?: Uri) {
     if(!(await hasDependencies())){
       // prepend server run command with dependency install command:
       dependencyCommand = `npm install ; `;
-      depTimeout = 25000;
-      // install takes longer on windows
-      if(process.platform === 'win32'){
-        depTimeout += 20000;
-      }
+      if(previewType.includes('internal')){
+        depTimeout = 25000;
+        // install takes longer on windows
+        if(process.platform === 'win32'){
+          depTimeout += 20000;
+        }
+    }
       telemetryService.sendEvent('installDependencies');
     }
 
@@ -122,15 +124,18 @@ export async function startServer(pageUri?: Uri) {
 
     _running = true;
 
-    // wait for the dev server to start
-    await timeout(1000);
+    if(previewType.includes('internal')){
 
-    // wait for the server to process pages
-    await timeout(5000);
+      // wait for the dev server to start
+      await timeout(1000);
 
-    // server start takes longer on windows
-    if(process.platform === 'win32'){
-        await timeout(20000);
+      // wait for the server to process pages
+      await timeout(5000);
+
+      // server start takes longer on windows
+      if(process.platform === 'win32'){
+          await timeout(20000);
+      }
     }
 
     if(_running === true){
@@ -141,9 +146,6 @@ export async function startServer(pageUri?: Uri) {
       if(previewType === 'internal' || previewType === 'internal - side-by-side'){
         preview(pageUri);
       }
-
-      // send event
-      telemetryService.sendEvent('startServer');
 
       // change button to stop server
       statusBar.showStop();
@@ -175,9 +177,9 @@ export function getActivePort() {
  * and closes Evidence app terminal.
  */
 export async function stopServer() {
-  if (_running) {
-    sendCommand('q', '', false);
-  }
+  // if (_running) {
+  //   sendCommand('q', '', false);
+  // }
 
   // close Evidence server terminal instance
   closeTerminal();

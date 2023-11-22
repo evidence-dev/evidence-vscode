@@ -66,8 +66,7 @@ function decorate(editor: TextEditor) {
   }
 
     editor.setDecorations(decorationType, decorationsArray);
-
-  }
+}
 
 function isPagesDirectory(){
   const openEditor = window.activeTextEditor;
@@ -113,11 +112,15 @@ export async function activate(context: ExtensionContext) {
             telemetryService.updateProfileDetails(profile.anonymousId, profile.traits.projectCreated);
         } catch (err) {
             telemetryService.clearProfileDetails();
+            telemetryService.sendEvent('telemetryError', {location: 'updateProfileDetailsFromJson'});
         }
     };
 
   profileWatcher.onDidChange(updateProfileDetailsFromJson);
-  profileWatcher.onDidCreate(updateProfileDetailsFromJson);
+  profileWatcher.onDidCreate(() => {
+    telemetryService.sendEvent('profileCreated');
+    updateProfileDetailsFromJson();
+  });  
   profileWatcher.onDidDelete(() => telemetryService.clearProfileDetails());
 
   context.subscriptions.push(profileWatcher);
@@ -156,7 +159,7 @@ export async function activate(context: ExtensionContext) {
       decorate(openEditor);
     } catch(e) {
       telemetryService.sendEvent('decorationError');
-    }  
+    }    
   }
 
   window.onDidChangeTextEditorSelection(
@@ -167,7 +170,7 @@ export async function activate(context: ExtensionContext) {
           decorate(openEditor);
         } catch(e) {
           telemetryService.sendEvent('decorationError');
-        }
+        }  
       }
     }
   );
@@ -181,7 +184,7 @@ export async function activate(context: ExtensionContext) {
           decorate(openEditor);
         } catch(e) {
           telemetryService.sendEvent('decorationError');
-        }      
+        }  
       }
     }
   );
@@ -253,12 +256,16 @@ export async function activate(context: ExtensionContext) {
   });
 
   workspace.onDidCreateFiles(event => {
+    try{
     event.files.forEach(file => {
       if (fs.lstatSync(file.path).isDirectory() && file.path.includes('/pages/')) {
         const isTemplated = /\[.+\]/.test(file.path);
         telemetryService.sendEvent('createDirectory', { templated: isTemplated.toString() });
       }
     });
+  } catch(e) {
+    telemetryService.sendEvent('telemetryError', {location: 'createDirectory'});
+  }
   });
 
 
