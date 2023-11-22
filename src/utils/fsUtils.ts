@@ -119,6 +119,7 @@ export async function copyFiles(sourceFolder: Uri, targetFolder: Uri) {
  */
 export async function deleteFolder(relativeFolderPath: string): Promise<boolean> {
   const workspaceFolders = workspace.workspaceFolders;
+
   if (workspaceFolders) {
     for (const folder of workspaceFolders) {
       const folderUri: Uri = Uri.joinPath(folder.uri, relativeFolderPath);

@@ -23,7 +23,7 @@ import { statusBar } from '../statusBar';
 import { cloneTemplateRepository } from './template';
 import { getExtensionFileUri } from '../extensionContext';
 import { folderExists, copyFolder } from '../utils/fsUtils';
-import { openNewProjectFolder, showInstallDependencies } from '../views/prompts';
+import { openNewProjectFolder } from '../views/prompts';
 import { telemetryService } from '../extension';
 
 import {
@@ -53,7 +53,7 @@ const templateProjectUrlSetting = 'https://github.com/evidence-dev/template';
  * @param {string} projectUrl Optional template project url to copy the project from. If not provided, the template project will be used.
  */
 export async function createNewProject(projectFolder?: Uri, projectUrl?: string) {
-  telemetryService.sendEvent('createNewProject');
+  telemetryService.sendEvent('createNewProjectStart');
 
   if (!projectFolder) {
     const selectedFolders: Uri[] | undefined = await showSelectFolderDialog();
@@ -142,7 +142,7 @@ export async function createNewProject(projectFolder?: Uri, projectUrl?: string)
     showInvalidTemplateProjectUrlErrorMessage(projectTemplateUrl);
     outputChannel.appendLine(`✗ Invalid Template Project Folder: ${projectTemplateUrl}`);
   }
-  telemetryService.sendEvent('createNewProject');
+  telemetryService.sendEvent('createNewProjectComplete');
 }
 
 /**
@@ -184,25 +184,7 @@ async function createProjectFolder(templateFolder: Uri, projectFolder: Uri) {
       }
     }
 
-    // check if new Evidence project was created in the open workspace folder
-    const workspaceFolder: WorkspaceFolder | undefined = getWorkspaceFolder();
-    if (workspaceFolder?.uri.fsPath === projectFolder.fsPath) {
-      // update Evidence project context and status bar
-      // to enable all the Evidence project commands, etc.
-      updateProjectContext();
-      statusBar.showInstall();
-
-      // prompt to install Evidence app dependencies in the open workspace
-      showInstallDependencies();
-    }
-    else {
-      // prompt to open created Evidence project subfolder
-      // in a new VS Code workspace window
-      // to enable all Evidence extension commands
-      // and custom Evidence markdown Preview handling
-      // for the Evidence app and markdown pages development
       openNewProjectFolder(projectFolder);
-    }
   }
 }
 
@@ -211,22 +193,18 @@ async function createProjectFolder(templateFolder: Uri, projectFolder: Uri) {
  *
  */
 export async function openIndex() {
-  // This requires error handling for situations where an index file does not exist.
-  // In that case, it should not execute anything.
+  let openMarkdownFiles = workspace.textDocuments.filter(doc => doc.fileName.endsWith('.md'));
 
-  let openFiles = workspace.textDocuments;
-
-  if(openFiles.length === 0){
+  if (openMarkdownFiles.length === 0) {
     const folderPath = getWorkspaceFolder();
-    const filePath = folderPath?.uri + '/pages/index.md';
+    const filePath = folderPath?.uri.toString() + '/pages/index.md';
     const fileUri = Uri.parse(filePath);
-    await commands.executeCommand('vscode.open', fileUri, 1);  
-    await commands.executeCommand('vscode.open', fileUri, 2);  
+    await commands.executeCommand('vscode.open', fileUri, 1);
+    await commands.executeCommand('vscode.open', fileUri, 2);
     openWalkthrough();
   }
   telemetryService.sendEvent('openIndex');
 }
-
 
 export async function openWalkthrough(){
   await commands.executeCommand(Commands.OpenWalkthrough, `Evidence.evidence-vscode#getStarted`, false);

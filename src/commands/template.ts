@@ -5,12 +5,14 @@ import {
   ProgressLocation,
   OutputChannel,
   WorkspaceFolder,
-  Uri
+  Uri,
+  env
 } from 'vscode';
-
+import * as path from 'path';
+import { promises as fs } from 'fs';
 import { Commands } from './commands';
 import { getWorkspaceFolder, updateProjectContext } from '../config';
-import { showInstallDependencies } from '../views/prompts';
+import { openNewProjectFolder } from '../views/prompts';
 import { timeout } from '../utils/timer';
 import { statusBar } from '../statusBar';
 import { deleteFile, deleteFolder } from '../utils/fsUtils';
@@ -77,7 +79,7 @@ export async function createProjectFromTemplate() {
   // get root project folder path and clone template repo into it
   const projectFolderPath: string = workspace.workspaceFolders[0].uri.fsPath;
   await cloneTemplateRepository(
-    templateRepositoryUrl, projectFolderPath, true); // prompt to install dependencies
+    templateRepositoryUrl, projectFolderPath);
 }
 
 /**
@@ -192,44 +194,34 @@ export async function cloneTemplateRepository(
         // add credentials file to .evidence/template/evidence.settings.json if it is using default template, and also delete the degit.json file
         if (templateRepositoryUrl === templateProjectUrl) {
           console.log('Adding credentials file to .evidence/template/evidence.settings.json');
-          let credentialsString = `{"database":"duckdb","credentials":{"filename":"needful_things.duckdb","gitignoreDuckdb":null}}`
+          let credentialsString = `{"database":"duckdb","credentials":{"filename":"needful_things.duckdb","gitignoreDuckdb":null}}`;
           await workspace.fs.writeFile(Uri.file(`${projectFolderPath}/.evidence/template/evidence.settings.json`), Buffer.from(credentialsString));
           await workspace.fs.delete(Uri.file(`${projectFolderPath}/degit.json`));
         }
         
         // update Evidence project context and status bar
         updateProjectContext();
-        statusBar.showInstall();
 
         progress.report({
           increment: 100,
           message: 'Finished creating Evidence project.'
         });
 
-        if (showInstallDependenciesNotification) {
-          // prompt a user to install Evidence node.js dependencies
-          showInstallDependencies();
-        }
-        else {
           // get open workspace folder
           const workspaceFolder: WorkspaceFolder | undefined = getWorkspaceFolder();
 
-          // check if open workspace folder is the same as the created project folder
-          if (workspaceFolder && workspaceFolder.uri.fsPath !== projectFolderPath) {
-            commands.executeCommand(Commands.OpenFolder, Uri.file(projectFolderPath), true);
-            // display Open Folder notification message
-            // window.showInformationMessage(
-            //   `Evidence project created in: ${projectFolderPath}.`,
-            //   'Open Folder'
-            // ).then((selection: string | undefined) => {
-            //   if (selection === 'Open Folder') {
-            //     // open created project folder in a new VS Code window
-            //     // if the user selected the Open Folder option
-            //     commands.executeCommand(Commands.OpenFolder, Uri.file(projectFolderPath), true);
-            //   }
-            // });
-          }
-        }
+            // If the environment is not Codespaces, remove the .devcontainer folder
+            if (env.remoteName !== 'codespaces') {
+              const devContainerPath = path.join(projectFolderPath, '.devcontainer');
+              try {
+                await fs.rm(devContainerPath, { recursive: true, force: true });
+              } catch (error) {
+                // fail silently - leave the devcontainer folder in
+              }
+            }
+        
+          openNewProjectFolder(Uri.file(projectFolderPath));
+
       })
       .catch((error: any) => {
         const errorMessage = `Error cloning template repository. ${error.message}`;

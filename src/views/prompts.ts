@@ -76,7 +76,7 @@ export async function openNewProjectFolder(projectFolder: Uri) {
   // true = open in new window
   // false = open in current window
   // SET TO FALSE FOR TESTING ONLY - CHANGE TO TRUE BEFORE RELEASE
-  commands.executeCommand(Commands.OpenFolder, projectFolder, false);
+  commands.executeCommand(Commands.OpenFolder, projectFolder, true);
 }
 
 /**
