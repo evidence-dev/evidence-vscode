@@ -92,7 +92,7 @@ export async function sendCommand(command: string,
     }
   }
   else {
-    promptToInstallNodeJsAndRestart();
+    promptToInstallNodeJsAndRestart(_nodeVersion);
   }
 }
 
