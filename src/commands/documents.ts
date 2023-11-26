@@ -3,6 +3,12 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { telemetryService } from '../extension';
 
+function capitalizeWords(str: string) {
+  return str.toLowerCase().split(' ').map(word => 
+      word.charAt(0).toUpperCase() + word.substring(1)
+  ).join(' ');
+}
+
 export async function createTemplatedPageFromQuery() {
   telemetryService.sendEvent('createTemplatedPageFromQuery');
     const activeEditor = window.activeTextEditor;
@@ -32,7 +38,7 @@ export async function createTemplatedPageFromQuery() {
     const indexPath = path.join(newFolderPath, 'index.md');
     const columnFilePath = path.join(newFolderPath, `[${columnName}].md`);
 
-    const indexContent = `---\ntitle: Index for ${sqlFileName}\nsources:\n   - ${sqlFileName}: ${sqlFileName}.sql\n---\n\n<DataTable data={${sqlFileName}} link=link/>\n`;
+    const indexContent = `---\ntitle: ${capitalizeWords(sqlFileName)}\nsources:\n   - ${sqlFileName}: ${sqlFileName}.sql\n---\n\nClick on an item to see more detail\n\n<DataTable data={${sqlFileName}} link=link/>\n`;
     const columnFileContent = `---\nsources:\n   - ${sqlFileName}: ${sqlFileName}.sql\n---\n\n# {$page.params.${columnName}}\n\n<DataTable data={${sqlFileName}.filter(d => d.${columnName} === $page.params.${columnName})}/>\n`;
 
     fs.writeFileSync(indexPath, indexContent);
