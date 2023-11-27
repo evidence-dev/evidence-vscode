@@ -75,7 +75,7 @@ export async function startServer(pageUri?: Uri) {
   // check supported node version prior to server start
   const nodeVersion = await getNodeVersion();
   if (!isSupportedNodeVersion(nodeVersion)) {
-    promptToInstallNodeJsAndRestart();
+    promptToInstallNodeJsAndRestart(nodeVersion);
     telemetryService.sendEvent('nodeVersionError');
   } else {
 

@@ -42,7 +42,7 @@ export async function installDependencies() {
   // check supported node version prior to server start
   const nodeVersion = await getNodeVersion();
   if (!isSupportedNodeVersion(nodeVersion)) {
-    promptToInstallNodeJsAndRestart();
+    promptToInstallNodeJsAndRestart(nodeVersion);
  } else {   
     if (isServerRunning()) {
       stopServer();
@@ -117,7 +117,7 @@ export async function runCommandWithDepInstall(command: string) {
    // check supported node version prior to server start
    const nodeVersion = await getNodeVersion();
    if (!isSupportedNodeVersion(nodeVersion)) {
-      promptToInstallNodeJsAndRestart();
+      promptToInstallNodeJsAndRestart(nodeVersion);
   } else {   
     let depCommand = "";
     if (!(await hasDependencies())) {

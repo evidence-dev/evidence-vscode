@@ -107,9 +107,9 @@ export function executeCommand(command: string): Promise<string> {
   });
 }
 
-export async function promptToInstallNodeJsAndRestart() {
+export async function promptToInstallNodeJsAndRestart(currentVersion: string | undefined) {
   const downloadNodeNotification = await window.showErrorMessage(
-    'Evidence requires NodeJS v16.14 to v20.9',
+    currentVersion ? `Evidence requires NodeJS v16.14 to v20.9 - your NodeJS version is ${currentVersion}` : `Evidence requires NodeJS v16.14 to v20.9`,
     { title: downloadNodeJs }
   );
 
