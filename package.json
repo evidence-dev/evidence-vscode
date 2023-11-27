@@ -62,6 +62,11 @@
         "category": "Evidence"
       },
       {
+        "command": "evidence.createTemplatedPageFromQuery",
+        "title": "Create Templated Page from Query",
+        "category": "Evidence"
+      },
+      {
         "command": "evidence.newProject",
         "title": "New Evidence Project",
         "category": "Evidence"
