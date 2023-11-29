@@ -2,9 +2,10 @@ import { exec } from 'child_process';
 import { 
   window, 
   env, 
+  ExtensionContext,
   Uri } from 'vscode';
 import { showRestartPrompt } from './views/prompts';
-
+import { getExtensionContext } from './extensionContext';
 
 const downloadNodeJs = 'Download NodeJS (LTS Version)';
 const downloadNodeJsUrl = 'https://nodejs.org/en/download';
@@ -42,7 +43,7 @@ export function isSupportedNodeVersion(nodeVersion: string): boolean {
 
   // Maximum version of NodeJS required for Evidence:
   const maxMajorVersion = 20;
-  const maxMinorVersion = 9;
+  const maxMinorVersion = 10;
 
   // check node version
   if (nodeVersion && nodeVersion.startsWith('v')) {
@@ -108,8 +109,17 @@ export function executeCommand(command: string): Promise<string> {
 }
 
 export async function promptToInstallNodeJsAndRestart(currentVersion: string | undefined) {
+  const context = getExtensionContext();
+  const nodeErrorCountKey = 'nodeErrorCount';
+  const errorCount = context.globalState.get(nodeErrorCountKey, 0);
+  context.globalState.update(nodeErrorCountKey, errorCount + 1);
+
+  if (errorCount >= 1) {
+    promptForHelp();
+  }
+
   const downloadNodeNotification = await window.showErrorMessage(
-    currentVersion ? `Evidence requires NodeJS v16.14 to v20.9 - your NodeJS version is ${currentVersion}` : `Evidence requires NodeJS v16.14 to v20.9`,
+    currentVersion ? `Evidence requires NodeJS v16.14 to v20.10 - your NodeJS version is ${currentVersion}` : `Evidence requires NodeJS v16.14 to v20.10`,
     { title: downloadNodeJs }
   );
 
@@ -118,4 +128,15 @@ export async function promptToInstallNodeJsAndRestart(currentVersion: string | u
   }
   
   showRestartPrompt();
+}
+
+export async function promptForHelp() {
+  const helpNotification = await window.showWarningMessage(
+    `Need help with NodeJS? Chat with us in Slack`,
+    { title: `Chat in Evidence Slack` }
+  );
+
+  if (helpNotification?.title === `Chat in Evidence Slack`) {
+    env.openExternal(Uri.parse('https://slack.evidence.dev'));
+  }
 }
