@@ -376,7 +376,16 @@
           }
         ]
       }
-    ]
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "schemaView",
+          "name": "Evidence Schema View",
+          "when": "evidence.isNonLegacyProject"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
