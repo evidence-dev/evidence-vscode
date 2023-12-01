@@ -52,38 +52,51 @@ export class SchemaViewProvider implements vscode.TreeDataProvider<vscode.TreeIt
 }
 
 class SchemaItem extends vscode.TreeItem {
-  constructor(schema: string, private tables: vscode.Uri[]) {
+  constructor(private schema: string, private tables: vscode.Uri[]) {
     super(schema, vscode.TreeItemCollapsibleState.Collapsed);
     this.tooltip = schema;
+    this.id = schema;
   }
   
   async getTables(): Promise<TableItem[]> {
     return Promise.all(this.tables.map(async (table) => {
-      const tableName = path.basename(table.fsPath, '.schema.json');
-      const tableContent = await vscode.workspace.fs.readFile(table);
-      const tableJson = JSON.parse(Buffer.from(tableContent).toString());
-      return new TableItem(tableName, tableJson);
+      const name = path.basename(table.fsPath, '.schema.json');
+      const contents = await vscode.workspace.fs.readFile(table);
+      const columns = JSON.parse(Buffer.from(contents).toString());
+      return new TableItem({ name, columns }, this.schema);
     }));
   }
 
   // in the future: use each datasource icon for iconPath
 }
 
-type Table = { name: string, evidenceType: string }[];
+type Table = {
+  name: string;
+  columns: { name: string, evidenceType: string }[];
+};
 
 class TableItem extends vscode.TreeItem {
   columns: ColumnItem[];
 
-  constructor(name: string, table: Table) {
-    super(name, vscode.TreeItemCollapsibleState.Collapsed);
-    this.columns = table.map(({ name, evidenceType }) => new ColumnItem(name, evidenceType));
+  constructor(table: Table, schema: string) {
+    super(table.name, vscode.TreeItemCollapsibleState.Collapsed);
+    this.id = `${table.name}.${schema}`;
+    this.columns = table.columns.map(({ name, evidenceType }) => new ColumnItem(name, table.name, schema, evidenceType));
   }
 }
 
 class ColumnItem extends vscode.TreeItem {
-  constructor(name: string, evidenceType: string) {
+  constructor(name: string, table: string, schema: string, evidenceType: string) {
     super(name, vscode.TreeItemCollapsibleState.None);
     this.description = evidenceType;
+    this.id = `${table}.${schema}.${name}`;
+    this.iconPath = evidenceType === 'string'?
+        new vscode.ThemeIcon('symbol-string') 
+        : evidenceType === 'number'? 
+        new vscode.ThemeIcon('symbol-number') 
+        : evidenceType === 'boolean'? 
+        new vscode.ThemeIcon('symbol-boolean') 
+        : new vscode.ThemeIcon('calendar');
   }
 
   // todo: convert evidenceType to iconPath like sqltools
