@@ -53,3 +53,29 @@ export function dependencyVersion(packageJson: any, dependencyName: string): str
   return packageJson.dependencies[dependencyName];
 }
 
+export type Manifest = {
+  renderedFiles: Record<string, string[]>;
+};
+
+function validateManifest(x: any): x is Manifest {
+  return x && 
+    typeof x === 'object' &&
+    typeof x.renderedFiles === 'object' && 
+    Object.keys(x.renderedFiles).length > 0?
+      Object.values(x.renderedFiles).every(Array.isArray)
+      : true;
+}
+
+export async function getManifestUri(): Promise<Uri> {
+  const [manifestUri] = await workspace.findFiles('**/.evidence/template/static/data/manifest.json', null, 1);
+  return manifestUri;
+}
+
+export async function getManifest(uri: Uri): Promise<Manifest | null> {
+  const manifestJson = await workspace.fs.readFile(uri);
+  const manifest = JSON.parse(Buffer.from(manifestJson).toString());
+  if (validateManifest(manifest)) {
+    return manifest;
+  }
+  return null;
+}
