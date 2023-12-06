@@ -38,7 +38,7 @@ export async function createTemplatedPageFromQuery() {
     const indexPath = path.join(newFolderPath, 'index.md');
     const columnFilePath = path.join(newFolderPath, `[${columnName}].md`);
 
-    const indexContent = `---\ntitle: ${capitalizeWords(sqlFileName)}\nsources:\n   - ${sqlFileName}: ${sqlFileName}.sql\n---\n\nClick on an item to see more detail\n\n<DataTable data={${sqlFileName}} link=link/>\n`;
+    const indexContent = `---\ntitle: ${capitalizeWords(sqlFileName)}\nsources:\n   - ${sqlFileName}: ${sqlFileName}.sql\n---\n\nClick on an item to see more detail\n\n\n\`\`\`sql ${sqlFileName}_with_link\nselect *, '/${sqlFileName}/' || ${columnName} as link\nfrom \$\{${sqlFileName}\}\n\`\`\`\n\n<DataTable data={${sqlFileName}_with_link} link=link/>\n`;
     const columnFileContent = `---\nsources:\n   - ${sqlFileName}: ${sqlFileName}.sql\n---\n\n# {$page.params.${columnName}}\n\n<DataTable data={${sqlFileName}.filter(d => d.${columnName} === $page.params.${columnName})}/>\n`;
 
     fs.writeFileSync(indexPath, indexContent);
