@@ -5,6 +5,10 @@ import {
 
 import { TextDecoder } from 'util';
 
+import * as fs from 'fs';
+import * as path from 'path';
+import * as yaml from 'js-yaml';
+
 import { getWorkspaceFolder } from '../config';
 
 /**
@@ -78,4 +82,55 @@ export async function getManifest(uri: Uri): Promise<Manifest | null> {
     return manifest;
   }
   return null;
+}
+
+export async function hasManifest() {
+  const manifest = await workspace.findFiles('**/.evidence/template/static/data/manifest.json');
+  return manifest.length > 0;
+}
+
+export async function isUSQL() {
+  const connectionFiles = await workspace.findFiles('sources/**/connection.yaml');
+  return connectionFiles.length > 0;
+}
+
+interface ConnectionConfig {
+  type?: string;
+}
+
+export async function getTypesFromConnections() {
+  const workspaceFolders = workspace.workspaceFolders;
+  if (!workspaceFolders) {
+      return []; // No workspace is opened
+  }
+
+  const sourcesPath = path.join(workspaceFolders[0].uri.fsPath, 'sources');
+  let types = [];
+
+  try {
+      const filesAndFolders = fs.readdirSync(sourcesPath);
+
+      for (const item of filesAndFolders) {
+          const itemPath = path.join(sourcesPath, item);
+          if (fs.statSync(itemPath).isDirectory()) {
+              const connectionFilePath = path.join(itemPath, 'connection.yaml');
+              if (fs.existsSync(connectionFilePath)) {
+                  const fileContent = fs.readFileSync(connectionFilePath, 'utf8');
+                  try {
+                      const yamlContent = yaml.load(fileContent) as ConnectionConfig;
+                      if (yamlContent && yamlContent.type) {
+                          types.push(yamlContent.type);
+                      }
+                  } catch (err) {
+                      console.error(`Error parsing YAML in ${connectionFilePath}:`, err);
+                  }
+              }
+          }
+      }
+
+      return types;
+  } catch (err) {
+      console.error("Error reading 'sources' directory:", err);
+      return []; // Return an empty array in case of error
+  }
 }

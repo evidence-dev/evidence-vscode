@@ -13,6 +13,10 @@ import {
   buildProjectStrict
 } from './build';
 
+import {
+  runSources
+} from './sources';
+
 import { createNewProject, openIndex, openWalkthrough, copyProject } from './project';
 import { createProjectFromTemplate } from './template';
 import { startServer, stopServer} from './server';
@@ -54,6 +58,7 @@ export const enum Commands {
   ClearCache = 'evidence.clearCache',
   BuildProject = 'evidence.build',
   BuildProjectStrict = 'evidence.buildStrict',
+  RunSources = 'evidence.runSources',
   ShowOutput = 'evidence.showOutput',
   OpenIndex = 'evidence.openIndex',
   OpenEvidenceWalkthrough = 'evidence.openWalkthrough',
@@ -86,6 +91,7 @@ export function registerCommands(context: ExtensionContext) {
   registerCommand(Commands.ClearCache, clearCache);
   registerCommand(Commands.BuildProject, buildProject);
   registerCommand(Commands.BuildProjectStrict, buildProjectStrict);
+  registerCommand(Commands.RunSources, runSources);
   registerCommand(Commands.ShowOutput, showOutput);
   registerCommand(Commands.OpenIndex, openIndex);
   registerCommand(Commands.OpenEvidenceWalkthrough, openWalkthrough);
