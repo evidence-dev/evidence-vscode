@@ -127,12 +127,12 @@
     ],
     "description": "Insert Markdown Table"
   },
-  "Sankey Diagram": {
-    "prefix": "/SankeyDiagram",
+  "Sankey Chart": {
+    "prefix": "/SankeyChart",
     "body": [
-      "<SankeyDiagram\n\tdata={${1:query_name}}\n\tsourceCol=${2:column}\n\ttargetCol=${3:column}\n\tvalueCol=${4:column}\n/>\n\n"
+      "<SankeyChart\n\tdata={${1:query_name}}\n\tsourceCol=${2:column}\n\ttargetCol=${3:column}\n\tvalueCol=${4:column}\n/>\n\n"
     ],
-    "description": "Insert Sankey Diagram"
+    "description": "Insert Sankey Chart"
   },
   "Funnel Chart": {
     "prefix": "/FunnelChart",
@@ -228,7 +228,7 @@
   "Page Parameter": {
     "prefix": "/Page Parameter",
     "body": [
-      "{\\$page.params.${TM_FILENAME_BASE/[\\[\\]]//gi}}"
+      "{\\params.${TM_FILENAME_BASE/[\\[\\]]//gi}}"
     ],
     "description": "[For Templated Pages Only] Insert Page Parameter"
   },
@@ -325,4 +325,31 @@
     ],
     "description": "Insert code block"
   },
+  "Frontmatter": {
+    "prefix": "/Frontmatter",
+    "body": [
+      "---",
+      "title: ${1:Page Title}",
+      "queries:",
+      " - ${2:myquery: myquery.sql}"
+      "---" 
+    ],
+    "description": "Insert frontmatter (should be at top of markdown page)"
+  },
+  "Dropdown": {
+    "prefix": "/Dropdown",
+    "body": "<DropDown data={data} name=name_of_dropdown value=column_name/>",
+    "description": "Insert drop-down component"
+  },
+  "Dropdown with filtered query": {
+    "prefix": "/DropDownWithFilteredQuery",
+    "body": [
+      "<DropDown data={data} name=name_of_dropdown value=column_name/>",
+      "",
+      "```sql filtered_query",
+      "select * from table where column_name = ${inputs.name_of_dropdown}",
+      "```"
+    ]
+    "description": "Insert drop-down component and filtered query"
+  }
 }

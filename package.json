@@ -10,6 +10,7 @@
   "categories": [
     "Data Science",
     "Programming Languages",
+    "Visualization",
     "Other"
   ],
   "publisher": "Evidence",
@@ -48,6 +49,7 @@
     "onCommand:evidence.clearCache",
     "onCommand:evidence.startServer",
     "onCommand:evidence.stopServer",
+    "onCommand:evidence.runSources",
     "onCommand:evidence.preview",
     "onCommand:evidence.viewSettings",
     "onCommand:evidence.build",
@@ -91,6 +93,12 @@
       {
         "command": "evidence.updateDependencies",
         "title": "Update to Latest Version",
+        "category": "Evidence",
+        "enablement": "evidence.hasProject"
+      },
+      {
+        "command": "evidence.runSources",
+        "title": "Run Sources",
         "category": "Evidence",
         "enablement": "evidence.hasProject"
       },
@@ -398,6 +406,7 @@
   },
   "devDependencies": {
     "@types/glob": "^7.1.4",
+    "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^9.0.0",
     "@types/node": "14.x",
     "@types/vscode": "^1.52.0",
@@ -418,6 +427,7 @@
   "dependencies": {
     "@vscode/extension-telemetry": "^0.9.0",
     "@vscode/vsce": "^2.21.1",
+    "js-yaml": "^4.1.0",
     "tiged": "^2.12.5"
   }
 }

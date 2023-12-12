@@ -19,7 +19,7 @@ import { Commands } from './commands/commands';
 import { MarkdownSymbolProvider } from './providers/markdownSymbolProvider';
 import { setExtensionContext } from './extensionContext';
 import { registerCommands } from './commands/commands';
-import { loadPackageJson, hasDependency, dependencyVersion, getManifestUri, getManifest } from './utils/jsonUtils';
+import { loadPackageJson, hasDependency, dependencyVersion, getManifestUri, getManifest, isUSQL, hasManifest } from './utils/jsonUtils';
 import { Settings, getConfig, updateProjectContext } from './config';
 import { startServer } from './commands/server';
 import { openIndex, openWalkthrough } from './commands/project';
@@ -335,15 +335,25 @@ export async function activate(context: ExtensionContext) {
     // open index.md if no other files are open
     openIndex();
 
-    const manifestUri = await getManifestUri();
-    const manifest = await getManifest(manifestUri);
-    // if there's no manifest, either the project is unbuilt, or it's legacy - either way there's nothing to show
-    if (manifest) {
-      const schemaViewProvider = new SchemaViewProvider(manifestUri);
-      window.registerTreeDataProvider('schemaView', schemaViewProvider);
-    }
-    commands.executeCommand(Commands.SetContext, Context.isNonLegacyProject, !!manifest);
+    try{
+      if(await isUSQL() && await hasManifest()){
+        
+        const manifestUri = await getManifestUri();
+        const manifest = await getManifest(manifestUri);
+        
+        // if there's no manifest, either the project is unbuilt, or it's legacy - either way there's nothing to show
+        if (manifest) {
+          const schemaViewProvider = new SchemaViewProvider(manifestUri);
+          window.registerTreeDataProvider('schemaView', schemaViewProvider);
+        }
+        commands.executeCommand(Commands.SetContext, Context.isNonLegacyProject, !!manifest);
+      }
 
+    } catch(e) {
+      console.log(e);
+    }
+
+  
     if (autoStart) {
       startServer();
     }

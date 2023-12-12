@@ -7,7 +7,7 @@ import { deleteFolder } from '../utils/fsUtils';
 import { telemetryService } from '../extension';
 
 /**
- * Evidence application cache directory.
+ * Evidence application cache directories.
  */
 const cachePath = '.evidence/template/.evidence-queries';
 
