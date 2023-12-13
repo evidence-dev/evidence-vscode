@@ -47,7 +47,7 @@ export async function getPackageJsonFolder(): Promise<string | undefined> {
             let relativePath = path.relative(workspaceFolderPath, packageJsonDirPath);
     
             // Remove leading slash for relative paths
-            relativePath = relativePath.startsWith('/') ? relativePath.substring(1) : relativePath;
+            relativePath = relativePath.replace(/^\/|\\/, '');
     
             // Return empty string if the package.json is in the root
             return relativePath;
