@@ -17,17 +17,45 @@ import { getWorkspaceFolder } from '../config';
  * @returns package.json file content, or udefined if package.json file doesn't exist.
  */
 export async function loadPackageJson(): Promise<any | undefined> {
-  const packageJsonFiles = await workspace.findFiles('package.json');
-  if (workspace.workspaceFolders && packageJsonFiles.length > 0) {
-    // get package.json from the top workspace folder for now
-    const packageJsonUri: Uri = Uri.joinPath(getWorkspaceFolder()!.uri, 'package.json');
-    const packageJsonContent = await workspace.fs.readFile(packageJsonUri);
-    const textDecoder = new TextDecoder('utf-8');
-    const packageJson = JSON.parse(textDecoder.decode(packageJsonContent));
-    return packageJson;
+  const packageJsonFiles = await workspace.findFiles('**/package.json', '**/node_modules/**');
+
+  if (packageJsonFiles.length > 0) {
+      // Use the first package.json file found
+      const packageJsonUri = packageJsonFiles[0];
+      const packageJsonContent = await workspace.fs.readFile(packageJsonUri);
+      const textDecoder = new TextDecoder('utf-8');
+      const packageJson = JSON.parse(textDecoder.decode(packageJsonContent));
+      return packageJson;
+  }
+  
+  return undefined;
+}
+
+export async function getPackageJsonFolder(): Promise<string | undefined> {
+  const packageJsonFiles = await workspace.findFiles('**/package.json', '**/node_modules/**');
+  if (packageJsonFiles.length > 0) {
+      // Use the first package.json file found
+      const packageJsonUri = packageJsonFiles[0];
+
+      // Get the workspace folder path
+      const workspaceFolderPath = workspace.workspaceFolders
+          ? workspace.workspaceFolders[0].uri.fsPath
+          : undefined;
+
+        if (workspaceFolderPath) {
+            const packageJsonDirPath = path.dirname(packageJsonUri.fsPath);
+            let relativePath = path.relative(workspaceFolderPath, packageJsonDirPath);
+    
+            // Remove leading slash for relative paths
+            relativePath = relativePath.startsWith('/') ? relativePath.substring(1) : relativePath;
+    
+            // Return empty string if the package.json is in the root
+            return relativePath;
+        }
   }
   return undefined;
 }
+
 
 /**
  * Checks loaded package.json configuration devDependencies
@@ -90,7 +118,7 @@ export async function hasManifest() {
 }
 
 export async function isUSQL() {
-  const connectionFiles = await workspace.findFiles('sources/**/connection.yaml');
+  const connectionFiles = await workspace.findFiles('**/sources/**/connection.yaml');
   return connectionFiles.length > 0;
 }
 
@@ -104,7 +132,8 @@ export async function getTypesFromConnections() {
       return []; // No workspace is opened
   }
 
-  const sourcesPath = path.join(workspaceFolders[0].uri.fsPath, 'sources');
+  const packageJsonFolder = await getPackageJsonFolder();
+  const sourcesPath = path.join(workspaceFolders[0].uri.fsPath, packageJsonFolder ?? '', 'sources');
   let types = [];
 
   try {
