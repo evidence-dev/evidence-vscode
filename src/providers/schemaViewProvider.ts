@@ -4,6 +4,9 @@ import * as path from 'path';
 import { getManifest } from '../utils/jsonUtils';
 
 export class SchemaViewProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+  private _onDidChangeTreeData: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
+  readonly onDidChangeTreeData: vscode.Event<void> = this._onDidChangeTreeData.event;
+
   constructor(private manifestUri: vscode.Uri) {}
 
   getTreeItem(element: SchemaItem | TableItem | ColumnItem): vscode.TreeItem {
@@ -49,6 +52,11 @@ export class SchemaViewProvider implements vscode.TreeDataProvider<vscode.TreeIt
   private pathExists(p: vscode.Uri): boolean {
     return fs.existsSync(p.fsPath);
   }
+
+  refresh(): void {
+    this._onDidChangeTreeData.fire();
+  }
+
 }
 
 class SchemaItem extends vscode.TreeItem {

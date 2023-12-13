@@ -348,11 +348,16 @@ export async function activate(context: ExtensionContext) {
         
         const manifestUri = await getManifestUri();
         const manifest = await getManifest(manifestUri);
+        const manifestWatcher = workspace.createFileSystemWatcher(manifestUri.fsPath);
         
         // if there's no manifest, either the project is unbuilt, or it's legacy - either way there's nothing to show
         if (manifest) {
           const schemaViewProvider = new SchemaViewProvider(manifestUri);
           window.registerTreeDataProvider('schemaView', schemaViewProvider);
+          manifestWatcher.onDidChange(() => schemaViewProvider.refresh());
+          manifestWatcher.onDidCreate(() => schemaViewProvider.refresh());
+          manifestWatcher.onDidDelete(() => schemaViewProvider.refresh());
+          context.subscriptions.push(manifestWatcher);
         }
         commands.executeCommand(Commands.SetContext, Context.isNonLegacyProject, !!manifest);
       }
@@ -360,7 +365,6 @@ export async function activate(context: ExtensionContext) {
     } catch(e) {
       console.log(e);
     }
-
   
     if (autoStart) {
       startServer();
