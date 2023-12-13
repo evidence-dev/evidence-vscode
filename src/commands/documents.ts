@@ -2,7 +2,7 @@ import {workspace, window, Uri} from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import { telemetryService } from '../extension';
-import { isUSQL } from '../utils/jsonUtils';
+import { isUSQL, getPackageJsonFolder } from '../utils/jsonUtils';
 
 function capitalizeWords(str: string) {
   return str.toLowerCase().split(' ').map(word => 
@@ -31,9 +31,12 @@ export async function createTemplatedPageFromQuery() {
         return;
     }
 
-  const projectRoot = workspaceFolders[0].uri.fsPath;
+    // check if evidence project is in subdirectory:
+    const packageJsonFolder = await getPackageJsonFolder(); 
+
+    const projectRoot = workspaceFolders[0].uri.fsPath;
     const sqlFileName = path.basename(activeEditor.document.fileName, '.sql');
-    const newFolderPath = path.join(projectRoot, 'pages', sqlFileName);
+    const newFolderPath = path.join(projectRoot, packageJsonFolder ?? '', 'pages', sqlFileName);
     fs.mkdirSync(newFolderPath, { recursive: true });
 
     const indexPath = path.join(newFolderPath, 'index.md');
