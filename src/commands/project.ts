@@ -9,7 +9,12 @@ import {
   env
 } from 'vscode';
 import { promises as fs } from 'fs';
+import { existsSync } from 'fs';
 import * as path from 'path';
+import { sendCommand } from '../terminal';
+import { isServerRunning, stopServer } from './server';
+import { timeout } from '../utils/timer';
+import { exec } from 'child_process';
 import {
   Settings,
   getConfig,
@@ -213,4 +218,351 @@ export async function openIndex() {
 export async function openWalkthrough(){
   await commands.executeCommand(Commands.OpenWalkthrough, `Evidence.evidence-vscode#getStarted`, false);
   telemetryService.sendEvent('openWalkthrough');
+}
+
+
+
+
+// Scaffold USQL template project:
+
+function isValidFolderName(folderName: string): boolean {
+  return /^[a-z0-9\-_]+$/.test(folderName); // Adjust regex as needed
+}
+
+export async function migrateProjectToUSQL() {
+    const packageJsonFolder = await getPackageJsonFolder();
+    if(packageJsonFolder !== ''){
+      window.showErrorMessage('Migration command should only be run from within the Evidence folder workspace. You will need to use VS Code to open the folder as the current workspace.', {modal: true});
+    } else {
+
+      window.showInputBox({ prompt: 'Provide a name to use for your data source folder (E.g., needful_things or bigquery)' })
+      .then(dataSourceFolderName => {
+          if (!dataSourceFolderName || dataSourceFolderName.trim() === '') {
+              window.showErrorMessage('Data source folder name is required.');
+              return;
+          }
+
+          const validatedName = dataSourceFolderName.trim().toLowerCase();
+
+          if (!isValidFolderName(validatedName)) {
+              window.showErrorMessage('The data source folder name must be lowercase and must not contain spaces.', {modal: true});
+              return;
+          }
+
+          window.showInformationMessage(`You entered "${dataSourceFolderName}". Is this correct?`, {modal:true}, 'Yes', 'No')
+          .then(selection => {
+              if (selection === 'Yes') {
+                const workspaceRoot = workspace.workspaceFolders![0].uri.fsPath;
+                const legacyProjectPath = path.join(workspaceRoot, '_legacy_project');
+
+                moveFilesToLegacyProject(workspaceRoot, legacyProjectPath)
+                    .then(() => runDegitCommand(workspaceRoot))
+                    .then(() => createDataSourceFolder(workspaceRoot, dataSourceFolderName))
+                    .then(() => copySpecificFilesToDataSourceFolder(legacyProjectPath, workspaceRoot, dataSourceFolderName))
+                    .then(() => copyFoldersFromLegacyProject(legacyProjectPath, workspaceRoot))
+                    .then(() => migrateQueriesToUSQL(dataSourceFolderName))
+                    .catch(err => {
+                        window.showErrorMessage('Error during project scaffolding: ' + err.message);
+                    });
+                  } else {
+                    window.showErrorMessage('Data source folder name was not confirmed. Operation cancelled.', {modal: true});
+                }
+            });
+                  });
+
+                }
+                
+}
+
+async function createDataSourceFolder(workspaceRoot: string, dataSourceFolderName: string): Promise<void> {
+  const dataSourceFolderPath = path.join(workspaceRoot, 'sources', dataSourceFolderName);
+  await fs.mkdir(dataSourceFolderPath, { recursive: true });
+}
+
+async function copySpecificFilesToDataSourceFolder(legacyProjectPath: string, workspaceRoot: string, dataSourceFolderName: string): Promise<void> {
+  const fileTypes = ['.duckdb', '.db', '.sqlite', '.sqlite3', '.csv', '.parquet'];
+  const dataSourceFolderPath = path.join(workspaceRoot, 'sources', dataSourceFolderName);
+
+  // Copy files from the root of legacy_project
+  await copyFilesByType(legacyProjectPath, dataSourceFolderPath, fileTypes);
+
+  // Copy files from the sources folder of legacy_project
+  const legacySourcesPath = path.join(legacyProjectPath, 'sources');
+  if (existsSync(legacySourcesPath)) {
+      await copyFilesByType(legacySourcesPath, dataSourceFolderPath, fileTypes);
+  }
+}
+
+async function copyFilesByType(sourcePath: string, destinationPath: string, fileTypes: string[]): Promise<void> {
+  const entries = await fs.readdir(sourcePath, { withFileTypes: true });
+  for (const entry of entries) {
+      if (entry.isFile() && fileTypes.includes(path.extname(entry.name))) {
+          const srcFilePath = path.join(sourcePath, entry.name);
+          const destFilePath = path.join(destinationPath, entry.name);
+          await fs.copyFile(srcFilePath, destFilePath);
+      }
+  }
+}
+
+
+async function moveFilesToLegacyProject(workspaceRoot: string, legacyProjectPath: string): Promise<void> {
+  await fs.mkdir(legacyProjectPath, { recursive: true });
+  const entries = await fs.readdir(workspaceRoot, { withFileTypes: true });
+
+  for (const entry of entries) {
+    if (entry.name !== '_legacy_project' && entry.name !== '.git') { // Exclude .git folder
+        const oldPath = path.join(workspaceRoot, entry.name);
+        const newPath = path.join(legacyProjectPath, entry.name);
+        await fs.rename(oldPath, newPath);
+    }
+}
+}
+
+async function runDegitCommand(workspaceRoot: string): Promise<void> {
+  if (isServerRunning()) {
+    stopServer();
+    await timeout(1000);
+  }
+
+  const usqlTemplatePath = path.join(workspaceRoot, 'usql-template');
+
+  await fs.mkdir(usqlTemplatePath, { recursive: true });
+
+  return new Promise((resolve, reject) => {
+    exec('npx degit evidence-dev/template#next usql-template', { cwd: workspaceRoot }, async (error, stdout, stderr) => {
+        if (error) {
+            reject(error);
+            return;
+        }
+        console.log(stdout);
+
+        // Move contents from usql-template to workspace root
+        await moveContents(usqlTemplatePath, workspaceRoot);
+        resolve();
+    });
+});
+}
+
+async function copyFoldersFromLegacyProject(legacyProjectPath: string, workspaceRoot: string): Promise<void> {
+  const foldersToCopy = ['pages', 'sources', 'static', 'partials', 'components'];
+  for (const folder of foldersToCopy) {
+      const sourcePath = path.join(legacyProjectPath, folder);
+      let destPath = path.join(workspaceRoot, folder === 'sources' ? 'queries' : folder);
+
+      if (folder === 'pages' && existsSync(destPath)) {
+          await removeDirectory(destPath);
+      }
+
+      if (existsSync(sourcePath)) {
+          await copyDirectory(sourcePath, destPath, folder === 'sources');
+      }
+  }
+}
+
+
+async function removeDirectory(directoryPath: string) {
+  const entries = await fs.readdir(directoryPath, { withFileTypes: true });
+
+  for (const entry of entries) {
+      const entryPath = path.join(directoryPath, entry.name);
+      entry.isDirectory() ? await removeDirectory(entryPath) : await fs.unlink(entryPath);
+  }
+
+  await fs.rmdir(directoryPath);
+}
+
+async function copyDirectory(source: string, destination: string, isSourcesFolder: boolean = false) {
+  await fs.mkdir(destination, { recursive: true });
+  const entries = await fs.readdir(source, { withFileTypes: true });
+
+  for (const entry of entries) {
+      const srcPath = path.join(source, entry.name);
+      const destPath = path.join(destination, entry.name);
+
+      if (entry.isDirectory()) {
+          await copyDirectory(srcPath, destPath, isSourcesFolder);
+      } else if (entry.isFile()) {
+          if (!isSourcesFolder || ['.csv', '.parquet', '.sql'].includes(path.extname(entry.name))) {
+              await fs.copyFile(srcPath, destPath);
+          }
+      }
+  }
+}
+
+
+
+async function moveContents(source: string, destination: string) {
+  const entries = await fs.readdir(source, { withFileTypes: true });
+
+  for (const entry of entries) {
+      const srcPath = path.join(source, entry.name);
+      const destPath = path.join(destination, entry.name);
+
+      await fs.rename(srcPath, destPath);
+  }
+
+  // Optionally, remove the now-empty usql-template directory
+  await fs.rmdir(source);
+}
+
+
+// Migrate queries and syntax to USQL:
+
+
+export function migrateQueriesToUSQL(sourcesFolder: string) {
+          const workspaceFolders = workspace.workspaceFolders;
+
+          if(workspaceFolders){
+            const projectRoot = workspaceFolders[0].uri.fsPath;
+            
+            // Assuming 'pages' and 'queries' directories are at the root
+            const pagesPath = path.join(projectRoot, 'pages');
+            const queriesPath = path.join(projectRoot, 'queries');
+            const sourcesPath = path.join(projectRoot, 'sources', sourcesFolder ?? '');
+
+            if (!existsSync(sourcesPath)) {
+                window.showErrorMessage(`The folder "${sourcesFolder}" cannot be found in the sources directory.`, {modal:true});
+                return;
+            }
+            
+            // change sources to queries in frontmatter:
+            processDirectory(pagesPath, sourcesPath);
+            createQueryFiles(sourcesPath, queriesPath);
+          } else {
+            window.showErrorMessage('No workspace folder is open.');
+          }
+}
+
+
+// Function to recursively process .md files
+async function processDirectory(directory: string, sourcesFolderPath: string): Promise<void> {
+  const entries = await fs.readdir(directory, { withFileTypes: true });
+
+  for (const entry of entries) {
+      const fullPath = path.join(directory, entry.name);
+      if (entry.isDirectory()) {
+          await processDirectory(fullPath, sourcesFolderPath);
+      } else if (entry.isFile() && path.extname(entry.name) === '.md') {
+          await handleMarkdownFile(fullPath, sourcesFolderPath);
+      }
+  }
+}
+
+
+// Handler function for each Markdown file
+async function handleMarkdownFile(filePath: string, sourcesFolderPath: string): Promise<void> {
+  // Here, you can call all the functions required to process the Markdown file
+  await updateFrontmatterInFile(filePath);
+  console.log('Chagned frontmatter to reference queries instead of sources');
+  await processCodeFences(filePath, sourcesFolderPath);
+  console.log('Extracted inline queries into source query files');
+  await updatePageParamsSyntax(filePath);
+  console.log('Updated page parameter syntax');
+}
+
+
+// Function to update frontmatter in a single file
+async function updateFrontmatterInFile(filePath: string): Promise<void> {
+  try {
+      const content = await fs.readFile(filePath, 'utf8');
+      const frontmatterRegex = /^---\n([\s\S]*?)\n---/;
+      const match = frontmatterRegex.exec(content);
+
+      if (match) {
+          let frontmatter = match[1];
+          if (frontmatter.includes('sources:')) {
+              frontmatter = frontmatter.replace(/sources:/g, 'queries:');
+              const newContent = content.replace(match[0], `---\n${frontmatter}\n---`);
+              await fs.writeFile(filePath, newContent, 'utf8');
+          }
+      }
+  } catch (err) {
+      if (err instanceof Error) {
+          window.showErrorMessage('Error updating file: ' + filePath + ' - ' + err.message);
+      } else {
+          window.showErrorMessage('An unknown error occurred while processing: ' + filePath);
+      }
+  }
+}
+
+
+// Takes .sql files from sources directory and creates corresponding .sql files in the queries directory
+async function createQueryFiles(sourcesFolderPath: string, queriesFolderPath: string): Promise<void> {
+  try {
+      const files = await fs.readdir(sourcesFolderPath);
+
+      for (const file of files) {
+          if (path.extname(file) === '.sql') {
+              const filenameWithoutExtension = path.basename(file, '.sql');
+              const newSqlContent = `select * from ${path.basename(sourcesFolderPath)}.${filenameWithoutExtension}`;
+              const newFilePath = path.join(queriesFolderPath, filenameWithoutExtension + '.sql');
+
+              await fs.writeFile(newFilePath, newSqlContent, 'utf8');
+          }
+      }
+  } catch (err) {
+      if (err instanceof Error) {
+          window.showErrorMessage('Error creating query files: ' + err.message);
+      } else {
+          window.showErrorMessage('An unknown error occurred while creating query files');
+      }
+  }
+}
+
+
+async function processCodeFences(filePath: string, sourcesFolderPath: string): Promise<void> {
+  try {
+      let content = await fs.readFile(filePath, 'utf8');
+
+      // Regex to find code fences with optional query name
+      const codeFenceRegex = /```(?:sql)?\s*(\w+)?\n([\s\S]*?)```/g;
+      let match;
+      let replacements = [];
+
+      while ((match = codeFenceRegex.exec(content)) !== null) {
+          const [fullMatch, queryName, queryContent] = match;
+
+          if (queryName && queryContent.trim()) {
+              // Create a SQL file for the extracted query
+              const newFilePath = path.join(sourcesFolderPath, `${queryName}.sql`);
+              await fs.writeFile(newFilePath, queryContent.trim(), 'utf8');
+
+              // Prepare replacement text
+              const replacementQuery = `select * from ${path.basename(sourcesFolderPath)}.${queryName}`;
+              const replacementText = fullMatch.replace(queryContent.trim(), replacementQuery);
+              replacements.push({ fullMatch, replacementText });
+          }
+      }
+
+      // Replace code fences in the markdown file
+      for (const { fullMatch, replacementText } of replacements) {
+          content = content.replace(fullMatch, replacementText);
+      }
+
+      await fs.writeFile(filePath, content, 'utf8');
+  } catch (err) {
+      if (err instanceof Error) {
+          console.error('Error processing code fences in file:', filePath, '-', err.message);
+      } else {
+          console.error('An unknown error occurred while processing code fences in file:', filePath);
+      }
+  }
+}
+
+async function updatePageParamsSyntax(filePath: string): Promise<void> {
+  try {
+      let content = await fs.readFile(filePath, 'utf8');
+
+      // Regex to find and replace the old page params syntax
+      const pageParamsRegex = /\$page\.params\.(\w+)/g;
+      const updatedContent = content.replace(pageParamsRegex, 'params.$1');
+
+      await fs.writeFile(filePath, updatedContent, 'utf8');
+  } catch (err) {
+      if (err instanceof Error) {
+          console.error('Error updating page params syntax in file:', filePath, '-', err.message);
+      } else {
+          console.error('An unknown error occurred while updating page params syntax in file:', filePath);
+      }
+  }
 }

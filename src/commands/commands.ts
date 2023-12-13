@@ -17,7 +17,7 @@ import {
   runSources
 } from './sources';
 
-import { createNewProject, openIndex, openWalkthrough, copyProject } from './project';
+import { createNewProject, openIndex, openWalkthrough, copyProject, migrateQueriesToUSQL, migrateProjectToUSQL } from './project';
 import { createProjectFromTemplate } from './template';
 import { startServer, stopServer} from './server';
 import { preview } from './preview';
@@ -61,6 +61,8 @@ export const enum Commands {
   RunSources = 'evidence.runSources',
   ShowOutput = 'evidence.showOutput',
   OpenIndex = 'evidence.openIndex',
+  MigrateQueriesToUSQL = 'evidence.migrateQueriesToUSQL',
+  MigrateProjectToUSQL = 'evidence.migrateProjectToUSQL',
   OpenEvidenceWalkthrough = 'evidence.openWalkthrough',
   CreateTemplatedPageFromQuery = 'evidence.createTemplatedPageFromQuery',
   OpenSimpleBrowser = 'simpleBrowser.api.open'
@@ -94,6 +96,8 @@ export function registerCommands(context: ExtensionContext) {
   registerCommand(Commands.RunSources, runSources);
   registerCommand(Commands.ShowOutput, showOutput);
   registerCommand(Commands.OpenIndex, openIndex);
+  registerCommand(Commands.MigrateQueriesToUSQL, migrateQueriesToUSQL);
+  registerCommand(Commands.MigrateProjectToUSQL, migrateProjectToUSQL);
   registerCommand(Commands.OpenEvidenceWalkthrough, openWalkthrough);
   registerCommand(Commands.CreateTemplatedPageFromQuery, createTemplatedPageFromQuery);
 }
