@@ -206,8 +206,8 @@ export async function openIndex() {
     await commands.executeCommand('vscode.open', fileUri, 1);
     await commands.executeCommand('vscode.open', fileUri, 2);
     openWalkthrough();
+    telemetryService.sendEvent('openIndex');
   }
-  telemetryService.sendEvent('openIndex');
 }
 
 export async function openWalkthrough(){

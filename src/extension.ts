@@ -37,7 +37,14 @@ export const enum Context {
   isNonLegacyProject = 'evidence.isNonLegacyProject'
 }
 
-export let telemetryService: TelemetryService;
+export let telemetryService: TelemetryService; // Global instance
+
+async function initializeTelemetryService() {
+  const packageJsonFolder = await getPackageJsonFolder() ?? '';
+  const iK = '99ec224c-3fe8-4635-96ef-24c9aa5a354f';
+  telemetryService = new TelemetryService(iK); // Assign to global instance
+  telemetryService.loadCommonProperties(packageJsonFolder);
+}
 
 const decorationType = window.createTextEditorDecorationType({
   after: {
@@ -84,6 +91,7 @@ function isPagesDirectory() {
   return pageContext;
 }
 
+
 /**
  * Activates Evidence vscode extension.
  *
@@ -93,14 +101,10 @@ export async function activate(context: ExtensionContext) {
   setExtensionContext(context);
   registerCommands(context);
 
-  // Set up telemetry
-  const iK = '99ec224c-3fe8-4635-96ef-24c9aa5a354f';
+  await initializeTelemetryService();
 
-  // create telemetry reporter on extension activation
-  telemetryService = new TelemetryService(iK);
-  // ensure it gets properly disposed. Upon disposal the events will be flushed
+  // Ensure it gets properly disposed. Upon disposal, the events will be flushed
   context.subscriptions.push(telemetryService);
-
 
   // register markdown symbol provider
   const markdownLanguage = { language: 'emd', scheme: 'file' };
@@ -123,8 +127,12 @@ export async function activate(context: ExtensionContext) {
 
       // set up file watcher for .profile.json
       const workspaceFolder = workspace.workspaceFolders?.[0];
+
+     // check if evidence project is in subdirectory:  
+      const packageJsonFolder = await getPackageJsonFolder(); 
+      
       if (workspaceFolder) {
-        const profilePath = path.join(workspaceFolder.uri.fsPath, '.evidence', 'template', '.profile.json');
+        const profilePath = path.join(workspaceFolder.uri.fsPath, packageJsonFolder ?? '', '.evidence', 'template', '.profile.json');
         const profileWatcher = workspace.createFileSystemWatcher(profilePath);
 
         const updateProfileDetailsFromJson = () => {
@@ -151,7 +159,7 @@ export async function activate(context: ExtensionContext) {
         updateProfileDetailsFromJson();
 
         // Git watcher
-        const gitPath = path.join(workspaceFolder.uri.fsPath, '.git');
+        const gitPath = path.join(workspaceFolder.uri.fsPath, packageJsonFolder ?? '', '.git');
         const gitWatcher = workspace.createFileSystemWatcher(gitPath);
 
         const updateGitCheck = () => {
@@ -303,11 +311,11 @@ export async function activate(context: ExtensionContext) {
       let componentsFilesCount: number = 0;
       let evidenceFolderAtRoot: boolean = false;
       if (workspaceFolder) {
-        markdownFilesCount = countFilesInDirectory(path.join(workspaceFolder?.uri.fsPath, 'pages'), /\.md$/);
-        templatedPagesCount = countTemplatedPages(path.join(workspaceFolder?.uri.fsPath, 'pages'));
-        sourcesFilesCount = countFilesInDirectory(path.join(workspaceFolder?.uri.fsPath, 'sources'), /.*$/);
-        componentsFilesCount = countFilesInDirectory(path.join(workspaceFolder?.uri.fsPath, 'components'), /.*$/);
-        evidenceFolderAtRoot = fs.existsSync(path.join(workspaceFolder?.uri.fsPath, '.evidence'));
+        markdownFilesCount = countFilesInDirectory(path.join(workspaceFolder?.uri.fsPath, packageJsonFolder ?? '','pages'), /\.md$/);
+        templatedPagesCount = countTemplatedPages(path.join(workspaceFolder?.uri.fsPath, packageJsonFolder ?? '','pages'));
+        sourcesFilesCount = countFilesInDirectory(path.join(workspaceFolder?.uri.fsPath, packageJsonFolder ?? '','sources'), /.*$/);
+        componentsFilesCount = countFilesInDirectory(path.join(workspaceFolder?.uri.fsPath, packageJsonFolder ?? '','components'), /.*$/);
+        evidenceFolderAtRoot = fs.existsSync(path.join(workspaceFolder?.uri.fsPath, packageJsonFolder ?? '','.evidence'));
       }
 
       telemetryService.sendEvent('activate', {

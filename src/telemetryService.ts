@@ -11,16 +11,16 @@ export class TelemetryService {
 
   constructor(key: string) {
       this.reporter = new TelemetryReporter(key);
-      this.loadCommonProperties();
   }
 
-  private loadCommonProperties() {
+  loadCommonProperties(packageJsonFolder: string) {
     let profilePath = '';
 
     if (workspace.workspaceFolders && workspace.workspaceFolders.length > 0) {
         // Use the path of the first workspace folder
         const workspaceFolder = workspace.workspaceFolders[0];
-        profilePath = path.join(workspaceFolder.uri.fsPath, '.evidence', 'template', '.profile.json');
+
+        profilePath = path.join(workspaceFolder.uri.fsPath, packageJsonFolder ?? '','.evidence', 'template', '.profile.json');
     }
 
     try {
