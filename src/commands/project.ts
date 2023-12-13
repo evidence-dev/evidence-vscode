@@ -23,6 +23,7 @@ import { statusBar } from '../statusBar';
 import { cloneTemplateRepository } from './template';
 import { getExtensionFileUri } from '../extensionContext';
 import { folderExists, copyFolder } from '../utils/fsUtils';
+import { getPackageJsonFolder } from '../utils/jsonUtils';
 import { openNewProjectFolder } from '../views/prompts';
 import { telemetryService } from '../extension';
 
@@ -195,7 +196,10 @@ async function createProjectFolder(templateFolder: Uri, projectFolder: Uri) {
 export async function openIndex() {
   let openMarkdownFiles = workspace.textDocuments.filter(doc => doc.fileName.endsWith('.md'));
 
-  if (openMarkdownFiles.length === 0) {
+  // check if evidence is in a subdirectory - don't open index/walkthrough if monorepo
+  const packageJsonFolder = await getPackageJsonFolder();
+
+  if (packageJsonFolder === '' && openMarkdownFiles.length === 0) {
     const folderPath = getWorkspaceFolder();
     const filePath = folderPath?.uri.toString() + '/pages/index.md';
     const fileUri = Uri.parse(filePath);

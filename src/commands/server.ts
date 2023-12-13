@@ -12,7 +12,7 @@ import { tryPort } from '../utils/httpUtils';
 import { hasDependencies } from './build';
 import { open } from 'fs';
 import { telemetryService } from '../extension';
-import { hasManifest, isUSQL, getTypesFromConnections } from '../utils/jsonUtils';
+import { hasManifest, isUSQL, getTypesFromConnections, getPackageJsonFolder } from '../utils/jsonUtils';
 
 
 const localhost = 'localhost';
@@ -72,6 +72,12 @@ export async function startServer(pageUri?: Uri) {
     pageUri = await getAppPageUri('/');
   }
 
+  // check if we need to run command in a different directory than root of the project:
+  const workspaceFolderPath = workspace.workspaceFolders ? workspace.workspaceFolders[0].uri.fsPath : '';
+  const packageJsonFolder = await getPackageJsonFolder();
+  const cdCommand = packageJsonFolder ? `cd ${packageJsonFolder} && ` : '';
+  const cdBackCommand = packageJsonFolder ? `; cd ${workspaceFolderPath}` : '';
+
   const previewType: string = <string>getConfig(Settings.PreviewType);
 
   // check supported node version prior to server start
@@ -125,9 +131,9 @@ export async function startServer(pageUri?: Uri) {
         previewParameter = ' --open /';
         serverPortParameter = '';
       }
-
+      
       // start dev server via terminal command
-      sendCommand(`${dependencyCommand}${sourcesCommand}npm exec evidence dev --${devServerHostParameter}${serverPortParameter}${previewParameter}`);
+      sendCommand(`${cdCommand}${dependencyCommand}${sourcesCommand}npm exec evidence dev --${devServerHostParameter}${serverPortParameter}${previewParameter}${cdBackCommand}`);
     }
 
     statusBar.showInstalling();

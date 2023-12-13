@@ -13,6 +13,7 @@ import { statusBar } from '../statusBar';
 import { getNodeVersion, isSupportedNodeVersion, promptToInstallNodeJsAndRestart } from '../node';
 import { getWorkspaceFolder, updateProjectContext } from '../config';
 import { telemetryService } from '../extension';
+import { getPackageJsonFolder } from '../utils/jsonUtils';
 
 /**
  * Node modules folder name to check in the open project workspace
@@ -39,6 +40,12 @@ const evidencePackages: string[] = [
  */
 export async function installDependencies() {
 
+  // check if we need to run command in a different directory than root of the project:
+  const workspaceFolderPath = workspace.workspaceFolders ? workspace.workspaceFolders[0].uri.fsPath : '';
+  const packageJsonFolder = await getPackageJsonFolder();
+  const cdCommand = packageJsonFolder ? `cd ${packageJsonFolder} && ` : '';
+  const cdBackCommand = packageJsonFolder ? `; cd ${workspaceFolderPath}` : '';
+
   // check supported node version prior to server start
   const nodeVersion = await getNodeVersion();
   if (!isSupportedNodeVersion(nodeVersion)) {
@@ -53,7 +60,7 @@ export async function installDependencies() {
       updateProjectContext();
     }
 
-    sendCommand('npm install');
+    sendCommand(`${cdCommand}npm install${cdBackCommand}`);
     await timeout(1000);
     statusBar.showInstalling();
     await timeout(25000);
@@ -65,11 +72,17 @@ export async function installDependencies() {
  * Updates all Evidence app librarires to the latest versions.
  */
 export async function updateDependencies() {
+  // check if we need to run command in a different directory than root of the project:
+  const workspaceFolderPath = workspace.workspaceFolders ? workspace.workspaceFolders[0].uri.fsPath : '';
+  const packageJsonFolder = await getPackageJsonFolder();
+  const cdCommand = packageJsonFolder ? `cd ${packageJsonFolder} && ` : '';
+  const cdBackCommand = packageJsonFolder ? `; cd ${workspaceFolderPath}` : '';
+
   if (isServerRunning()) {
     stopServer();
     await timeout(1000);
   }
-  sendCommand(`npm install ${evidencePackages.join(' ')}`);
+  sendCommand(`${cdCommand}npm install ${evidencePackages.join(' ')}${cdBackCommand}`);
   await timeout(5000);
   statusBar.showStart();
 
@@ -114,6 +127,12 @@ export async function buildProjectStrict() {
  */
 export async function runCommandWithDepInstall(command: string) {
 
+  // check if we need to run command in a different directory than root of the project:
+  const workspaceFolderPath = workspace.workspaceFolders ? workspace.workspaceFolders[0].uri.fsPath : '';
+  const packageJsonFolder = await getPackageJsonFolder();
+  const cdCommand = packageJsonFolder ? `cd ${packageJsonFolder} && ` : '';
+  const cdBackCommand = packageJsonFolder ? `; cd ${workspaceFolderPath}` : '';
+
    // check supported node version prior to server start
    const nodeVersion = await getNodeVersion();
    if (!isSupportedNodeVersion(nodeVersion)) {
@@ -123,7 +142,7 @@ export async function runCommandWithDepInstall(command: string) {
     if (!(await hasDependencies())) {
       depCommand = `npm install ; `;
     }
-    sendCommand(depCommand + command);
+    sendCommand(cdCommand + depCommand + command + cdBackCommand);
   }
 }
 

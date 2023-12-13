@@ -19,7 +19,7 @@ import { Commands } from './commands/commands';
 import { MarkdownSymbolProvider } from './providers/markdownSymbolProvider';
 import { setExtensionContext } from './extensionContext';
 import { registerCommands } from './commands/commands';
-import { loadPackageJson, hasDependency, dependencyVersion, getManifestUri, getManifest, isUSQL, hasManifest } from './utils/jsonUtils';
+import { loadPackageJson, getPackageJsonFolder, hasDependency, dependencyVersion, getManifestUri, getManifest, isUSQL, hasManifest } from './utils/jsonUtils';
 import { Settings, getConfig, updateProjectContext } from './config';
 import { startServer } from './commands/server';
 import { openIndex, openWalkthrough } from './commands/project';
