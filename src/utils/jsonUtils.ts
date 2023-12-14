@@ -33,26 +33,35 @@ export async function loadPackageJson(): Promise<any | undefined> {
 
 export async function getPackageJsonFolder(): Promise<string | undefined> {
   const packageJsonFiles = await workspace.findFiles('**/package.json', '**/node_modules/**');
+  
   if (packageJsonFiles.length > 0) {
-      // Use the first package.json file found
-      const packageJsonUri = packageJsonFiles[0];
-
       // Get the workspace folder path
       const workspaceFolderPath = workspace.workspaceFolders
           ? workspace.workspaceFolders[0].uri.fsPath
           : undefined;
 
-        if (workspaceFolderPath) {
-            const packageJsonDirPath = path.dirname(packageJsonUri.fsPath);
-            let relativePath = path.relative(workspaceFolderPath, packageJsonDirPath);
-    
-            // Remove leading slash for relative paths
-            relativePath = relativePath.replace(/^\/|\\/, '');
-    
-            // Return empty string if the package.json is in the root
-            return relativePath;
-        }
+      if (workspaceFolderPath) {
+          for (const packageJsonUri of packageJsonFiles) {
+              const packageJsonDirPath = path.dirname(packageJsonUri.fsPath);
+              let relativePath = path.relative(workspaceFolderPath, packageJsonDirPath);
+
+              // Remove leading slash for relative paths
+              relativePath = relativePath.replace(/^\/|\\/, '');
+
+              // Prioritize the package.json in the root
+              if (relativePath === '') {
+                  return '';
+              }
+          }
+
+          // If no root package.json, return the first one found
+          const firstPackageJsonDirPath = path.dirname(packageJsonFiles[0].fsPath);
+          let relativePath = path.relative(workspaceFolderPath, firstPackageJsonDirPath);
+          relativePath = relativePath.replace(/^\/|\\/, '');
+          return relativePath;
+      }
   }
+  
   return undefined;
 }
 
