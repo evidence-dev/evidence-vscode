@@ -283,7 +283,7 @@ export async function migrateProjectToUSQL() {
           'No, I want to choose another name'
       );
   
-      if (confirmation === 'Yes') {
+      if (confirmation === 'Continue') {
   
                 window.withProgress({
                   location: ProgressLocation.Notification,
