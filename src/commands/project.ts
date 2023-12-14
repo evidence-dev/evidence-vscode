@@ -231,12 +231,22 @@ function isValidFolderName(folderName: string): boolean {
 }
 
 export async function migrateProjectToUSQL() {
-    window.showWarningMessage(`Make sure your server is not running and you create a backup before attempting migration. \n\nThis migration script creates a backup in a folder called '_legacy_project', but there may be edge cases that cause unexpected behaviour`, {modal:true});
+
+  const confirm = await window.showInformationMessage(
+    `Ensure your server is not running and create a backup before you continue.\n\n Do you want to continue?`, 
+    {modal: true},
+    'Yes', 
+    'No'
+  );
+
+  if(confirm !== 'Yes'){
+    return;
+  }
 
     telemetryService.sendEvent('migrateProjectToUSQL');
     const packageJsonFolder = await getPackageJsonFolder();
     if(packageJsonFolder !== ''){
-      window.showErrorMessage('Migration command should only be run from within the Evidence folder workspace. You will need to use VS Code to open the folder as the current workspace.', {modal: true});
+      window.showErrorMessage('Migration command should only be run from within the Evidence folder workspace. You will need to use VS Code to open the Evidence folder as the current workspace.', {modal: true});
     } else {
       // const dataConnectors = ['bigquery', 'csv', 'duckdb', 'mssql', 'mysql', 'postgres', 'redshift', 'snowflake', 'sqlite', 'trino', 'databricks'];
     
@@ -267,10 +277,10 @@ export async function migrateProjectToUSQL() {
   
       const confirmation = await window.showInformationMessage(
           // `You inputted "${validatedName}", a ${selectedDataConnector} connection. Is this right?`, 
-          `You inputted "${validatedName}". Is this right?`, 
+          `Your source will be named "${validatedName}". Is this correct?`, 
           {modal: true},
-          'Yes', 
-          'No'
+          'Continue', 
+          'No, I want to choose another name'
       );
   
       if (confirmation === 'Yes') {
