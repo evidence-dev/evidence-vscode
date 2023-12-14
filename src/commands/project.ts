@@ -231,31 +231,50 @@ function isValidFolderName(folderName: string): boolean {
 }
 
 export async function migrateProjectToUSQL() {
-    window.showWarningMessage(`Make sure you create a backup before attempting migration. This migration script creates a backup, but there may be edge cases that cause this not to work`, {modal:true});
+    window.showWarningMessage(`Make sure your server is not running and you create a backup before attempting migration. This migration script creates a backup, but there may be edge cases that cause this not to work.`, {modal:true});
 
     telemetryService.sendEvent('migrateProjectToUSQL');
     const packageJsonFolder = await getPackageJsonFolder();
     if(packageJsonFolder !== ''){
       window.showErrorMessage('Migration command should only be run from within the Evidence folder workspace. You will need to use VS Code to open the folder as the current workspace.', {modal: true});
     } else {
-
-      window.showInputBox({ prompt: 'Provide a name to use for your data source folder (E.g., needful_things or bigquery)' })
-      .then(dataSourceFolderName => {
-          if (!dataSourceFolderName || dataSourceFolderName.trim() === '') {
-              window.showErrorMessage('Data source folder name is required.');
-              return;
-          }
-
-          const validatedName = dataSourceFolderName.trim().toLowerCase();
-
-          if (!isValidFolderName(validatedName)) {
-              window.showErrorMessage('The data source folder name must be lowercase and must not contain spaces.', {modal: true});
-              return;
-          }
-
-          window.showInformationMessage(`You entered "${dataSourceFolderName}". Is this correct?`, {modal:true}, 'Yes', 'No')
-          .then(selection => {
-              if (selection === 'Yes') {
+      // const dataConnectors = ['bigquery', 'csv', 'duckdb', 'mssql', 'mysql', 'postgres', 'redshift', 'snowflake', 'sqlite', 'trino', 'databricks'];
+    
+      // const selectedDataConnector = await window.showQuickPick(dataConnectors, {
+      //     placeHolder: 'Which data connector does your project use?',
+      // });
+  
+      // if (!selectedDataConnector) {
+      //     window.showErrorMessage('Data connector selection is required.');
+      //     return;
+      // }
+  
+      const dataSourceFolderName = await window.showInputBox({ 
+          prompt: 'Provide a name to use for your data source folder (E.g., needful_things or bigquery)' 
+      });
+  
+      if (!dataSourceFolderName || dataSourceFolderName.trim() === '') {
+          window.showErrorMessage('Data source folder name is required.');
+          return;
+      }
+  
+      const validatedName = dataSourceFolderName.trim().toLowerCase();
+  
+      if (!isValidFolderName(validatedName)) {
+          window.showErrorMessage('The data source folder name must be lowercase and must not contain spaces.', {modal: true});
+          return;
+      }
+  
+      const confirmation = await window.showInformationMessage(
+          // `You inputted "${validatedName}", a ${selectedDataConnector} connection. Is this right?`, 
+          `You inputted "${validatedName}". Is this right?`, 
+          {modal: true},
+          'Yes', 
+          'No'
+      );
+  
+      if (confirmation === 'Yes') {
+  
                 window.withProgress({
                   location: ProgressLocation.Notification,
                   title: "Migrating your project to USQL...",
@@ -274,7 +293,8 @@ export async function migrateProjectToUSQL() {
 
                       progress.report({ message: "Creating data source folder..." });
                       await createDataSourceFolder(workspaceRoot, dataSourceFolderName);
-                      
+                      // await createConnectionYamlFile(workspaceRoot, dataSourceFolderName, selectedDataConnector);
+
                       progress.report({ message: "Copying specific files..." });
                       await copySpecificFilesToDataSourceFolder(legacyProjectPath, workspaceRoot, dataSourceFolderName);
                       
@@ -298,9 +318,6 @@ export async function migrateProjectToUSQL() {
                   } else {
                     window.showErrorMessage('Data source folder name was not confirmed. Operation cancelled.', {modal: true});
                 }
-            });
-                  });
-
                 }
                 
 }
@@ -309,6 +326,13 @@ async function createDataSourceFolder(workspaceRoot: string, dataSourceFolderNam
   const dataSourceFolderPath = path.join(workspaceRoot, 'sources', dataSourceFolderName);
   await fs.mkdir(dataSourceFolderPath, { recursive: true });
 }
+
+// async function createConnectionYamlFile(workspaceRoot: string, dataSourceFolderName: string, dataConnectorType: string): Promise<void> {
+//   const connectionYamlPath = path.join(workspaceRoot, 'sources', dataSourceFolderName, 'connection.yaml');
+//   const connectionYamlContent = `name: ${dataSourceFolderName}\ntype: ${dataConnectorType}`;
+
+//   await fs.writeFile(connectionYamlPath, connectionYamlContent, 'utf-8');
+// }
 
 async function copySpecificFilesToDataSourceFolder(legacyProjectPath: string, workspaceRoot: string, dataSourceFolderName: string): Promise<void> {
   const fileTypes = ['.duckdb', '.db', '.sqlite', '.sqlite3', '.csv', '.parquet'];
@@ -577,38 +601,46 @@ async function createQueryFiles(sourcesFolderPath: string, queriesFolderPath: st
   }
 }
 
-
 async function processCodeFences(filePath: string, sourcesFolderPath: string): Promise<void> {
   try {
-      let content = await fs.readFile(filePath, 'utf8');
+      let content = await fs.readFile(filePath, 'utf-8');
 
-      // Regex to find code fences with optional query name
-      const codeFenceRegex = /```(?:sql)?\s*(\w+)?\n([\s\S]*?)```/g;
+      // List of reserved language keywords to exclude
+      const reservedLanguages = ['python', 'html', 'svelte', 'javascript', 'js', 'r'];
+      const reservedPattern = reservedLanguages.join('|');
+
+      // Regex to match only SQL code fences with a query name, excluding reserved languages
+      const codeFenceRegex = new RegExp(`\`\`\`(?!(?:${reservedPattern})\\s)sql\\s+(\\w+)\\s*\\n([\\s\\S]*?)\`\`\``, 'g');
       let match;
       let replacements = [];
 
       while ((match = codeFenceRegex.exec(content)) !== null) {
-          const [fullMatch, queryName, queryContent] = match;
+        const [fullMatch, originalQueryName, queryContent] = match;
 
-          if (queryName && queryContent.trim()) {
-              // Create a SQL file for the extracted query
-              const newFilePath = path.join(sourcesFolderPath, `${queryName}.sql`);
-              await fs.writeFile(newFilePath, queryContent.trim(), 'utf8');
+        // Skip processing if the queryContent contains a chained query pattern
+        if (!/\$\{\w+\}/.test(queryContent)) {
+            let newQueryName = await getUniqueQueryName(sourcesFolderPath, originalQueryName);
+            const newFilePath = path.join(sourcesFolderPath, `${newQueryName}.sql`);
 
-              // Prepare replacement text
-              const replacementQuery = `select * from ${path.basename(sourcesFolderPath)}.${queryName}`;
-              const replacementText = fullMatch.replace(queryContent.trim(), replacementQuery);
-              replacements.push({ fullMatch, replacementText });
-          }
-      }
+            await fs.writeFile(newFilePath, queryContent.trim(), 'utf-8');
 
-      // Replace code fences in the markdown file
-      for (const { fullMatch, replacementText } of replacements) {
+            // Prepare replacement text for the markdown file
+            const replacementQuery = `select * from ${path.basename(sourcesFolderPath)}.${newQueryName}`;
+            const replacementText = fullMatch.replace(/\b\w+\s*\n/, `${newQueryName}\n`).replace(queryContent.trim(), replacementQuery);
+            replacements.push({ fullMatch, replacementText, originalQueryName, newQueryName });
+        }
+    }
+    
+      // Replace code fences and references in the markdown file
+      for (const { fullMatch, replacementText, originalQueryName, newQueryName } of replacements) {
           content = content.replace(fullMatch, replacementText);
+          // Replace references {original_name} and {original_name.
+          content = content.replace(new RegExp(`\\{${originalQueryName}\\}`, 'g'), `{${newQueryName}}`);
+          content = content.replace(new RegExp(`\\{${originalQueryName}\\.`, 'g'), `{${newQueryName}.`);
       }
 
-      await fs.writeFile(filePath, content, 'utf8');
-  } catch (err) {
+      await fs.writeFile(filePath, content, 'utf-8');
+    } catch (err) {
       if (err instanceof Error) {
           console.error('Error processing code fences in file:', filePath, '-', err.message);
       } else {
@@ -616,6 +648,22 @@ async function processCodeFences(filePath: string, sourcesFolderPath: string): P
       }
   }
 }
+
+
+async function getUniqueQueryName(sourcesFolderPath: string, baseName: string): Promise<string> {
+  let counter = 1;
+  let queryName = baseName;
+  let queryFilePath = path.join(sourcesFolderPath, `${queryName}.sql`);
+
+  while (existsSync(queryFilePath)) {
+      queryName = `${baseName}${counter}`;
+      queryFilePath = path.join(sourcesFolderPath, `${queryName}.sql`);
+      counter++;
+  }
+
+  return queryName;
+}
+
 
 async function updatePageParamsSyntax(filePath: string): Promise<void> {
   try {
