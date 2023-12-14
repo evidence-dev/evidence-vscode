@@ -50,7 +50,6 @@
     "onCommand:evidence.startServer",
     "onCommand:evidence.stopServer",
     "onCommand:evidence.runSources",
-    "onCommand:evidence.migrateQueriesToUSQL",
     "onCommand:evidence.preview",
     "onCommand:evidence.viewSettings",
     "onCommand:evidence.build",
@@ -100,12 +99,6 @@
       {
         "command": "evidence.runSources",
         "title": "Run Sources",
-        "category": "Evidence",
-        "enablement": "evidence.hasProject"
-      },
-      {
-        "command": "evidence.migrateQueriesToUSQL",
-        "title": "Migrate Queries to USQL",
         "category": "Evidence",
         "enablement": "evidence.hasProject"
       },

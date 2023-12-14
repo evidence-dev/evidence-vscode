@@ -231,7 +231,7 @@ function isValidFolderName(folderName: string): boolean {
 }
 
 export async function migrateProjectToUSQL() {
-    window.showWarningMessage(`Make sure your server is not running and you create a backup before attempting migration. This migration script creates a backup, but there may be edge cases that cause this not to work.`, {modal:true});
+    window.showWarningMessage(`Make sure your server is not running and you create a backup before attempting migration. \n\nThis migration script creates a backup in a folder called '_legacy_project', but there may be edge cases that cause unexpected behaviour`, {modal:true});
 
     telemetryService.sendEvent('migrateProjectToUSQL');
     const packageJsonFolder = await getPackageJsonFolder();
@@ -630,7 +630,7 @@ async function processCodeFences(filePath: string, sourcesFolderPath: string): P
             replacements.push({ fullMatch, replacementText, originalQueryName, newQueryName });
         }
     }
-    
+
       // Replace code fences and references in the markdown file
       for (const { fullMatch, replacementText, originalQueryName, newQueryName } of replacements) {
           content = content.replace(fullMatch, replacementText);
