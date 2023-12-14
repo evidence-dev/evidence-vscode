@@ -306,6 +306,11 @@ export async function migrateProjectToUSQL() {
 
                       telemetryService.sendEvent('migrateProjectToUSQL_success');
 
+                      const readmePath = path.join(workspaceRoot, 'README.md');
+                      const readmeUri = Uri.file(readmePath);
+
+                      window.showTextDocument(readmeUri, { preview: false });
+
                     } catch (err) {
                       if (err instanceof Error) {
                           window.showErrorMessage('Error during project migration: ' + err.message);
@@ -609,32 +614,31 @@ async function processCodeFences(filePath: string, sourcesFolderPath: string): P
       const reservedLanguages = ['python', 'html', 'svelte', 'javascript', 'js', 'r'];
       const reservedPattern = reservedLanguages.join('|');
 
-      // Regex to match only SQL code fences with a query name, excluding reserved languages
-      const codeFenceRegex = new RegExp(`\`\`\`(?!(?:${reservedPattern})\\s)sql\\s+(\\w+)\\s*\\n([\\s\\S]*?)\`\`\``, 'g');
+      // Regex to match SQL code fences with a query name, optionally preceded by 'sql', excluding reserved languages
+      const codeFenceRegex = new RegExp(`\`\`\`(?!(?:${reservedPattern})\\s)(?:sql\\s+)?(\\w+)\\s*\\n([\\s\\S]*?)\`\`\``, 'g');
       let match;
       let replacements = [];
 
       while ((match = codeFenceRegex.exec(content)) !== null) {
-        const [fullMatch, originalQueryName, queryContent] = match;
+          const [fullMatch, originalQueryName, queryContent] = match;
 
-        // Skip processing if the queryContent contains a chained query pattern
-        if (!/\$\{\w+\}/.test(queryContent)) {
-            let newQueryName = await getUniqueQueryName(sourcesFolderPath, originalQueryName);
-            const newFilePath = path.join(sourcesFolderPath, `${newQueryName}.sql`);
+          // Skip processing if the queryContent contains a chained query pattern
+          if (!/\$\{\w+\}/.test(queryContent)) {
+              let newQueryName = await getUniqueQueryName(sourcesFolderPath, originalQueryName);
+              const newFilePath = path.join(sourcesFolderPath, `${newQueryName}.sql`);
 
-            await fs.writeFile(newFilePath, queryContent.trim(), 'utf-8');
+              await fs.writeFile(newFilePath, queryContent.trim(), 'utf-8');
 
-            // Prepare replacement text for the markdown file
-            const replacementQuery = `select * from ${path.basename(sourcesFolderPath)}.${newQueryName}`;
-            const replacementText = fullMatch.replace(/\b\w+\s*\n/, `${newQueryName}\n`).replace(queryContent.trim(), replacementQuery);
-            replacements.push({ fullMatch, replacementText, originalQueryName, newQueryName });
-        }
-    }
+              // Prepare replacement text for the markdown file
+              const replacementQuery = `select * from ${path.basename(sourcesFolderPath)}.${newQueryName}`;
+              const replacementText = fullMatch.replace(/\b\w+\s*\n/, `${newQueryName}\n`).replace(queryContent.trim(), replacementQuery);
+              replacements.push({ fullMatch, replacementText, originalQueryName, newQueryName });
+          }
+      }
 
       // Replace code fences and references in the markdown file
       for (const { fullMatch, replacementText, originalQueryName, newQueryName } of replacements) {
           content = content.replace(fullMatch, replacementText);
-          // Replace references {original_name} and {original_name.
           content = content.replace(new RegExp(`\\{${originalQueryName}\\}`, 'g'), `{${newQueryName}}`);
           content = content.replace(new RegExp(`\\{${originalQueryName}\\.`, 'g'), `{${newQueryName}.`);
       }
