@@ -1,7 +1,7 @@
 import { sendCommand } from '../terminal';
 import { timeout } from '../utils/timer';
 import { isServerRunning, startServer, stopServer } from './server';
-import { isUSQL, getTypesFromConnections, getPackageJsonFolder } from '../utils/jsonUtils';
+import { getTypesFromConnections, getPackageJsonFolder, isUSQL } from '../utils/jsonUtils';
 import { telemetryService } from '../extension';
 import { window, workspace } from 'vscode';
 

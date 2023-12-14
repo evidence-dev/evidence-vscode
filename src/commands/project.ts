@@ -6,7 +6,8 @@ import {
   Uri,
   WorkspaceFolder,
   OutputChannel,
-  env
+  env,
+  ProgressLocation
 } from 'vscode';
 import { promises as fs } from 'fs';
 import { existsSync } from 'fs';
@@ -230,6 +231,9 @@ function isValidFolderName(folderName: string): boolean {
 }
 
 export async function migrateProjectToUSQL() {
+    window.showWarningMessage(`Make sure you create a backup before attempting migration. This migration script creates a backup, but there may be edge cases that cause this not to work`, {modal:true});
+
+    telemetryService.sendEvent('migrateProjectToUSQL');
     const packageJsonFolder = await getPackageJsonFolder();
     if(packageJsonFolder !== ''){
       window.showErrorMessage('Migration command should only be run from within the Evidence folder workspace. You will need to use VS Code to open the folder as the current workspace.', {modal: true});
@@ -252,18 +256,45 @@ export async function migrateProjectToUSQL() {
           window.showInformationMessage(`You entered "${dataSourceFolderName}". Is this correct?`, {modal:true}, 'Yes', 'No')
           .then(selection => {
               if (selection === 'Yes') {
-                const workspaceRoot = workspace.workspaceFolders![0].uri.fsPath;
-                const legacyProjectPath = path.join(workspaceRoot, '_legacy_project');
+                window.withProgress({
+                  location: ProgressLocation.Notification,
+                  title: "Migrating your project to USQL...",
+                  cancellable: true
+              }, async (progress) => {
+                  const workspaceRoot = workspace.workspaceFolders![0].uri.fsPath;
+                  const legacyProjectPath = path.join(workspaceRoot, '_legacy_project');
 
-                moveFilesToLegacyProject(workspaceRoot, legacyProjectPath)
-                    .then(() => runDegitCommand(workspaceRoot))
-                    .then(() => createDataSourceFolder(workspaceRoot, dataSourceFolderName))
-                    .then(() => copySpecificFilesToDataSourceFolder(legacyProjectPath, workspaceRoot, dataSourceFolderName))
-                    .then(() => copyFoldersFromLegacyProject(legacyProjectPath, workspaceRoot))
-                    .then(() => migrateQueriesToUSQL(dataSourceFolderName))
-                    .catch(err => {
-                        window.showErrorMessage('Error during project scaffolding: ' + err.message);
-                    });
+                  try {
+                      progress.report({ message: "Moving files to legacy project..." });
+                      await moveFilesToLegacyProject(workspaceRoot, legacyProjectPath);
+                      
+                      progress.report({ message: "Scaffolding USQL project..." });
+                      await runDegitCommand(workspaceRoot);
+                      await emptySpecificFolders(workspaceRoot, ['sources', 'components']);
+
+                      progress.report({ message: "Creating data source folder..." });
+                      await createDataSourceFolder(workspaceRoot, dataSourceFolderName);
+                      
+                      progress.report({ message: "Copying specific files..." });
+                      await copySpecificFilesToDataSourceFolder(legacyProjectPath, workspaceRoot, dataSourceFolderName);
+                      
+                      progress.report({ message: "Copying folders from legacy project..." });
+                      await copyFoldersFromLegacyProject(legacyProjectPath, workspaceRoot, dataSourceFolderName);
+                      
+                      progress.report({ message: "Migrating queries to USQL..." });
+                      await migrateQueriesToUSQL(dataSourceFolderName);
+
+                      telemetryService.sendEvent('migrateProjectToUSQL_success');
+
+                    } catch (err) {
+                      if (err instanceof Error) {
+                          window.showErrorMessage('Error during project migration: ' + err.message);
+                      } else {
+                          // Handle the case where the error is not an Error instance
+                          window.showErrorMessage('An unknown error occurred during project migration.');
+                      }
+                  }
+              });
                   } else {
                     window.showErrorMessage('Data source folder name was not confirmed. Operation cancelled.', {modal: true});
                 }
@@ -287,10 +318,10 @@ async function copySpecificFilesToDataSourceFolder(legacyProjectPath: string, wo
   await copyFilesByType(legacyProjectPath, dataSourceFolderPath, fileTypes);
 
   // Copy files from the sources folder of legacy_project
-  const legacySourcesPath = path.join(legacyProjectPath, 'sources');
-  if (existsSync(legacySourcesPath)) {
-      await copyFilesByType(legacySourcesPath, dataSourceFolderPath, fileTypes);
-  }
+  // const legacySourcesPath = path.join(legacyProjectPath, 'sources');
+  // if (existsSync(legacySourcesPath)) {
+  //     await copyFilesByType(legacySourcesPath, dataSourceFolderPath, fileTypes);
+  // }
 }
 
 async function copyFilesByType(sourcePath: string, destinationPath: string, fileTypes: string[]): Promise<void> {
@@ -343,19 +374,56 @@ async function runDegitCommand(workspaceRoot: string): Promise<void> {
 });
 }
 
-async function copyFoldersFromLegacyProject(legacyProjectPath: string, workspaceRoot: string): Promise<void> {
-  const foldersToCopy = ['pages', 'sources', 'static', 'partials', 'components'];
+async function emptySpecificFolders(workspaceRoot: string, folderNames: string[]): Promise<void> {
+  for (const folderName of folderNames) {
+      const folderPath = path.join(workspaceRoot, folderName);
+
+      if (existsSync(folderPath)) {
+          const files = await fs.readdir(folderPath, { withFileTypes: true });
+
+          for (const file of files) {
+              const filePath = path.join(folderPath, file.name);
+              if (file.isDirectory()) {
+                  await removeDirectory(filePath);
+              } else {
+                  await fs.unlink(filePath);
+              }
+          }
+      }
+  }
+}
+
+async function copyFoldersFromLegacyProject(legacyProjectPath: string, workspaceRoot: string, dataSourceFolderName: string): Promise<void> {
+  const foldersToCopy = ['pages', 'static', 'partials', 'components'];
+  const sourcesFolder = 'sources';
+  const queriesFolder = 'queries';
+
+  // Process 'sources' folder separately
+  const legacySourcesPath = path.join(legacyProjectPath, sourcesFolder);
+  const newSourcesPath = path.join(workspaceRoot, sourcesFolder, dataSourceFolderName);
+
+  if (existsSync(legacySourcesPath)) {
+      await copyDirectory(legacySourcesPath, newSourcesPath);
+  }
+
+  // Process other folders
   for (const folder of foldersToCopy) {
       const sourcePath = path.join(legacyProjectPath, folder);
-      let destPath = path.join(workspaceRoot, folder === 'sources' ? 'queries' : folder);
+      const destPath = path.join(workspaceRoot, folder);
 
       if (folder === 'pages' && existsSync(destPath)) {
           await removeDirectory(destPath);
       }
 
       if (existsSync(sourcePath)) {
-          await copyDirectory(sourcePath, destPath, folder === 'sources');
+          await copyDirectory(sourcePath, destPath);
       }
+  }
+
+  // Create empty 'queries' folder
+  const queriesPath = path.join(workspaceRoot, queriesFolder);
+  if (!existsSync(queriesPath)) {
+      await fs.mkdir(queriesPath, { recursive: true });
   }
 }
 
