@@ -583,25 +583,30 @@ async function updateFrontmatterInFile(filePath: string): Promise<void> {
 }
 
 
-// Takes .sql files from sources directory and creates corresponding .sql files in the queries directory
 async function createQueryFiles(sourcesFolderPath: string, queriesFolderPath: string): Promise<void> {
-  try {
-      const files = await fs.readdir(sourcesFolderPath);
+  const sourceName = path.basename(sourcesFolderPath);
+  await processSqlFiles(sourcesFolderPath, queriesFolderPath, sourceName);
+}
 
-      for (const file of files) {
-          if (path.extname(file) === '.sql') {
-              const filenameWithoutExtension = path.basename(file, '.sql');
-              const newSqlContent = `select * from ${path.basename(sourcesFolderPath)}.${filenameWithoutExtension}`;
-              const newFilePath = path.join(queriesFolderPath, filenameWithoutExtension + '.sql');
+async function processSqlFiles(currentPath: string, queriesFolderPath: string, sourceName: string, relativePath: string = ''): Promise<void> {
+  const entries = await fs.readdir(currentPath, { withFileTypes: true });
 
-              await fs.writeFile(newFilePath, newSqlContent, 'utf8');
-          }
-      }
-  } catch (err) {
-      if (err instanceof Error) {
-          window.showErrorMessage('Error creating query files: ' + err.message);
-      } else {
-          window.showErrorMessage('An unknown error occurred while creating query files');
+  for (const entry of entries) {
+      const fullPath = path.join(currentPath, entry.name);
+      const relativeEntryPath = path.join(relativePath, entry.name);
+
+      if (entry.isDirectory()) {
+          await processSqlFiles(fullPath, queriesFolderPath, sourceName, relativeEntryPath);
+      } else if (entry.isFile() && path.extname(entry.name) === '.sql') {
+          const filenameWithoutExtension = path.basename(entry.name, '.sql');
+          const newSqlContent = `select * from ${sourceName}.${filenameWithoutExtension}`;
+          const newFilePath = path.join(queriesFolderPath, relativeEntryPath);
+
+          // Create the folder structure in the queries directory if it doesn't exist
+          const newFileDir = path.dirname(newFilePath);
+          await fs.mkdir(newFileDir, { recursive: true });
+
+          await fs.writeFile(newFilePath, newSqlContent, 'utf8');
       }
   }
 }
