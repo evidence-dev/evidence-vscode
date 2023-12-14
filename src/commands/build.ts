@@ -43,7 +43,7 @@ export async function installDependencies() {
   // check if we need to run command in a different directory than root of the project:
   const workspaceFolderPath = workspace.workspaceFolders ? workspace.workspaceFolders[0].uri.fsPath : '';
   const packageJsonFolder = await getPackageJsonFolder();
-  const cdCommand = packageJsonFolder ? `cd ${packageJsonFolder} && ` : '';
+  const cdCommand = packageJsonFolder ? `cd ${packageJsonFolder} ; ` : '';
   const cdBackCommand = packageJsonFolder ? `; cd ${workspaceFolderPath}` : '';
 
   // check supported node version prior to server start
@@ -75,7 +75,7 @@ export async function updateDependencies() {
   // check if we need to run command in a different directory than root of the project:
   const workspaceFolderPath = workspace.workspaceFolders ? workspace.workspaceFolders[0].uri.fsPath : '';
   const packageJsonFolder = await getPackageJsonFolder();
-  const cdCommand = packageJsonFolder ? `cd ${packageJsonFolder} && ` : '';
+  const cdCommand = packageJsonFolder ? `cd ${packageJsonFolder} ; ` : '';
   const cdBackCommand = packageJsonFolder ? `; cd ${workspaceFolderPath}` : '';
 
   if (isServerRunning()) {
@@ -130,7 +130,7 @@ export async function runCommandWithDepInstall(command: string) {
   // check if we need to run command in a different directory than root of the project:
   const workspaceFolderPath = workspace.workspaceFolders ? workspace.workspaceFolders[0].uri.fsPath : '';
   const packageJsonFolder = await getPackageJsonFolder();
-  const cdCommand = packageJsonFolder ? `cd ${packageJsonFolder} && ` : '';
+  const cdCommand = packageJsonFolder ? `cd ${packageJsonFolder} ; ` : '';
   const cdBackCommand = packageJsonFolder ? `; cd ${workspaceFolderPath}` : '';
 
    // check supported node version prior to server start
