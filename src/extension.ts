@@ -9,7 +9,8 @@ import {
   Range,
   Position,
   commands,
-  extensions
+  extensions,
+  ConfigurationTarget
 } from 'vscode';
 
 import { TelemetryService } from './telemetryService';
@@ -297,6 +298,16 @@ export async function activate(context: ExtensionContext) {
           telemetryService.sendEvent('telemetryError', { location: 'createDirectory' });
         }
       });
+
+        // Disable auto save in Codespaces:
+        if (process.env.CODESPACES === 'true') {
+  
+          // Access workspace configuration
+          const config = workspace.getConfiguration();
+  
+          // Set autosave to 'on'
+          await config.update('files.autoSave', 'off', ConfigurationTarget.Workspace);
+      } 
 
 
       // Activate Telemetry Event:

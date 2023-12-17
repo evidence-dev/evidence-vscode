@@ -630,7 +630,7 @@ async function processCodeFences(filePath: string, sourcesFolderPath: string): P
       const reservedPattern = reservedLanguages.join('|');
 
       // Regex to match SQL code fences with a query name, optionally preceded by 'sql', excluding reserved languages
-      const codeFenceRegex = new RegExp(`\`\`\`(?!(?:${reservedPattern})\\s)(?:sql\\s+)?(\\w+)\\s*\\n([\\s\\S]*?)\`\`\``, 'g');
+      const codeFenceRegex = new RegExp(`\`\`\`(?!(?:${reservedPattern}|sql(?!.+))\\s)(?:sql\\s+)?(\\w+)\\s*\\n([\\s\\S]*?)\`\`\``, 'g');
       let match;
       let replacements = [];
 
