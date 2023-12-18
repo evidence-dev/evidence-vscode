@@ -656,6 +656,7 @@ async function processCodeFences(filePath: string, sourcesFolderPath: string): P
           content = content.replace(fullMatch, replacementText);
           content = content.replace(new RegExp(`\\{${originalQueryName}\\}`, 'g'), `{${newQueryName}}`);
           content = content.replace(new RegExp(`\\{${originalQueryName}\\.`, 'g'), `{${newQueryName}.`);
+          content = content.replace(new RegExp(`\\{${originalQueryName}\\[`, 'g'), `{${newQueryName}[`);
       }
 
       await fs.writeFile(filePath, content, 'utf-8');
