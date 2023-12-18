@@ -103,6 +103,12 @@
         "enablement": "evidence.hasProject"
       },
       {
+        "command": "evidence.migrateProjectToUSQL",
+        "title": "Migrate Project to USQL",
+        "category": "Evidence",
+        "enablement": "evidence.hasProject"
+      },
+      {
         "command": "evidence.startServer",
         "title": "Start Evidence Server",
         "category": "Evidence",

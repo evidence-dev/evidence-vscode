@@ -75,7 +75,7 @@ export async function startServer(pageUri?: Uri) {
   // check if we need to run command in a different directory than root of the project:
   const workspaceFolderPath = workspace.workspaceFolders ? workspace.workspaceFolders[0].uri.fsPath : '';
   const packageJsonFolder = await getPackageJsonFolder();
-  const cdCommand = packageJsonFolder ? `cd ${packageJsonFolder} && ` : '';
+  const cdCommand = packageJsonFolder ? `cd ${packageJsonFolder} ; ` : '';
   const cdBackCommand = packageJsonFolder ? `; cd ${workspaceFolderPath}` : '';
 
   const previewType: string = <string>getConfig(Settings.PreviewType);
