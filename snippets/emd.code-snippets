@@ -347,7 +347,7 @@
       "<Dropdown data={data} name=name_of_dropdown value=column_name/>",
       "",
       "```sql filtered_query",
-      "select * from table where column_name = ${inputs.name_of_dropdown}",
+      "select * from table where column_name = '${inputs.name_of_dropdown}'",
       "```"
     ]
     "description": "Insert dropdown component and filtered query"
