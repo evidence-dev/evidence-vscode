@@ -287,7 +287,7 @@ export async function migrateProjectToUSQL() {
   
                 window.withProgress({
                   location: ProgressLocation.Notification,
-                  title: "Migrating your project to USQL...",
+                  title: "Migrating your project to USQL",
                   cancellable: true
               }, async (progress) => {
                   const workspaceRoot = workspace.workspaceFolders![0].uri.fsPath;
