@@ -399,7 +399,7 @@ async function runDegitCommand(workspaceRoot: string): Promise<void> {
   await fs.mkdir(usqlTemplatePath, { recursive: true });
 
   return new Promise((resolve, reject) => {
-    exec('npx degit evidence-dev/template#next usql-template', { cwd: workspaceRoot }, async (error, stdout, stderr) => {
+    exec('npx degit evidence-dev/template usql-template', { cwd: workspaceRoot }, async (error, stdout, stderr) => {
         if (error) {
             reject(error);
             return;
