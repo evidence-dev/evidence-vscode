@@ -15,7 +15,7 @@ export async function createTemplatedPageFromQuery() {
     const activeEditor = window.activeTextEditor;
     if (!activeEditor || !activeEditor.document.fileName.endsWith('.sql') || 
      !activeEditor.document.fileName.includes(await isUSQL() ? '/queries/' : '/sources/')) {
-      window.showWarningMessage(`This command can only be run from within a .sql file in your ${await isUSQL() ? 'sources' : 'queries'} folder`, {modal: true});
+      window.showWarningMessage(`This command can only be run from within a .sql file in your ${await isUSQL() ? 'queries' : 'sources'} folder`, {modal: true});
       telemetryService.sendEvent('createTemplatedPageSqlWarning');
     return;
 }
