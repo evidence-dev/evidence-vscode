@@ -294,6 +294,19 @@ export async function migrateProjectToUSQL() {
                   const legacyProjectPath = path.join(workspaceRoot, '_legacy_project');
 
                   try {
+                        // Start a timer for 5 minutes (300000 milliseconds)
+                        const timeoutId = setTimeout(() => {
+                          window.showInformationMessage(
+                              "This step shouldn't take this long unless you have a very large project. " +
+                              "Consider restarting the command. Reach out on Slack if you continue to have issues",
+                              "Reach out on Slack"
+                          ).then(selection => {
+                              if (selection === "Reach out on Slack") {
+                                  env.openExternal(Uri.parse("https://slack.evidence.dev"));
+                              }
+                          });
+                      }, 300000); // 5 minutes
+
                       progress.report({ message: "Moving files to legacy project..." });
                       await moveFilesToLegacyProject(workspaceRoot, legacyProjectPath);
                       
@@ -702,3 +715,5 @@ async function updatePageParamsSyntax(filePath: string): Promise<void> {
       }
   }
 }
+
+
