@@ -132,11 +132,14 @@ export async function promptToInstallNodeJsAndRestart(currentVersion: string | u
 
 export async function promptForHelp() {
   const helpNotification = await window.showWarningMessage(
-    `Need help with NodeJS? Chat with us in Slack`,
+    `Having issues installing NodeJS? Try Evidence in Codespaces or reach out to us in Slack`,
+    { title: `Try in Codespaces` },
     { title: `Chat in Evidence Slack` }
   );
 
   if (helpNotification?.title === `Chat in Evidence Slack`) {
-    env.openExternal(Uri.parse('https://slack.evidence.dev'));
+    await env.openExternal(Uri.parse('https://slack.evidence.dev'));
+  } else if (helpNotification?.title === `Try in Codespaces`) {
+    await env.openExternal(Uri.parse('https://github.com/codespaces/new?machine=standardLinux32gb&repo=399252557&ref=main&geo=UsEast'));
   }
 }
