@@ -33,46 +33,35 @@ export async function getNodeVersion() {
  * @param nodeVersion NodeJS version string to check.
  *
  * @returns True if NodeJS version is equal or greater
- *  than the major and minor version numbers, and false otherwise.
+ *  than the major version numbers, and false otherwise.
  */
 export function isSupportedNodeVersion(nodeVersion: string): boolean {
 
   // Minimum version of NodeJS required for Evidence:
   const minMajorVersion = 16;
-  const minMinorVersion = 14;
 
   // Maximum version of NodeJS required for Evidence:
   const maxMajorVersion = 20;
-  const maxMinorVersion = 10;
 
   // check node version
   if (nodeVersion && nodeVersion.startsWith('v')) {
     const nodeVersionNumbers = nodeVersion.replace('v', '').split('.');
     const majorVersionNumber = parseInt(nodeVersionNumbers[0]);
-    const minorVersionNumber = parseInt(nodeVersionNumbers[1]);
 
     let aboveMinVersion = false;
-    let aboveMaxVersion = false;
+    let belowMaxVersion = false;
 
     // Check if above min version:
-    if (majorVersionNumber > minMajorVersion) {
-      aboveMinVersion = true;
-    }
-    else if (majorVersionNumber === minMajorVersion &&
-      minorVersionNumber >= minMinorVersion) {
+    if (majorVersionNumber >= minMajorVersion) {
       aboveMinVersion = true;
     }
 
     // Check if below max version:
-    if (majorVersionNumber < maxMajorVersion) {
-      aboveMaxVersion = true;
-    }
-    else if (majorVersionNumber === maxMajorVersion &&
-      minorVersionNumber <= maxMinorVersion) {
-      aboveMaxVersion = true;
+    if (majorVersionNumber <= maxMajorVersion) {
+      belowMaxVersion = true;
     }
 
-    return aboveMinVersion && aboveMaxVersion;
+    return aboveMinVersion && belowMaxVersion;
  
   }
   return false;
@@ -119,7 +108,7 @@ export async function promptToInstallNodeJsAndRestart(currentVersion: string | u
   }
 
   const downloadNodeNotification = await window.showErrorMessage(
-    currentVersion ? `Evidence requires NodeJS v16.14 to v20.10 - your NodeJS version is ${currentVersion}` : `Evidence requires NodeJS v16.14 to v20.10`,
+    currentVersion ? `Evidence requires NodeJS v16 to v20 - your NodeJS version is ${currentVersion}` : `Evidence requires NodeJS v16 to v20`,
     { title: downloadNodeJs }
   );
 
