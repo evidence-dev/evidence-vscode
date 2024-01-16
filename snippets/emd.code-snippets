@@ -128,11 +128,11 @@
     "description": "Insert Markdown Table"
   },
   "Sankey Chart": {
-    "prefix": "/SankeyChart",
+    "prefix": "/SankeyDiagram",
     "body": [
-      "<SankeyChart\n\tdata={${1:query_name}}\n\tsourceCol=${2:column}\n\ttargetCol=${3:column}\n\tvalueCol=${4:column}\n/>\n\n"
+      "<SankeyDiagram\n\tdata={${1:query_name}}\n\tsourceCol=${2:column}\n\ttargetCol=${3:column}\n\tvalueCol=${4:column}\n/>\n\n"
     ],
-    "description": "Insert Sankey Chart"
+    "description": "Insert Sankey Diagram"
   },
   "Funnel Chart": {
     "prefix": "/FunnelChart",
@@ -338,19 +338,29 @@
   },
   "Dropdown": {
     "prefix": "/Dropdown",
-    "body": "<Dropdown data={data} name=name_of_dropdown value=column_name/>",
+    "body": "<Dropdown data={data} name=${1:name_of_dropdown} value=${2:column_name}/>\n\n",
     "description": "Insert dropdown component"
   },
   "Dropdown with filtered query": {
     "prefix": "/DropdownWithFilteredQuery",
     "body": [
-      "<Dropdown data={data} name=name_of_dropdown value=column_name/>",
+      "<Dropdown data={data} name=${1:name_of_dropdown} value=${2:column_name}/>",
       "",
       "```sql filtered_query",
       "select * from table where column_name = '${inputs.name_of_dropdown}'",
       "```"
     ]
     "description": "Insert dropdown component and filtered query"
-  }
+  },
+  "TextInput": {
+    "prefix": "/TextInput",
+    "body": "<TextInput name=${1:name_of_input} title=${2:Search}/>\n\n",
+    "description": "Insert text input component"
+  },
+  "ButtonGroup": {
+    "prefix": "/ButtonGroup",
+    "body": "<ButtonGroup data={${1:query_name}} name=${2:name_of_input} value=${3:column_name}/>\n\n",
+    "description": "Insert button group component"
+  },
 }
 
