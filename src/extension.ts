@@ -31,6 +31,7 @@ import { countFilesInDirectory, countTemplatedPages } from './utils/fsUtils';
 import * as path from 'path';
 import * as fs from 'fs';
 import { SchemaViewProvider } from './providers/schemaViewProvider';
+import { profile } from 'console';
 
 export const enum Context {
   isNewLine = 'evidence.isNewLine',
@@ -131,34 +132,81 @@ export async function activate(context: ExtensionContext) {
 
      // check if evidence project is in subdirectory:  
       const packageJsonFolder = await getPackageJsonFolder(); 
-      
-      if (workspaceFolder) {
-        const profilePath = path.join(workspaceFolder.uri.fsPath, packageJsonFolder ?? '', '.evidence', 'template', '.profile.json');
-        const profileWatcher = workspace.createFileSystemWatcher(profilePath);
 
-        const updateProfileDetailsFromJson = () => {
-          try {
-            const content = fs.readFileSync(profilePath, 'utf8');
-            const profile = JSON.parse(content);
-            telemetryService.updateProfileDetails(profile.anonymousId, profile.traits.projectCreated);
-          } catch (err) {
-            telemetryService.clearProfileDetails();
-            telemetryService.sendEvent('telemetryError', { location: 'updateProfileDetailsFromJson' });
-          }
-        };
+        if (workspaceFolder) {
+          const baseEvidencePath = path.join(workspaceFolder.uri.fsPath, packageJsonFolder ?? '', '.evidence');
+          const oldProfilePath = path.join(baseEvidencePath, 'template', '.profile.json');
+          const newProfilePath = path.join(baseEvidencePath, 'customization', '.profile.json');
 
-        profileWatcher.onDidChange(updateProfileDetailsFromJson);
-        profileWatcher.onDidCreate(() => {
-          updateProfileDetailsFromJson();
-          telemetryService.sendEvent('profileCreated');
-        });
-        profileWatcher.onDidDelete(() => telemetryService.clearProfileDetails());
+          const updateProfileDetails = (profilePath: string) => {
+            console.log('updatedetails: '+profilePath)
+            try {
+              if (!fs.existsSync(profilePath)) {
+                throw new Error("Profile file does not exist");
+              }
+          
+              const content = fs.readFileSync(profilePath, 'utf8');
+              if (!content) {
+                throw new Error("Profile file is empty");
+              }
+          
+              const profile = JSON.parse(content);
+              if (!profile || typeof profile !== 'object') {
+                throw new Error("Invalid profile data");
+              }
+          
+              if (!profile.anonymousId || !profile.traits || !profile.traits.projectCreated) {
+                throw new Error("Required profile fields are missing");
+              }
+              telemetryService.updateProfileDetails(profile.anonymousId, profile.traits.projectCreated);
+            } catch (err) {
+              if (err instanceof Error) {
+                telemetryService.clearProfileDetails();
+                telemetryService.sendEvent('telemetryError', { location: 'updateProfileDetailsFromJson', error: err.message });
+              } else {
+                telemetryService.clearProfileDetails();
+                // Send a generic error message if the error type is unknown
+                telemetryService.sendEvent('telemetryError', { location: 'updateProfileDetailsFromJson', error: 'Unknown error' });
+              }
+            }
+          };
 
-        context.subscriptions.push(profileWatcher);
+          const handleProfileChange = () => {
+            if (fs.existsSync(newProfilePath)) {
+              console.log('found new directory successfully')
+              updateProfileDetails(newProfilePath);
+            } else if (fs.existsSync(oldProfilePath)) {
+              updateProfileDetails(oldProfilePath);
+            } else {
+              console.log('could not find directory')
+              telemetryService.clearProfileDetails();
+            }
+          };
 
-        // Initial check
-        updateProfileDetailsFromJson();
+          const oldProfileWatcher = workspace.createFileSystemWatcher(oldProfilePath);
+          oldProfileWatcher.onDidChange(handleProfileChange);
+          oldProfileWatcher.onDidCreate(() => {
+            handleProfileChange();
+            telemetryService.sendEvent('profileCreated');
+          });
+          oldProfileWatcher.onDidDelete(handleProfileChange);
+          context.subscriptions.push(oldProfileWatcher);
 
+          const newProfileWatcher = workspace.createFileSystemWatcher(newProfilePath);
+          newProfileWatcher.onDidChange(handleProfileChange);
+          newProfileWatcher.onDidCreate(() => {
+            console.log('create event fired')
+            handleProfileChange();
+            console.log('profile change done')
+            telemetryService.sendEvent('profileCreated');
+            console.log('telem event post fire')
+          });
+          newProfileWatcher.onDidDelete(handleProfileChange);
+          context.subscriptions.push(newProfileWatcher);
+
+          // Initial check
+          handleProfileChange();
+        
         // Git watcher
         const gitPath = path.join(workspaceFolder.uri.fsPath, packageJsonFolder ?? '', '.git');
         const gitWatcher = workspace.createFileSystemWatcher(gitPath);

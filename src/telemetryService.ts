@@ -14,17 +14,22 @@ export class TelemetryService {
   }
 
   loadCommonProperties(packageJsonFolder: string) {
-    let profilePath = '';
+    let oldProfilePath = '';
+    let newProfilePath = '';
 
     if (workspace.workspaceFolders && workspace.workspaceFolders.length > 0) {
         // Use the path of the first workspace folder
         const workspaceFolder = workspace.workspaceFolders[0];
+        const baseEvidencePath = path.join(workspaceFolder.uri.fsPath, packageJsonFolder ?? '', '.evidence');
 
-        profilePath = path.join(workspaceFolder.uri.fsPath, packageJsonFolder ?? '','.evidence', 'template', '.profile.json');
+        oldProfilePath = path.join(baseEvidencePath, 'template', '.profile.json');
+        newProfilePath = path.join(baseEvidencePath, 'customization', '.profile.json');
     }
 
+    let profilePath = fs.existsSync(newProfilePath) ? newProfilePath : (fs.existsSync(oldProfilePath) ? oldProfilePath : '');
+
     try {
-        if (profilePath && fs.existsSync(profilePath)) {
+        if (profilePath) {
             const profile = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
             if (profile) {
                 if (profile.anonymousId) {
@@ -38,7 +43,7 @@ export class TelemetryService {
     } catch (error) {
         // Fail silently. Possibly send failure event in the future
     }
-}
+  }
 
   public sendEvent(eventName: string, properties?: { [key: string]: string }, measurements?: { [key: string]: number }) {
       const eventProperties = { ...this.commonProperties, ...properties };
