@@ -156,7 +156,7 @@
         "command": "runCommands",
         "key": "/",
         "enablement": "evidence.hasProject",
-        "when": "editorTextFocus && resourceLangId == 'emd' && evidence.isPagesDirectory == true",
+        "when": "editorTextFocus && resourceLangId == 'emd' && evidence.isPagesDirectory == true && evidence.slashCommands == true",
         "args": {
           "commands": [
             {
@@ -254,6 +254,11 @@
       "title": "Evidence",
       "type": "object",
       "properties": {
+        "evidence.slashCommands": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable slash commands in Evidence Markdown files (offers a list of suggested components after typing a slash). Uses a keybinding on the slash key. You may need to reopen VS Code after changing this setting."
+        },        
         "evidence.autoStart": {
           "type": "boolean",
           "default": false,

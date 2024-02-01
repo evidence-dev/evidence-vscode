@@ -36,7 +36,8 @@ import { profile } from 'console';
 export const enum Context {
   isNewLine = 'evidence.isNewLine',
   isPagesDirectory = 'evidence.isPagesDirectory',
-  isNonLegacyProject = 'evidence.isNonLegacyProject'
+  isNonLegacyProject = 'evidence.isNonLegacyProject',
+  slashCommands = 'evidence.slashCommands'
 }
 
 export let telemetryService: TelemetryService; // Global instance
@@ -231,9 +232,16 @@ export async function activate(context: ExtensionContext) {
       }
 
 
-      // decorate slash command on activation if the active file is a markdown file
+      // get slashCommands setting from extension settings:
+    const slashCommands: boolean = <boolean>getConfig(Settings.SlashCommands);
+
+    // Set context for slashCommands setting
+    commands.executeCommand(Commands.SetContext, Context.slashCommands, slashCommands);
+
+
+      // decorate slash command on activation if the active file is a markdown file and slash commands are enabled
       const openEditor = window.activeTextEditor;
-      if (openEditor && openEditor.document.fileName.endsWith('.md') && isPagesDirectory()) {
+      if (openEditor && openEditor.document.fileName.endsWith('.md') && isPagesDirectory() && slashCommands === true) {
         try {
           decorate(openEditor);
         } catch (e) {
@@ -244,7 +252,7 @@ export async function activate(context: ExtensionContext) {
       window.onDidChangeTextEditorSelection(
         () => {
           const openEditor = window.activeTextEditor;
-          if (openEditor && openEditor.document.fileName.endsWith('.md') && isPagesDirectory()) {
+          if (openEditor && openEditor.document.fileName.endsWith('.md') && isPagesDirectory() && slashCommands === true) {
             try {
               decorate(openEditor);
             } catch (e) {
@@ -258,7 +266,7 @@ export async function activate(context: ExtensionContext) {
       workspace.onDidChangeTextDocument(
         () => {
           const openEditor = window.activeTextEditor;
-          if (openEditor && openEditor.document.fileName.endsWith('.md') && isPagesDirectory()) {
+          if (openEditor && openEditor.document.fileName.endsWith('.md') && isPagesDirectory() && slashCommands === true) {
             try {
               decorate(openEditor);
             } catch (e) {

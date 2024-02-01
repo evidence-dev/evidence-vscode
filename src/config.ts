@@ -15,7 +15,8 @@ export const enum Settings {
   DefaultPort = 'defaultPort',
   AutoStart = 'autoStart',
   TemplateProjectUrl = 'templateProjectUrl',
-  PreviewType = 'previewType'
+  PreviewType = 'previewType',
+  SlashCommands = 'slashCommands'
 }
 
 /**
