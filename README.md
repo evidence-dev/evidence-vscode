@@ -133,11 +133,14 @@ Open Evidence extension Settings in VS Code by using the `Evidence: VS Code Exte
 
 ### Available Settings
 
+Note that after editing some settings you may need to close and reopen VS Code for the new setting to take effect.
+
 | Setting | Name | Type | Default Value | Description |
 | --- | --- | -- | -- | -- |
 | `evidence.previewType` | Preview Type |  string | `external` | Where to show development app preview: web browser, in VS Code (side-by-side), in VS Code (full width) |
 | `evidence.defaultPort` | Default Port | number | `3000` |  Default Evidence app dev server port. |
-| `evidence.autoStart` | Auto Start | boolean | `true` | Automatically start Evidence app dev server when opening a project. |
+| `evidence.autoStart` | Auto Start | boolean | `false` | Automatically start Evidence app dev server when opening a project. |
+| `evidence.slashCommands` | Slash Commands | boolean | `true` | Enabled slash commands - get component suggestions when typing `/` |
 | `evidence.templateProjectUrl` | Template Project Url | Url string | [`/template`](https://github.com/evidence-dev/evidence-vscode/tree/main/template) | Evidence `template` project GitHub Url or local `file://` path to the project template folder to use when creating new Evidence projects. Defaults to the built-in Evidence extension [`/template`](https://github.com/evidence-dev/evidence-vscode/tree/main/template) project that ships with this extenstion for faster `New Evidence Project` scaffolding. |
 
 You can request new Evidence extension settings to enhance this extension user experience in VS Code by submitting a [feature request](https://github.com/evidence-dev/evidence-vscode/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=) or [pull request](https://github.com/evidence-dev/evidence-vscode/pulls).
