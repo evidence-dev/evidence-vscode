@@ -86,7 +86,7 @@ export async function updateDependencies() {
   await timeout(5000);
   statusBar.showStart();
 
-  telemetryService.sendEvent('updateDependencies');
+  telemetryService?.sendEvent('updateDependencies');
 }
 
 /**
@@ -100,7 +100,7 @@ export async function buildProject() {
     await timeout(1000);
   }
   runCommandWithDepInstall('npm run build');
-  telemetryService.sendEvent('build');
+  telemetryService?.sendEvent('build');
 }
 
 /**
@@ -114,7 +114,7 @@ export async function buildProjectStrict() {
     await timeout(1000);
   }
   runCommandWithDepInstall('npm run build:strict');
-  telemetryService.sendEvent('buildStrict');
+  telemetryService?.sendEvent('buildStrict');
 }
 
 /**

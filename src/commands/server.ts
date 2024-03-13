@@ -66,7 +66,7 @@ export async function getAppPageUri(pageUrl?: string): Promise<Uri> {
  * @param pageFileUri Optional Uri of the starting page to load in preview.
  */
 export async function startServer(pageUri?: Uri) {
-  telemetryService.sendEvent('startServer');
+  telemetryService?.sendEvent('startServer');
 
   if (!pageUri) {
     pageUri = await getAppPageUri('/');
@@ -84,7 +84,7 @@ export async function startServer(pageUri?: Uri) {
   const nodeVersion = await getNodeVersion();
   if (!isSupportedNodeVersion(nodeVersion)) {
     promptToInstallNodeJsAndRestart(nodeVersion);
-    telemetryService.sendEvent('nodeVersionError', {currentNodeVersion: nodeVersion});
+    telemetryService?.sendEvent('nodeVersionError', {currentNodeVersion: nodeVersion});
   } else {
 
     // check for /node_modules before starting dev server
@@ -100,7 +100,7 @@ export async function startServer(pageUri?: Uri) {
           depTimeout += 20000;
         }
     }
-      telemetryService.sendEvent('installDependencies');
+      telemetryService?.sendEvent('installDependencies');
     }
 
     // check if sources have been run (only applicable for USQL) If not, tack on a run sources command
@@ -112,7 +112,7 @@ export async function startServer(pageUri?: Uri) {
         sourcesCommand = `npm run sources ; `;
         const sourceNames = await getTypesFromConnections();
 
-        telemetryService.sendEvent('runSources', { sources: sourceNames.join(', ')});
+        telemetryService?.sendEvent('runSources', { sources: sourceNames.join(', ')});
       }
     }
 
@@ -209,5 +209,5 @@ export async function stopServer() {
   _running = false;
   _activePort = <number>getConfig(Settings.DefaultPort);
   statusBar.showStart();
-  telemetryService.sendEvent('stopServer');
+  telemetryService?.sendEvent('stopServer');
 }

@@ -24,7 +24,7 @@ export async function runSources() {
 
     const sourceNames = await getTypesFromConnections();
   
-    telemetryService.sendEvent('runSources', { sources: sourceNames.join(', ')});
+    telemetryService?.sendEvent('runSources', { sources: sourceNames.join(', ')});
 
     if(serverRunning){
       startServer();
