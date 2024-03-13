@@ -342,7 +342,7 @@
         },
         "editor.suggest.snippetsPreventQuickSuggestions": false,
         "editor.quickSuggestionsDelay": 300,
-        "editor.acceptSuggestionOnEnter": "off"
+        "editor.acceptSuggestionOnEnter": "on"
       }
     },
     "snippets": [

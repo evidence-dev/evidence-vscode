@@ -228,7 +228,7 @@
   "Page Parameter": {
     "prefix": "/Page Parameter",
     "body": [
-      "{\\params.${TM_FILENAME_BASE/[\\[\\]]//gi}}"
+      "{params.${TM_FILENAME_BASE/[\\[\\]]//gi}}"
     ],
     "description": "[For Templated Pages Only] Insert Page Parameter"
   },
@@ -331,14 +331,14 @@
       "---",
       "title: ${1:Page Title}",
       "queries:",
-      " - ${2:myquery: myquery.sql}"
+      " - ${2:myquery: myquery.sql}",
       "---" 
     ],
     "description": "Insert frontmatter (should be at top of markdown page)"
   },
   "Dropdown": {
     "prefix": "/Dropdown",
-    "body": "<Dropdown data={data} name=${1:name_of_dropdown} value=${2:column_name}/>\n\n",
+    "body": "<Dropdown data={${1:query_name}} name=${2:name_of_dropdown} value=${3:column_name}/>\n\n",
     "description": "Insert dropdown component"
   },
   "Dropdown with filtered query": {
@@ -347,10 +347,15 @@
       "<Dropdown data={data} name=${1:name_of_dropdown} value=${2:column_name}/>",
       "",
       "```sql filtered_query",
-      "select * from table where column_name = '${inputs.name_of_dropdown}'",
+      "select * from table where column_name = '${inputs.name_of_dropdown.value}'",
       "```"
-    ]
+    ],
     "description": "Insert dropdown component and filtered query"
+  },
+  "Dropdown Multi-Select": {
+    "prefix": "/DropdownMultiSelect",
+    "body": "<Dropdown multiple=true data={data} name=${1:name_of_dropdown} value=${2:column_name}/>\n\n",
+    "description": "Insert dropdown with multi-select"
   },
   "TextInput": {
     "prefix": "/TextInput",
@@ -361,6 +366,59 @@
     "prefix": "/ButtonGroup",
     "body": "<ButtonGroup data={${1:query_name}} name=${2:name_of_input} value=${3:column_name}/>\n\n",
     "description": "Insert button group component"
+  },
+  "Heatmap": {
+    "prefix": "/Heatmap",
+    "body": [
+      "<Heatmap\n\tdata={${1:query_name}}\n\tx=${2:column}\n\ty=${3:column}\n\tvalue=${3:column}\n/>\n\n"
+    ],
+    "description": "Insert Heatmap"
+  },
+  "CalendarHeatmap": {
+    "prefix": "/CalendarHeatmap",
+    "body": [
+      "<CalendarHeatmap\n\tdata={${1:query_name}}\n\tdate=${2:column}\n\tvalue=${3:column}\n/>\n\n"
+    ],
+    "description": "Insert CalendarHeatmap"
+  },
+  "Sparkline": {
+    "prefix": "/Sparkline",
+    "body": "<Sparkline data={${1:query_name}} dateCol=${2:column_name} valueCol=${3:column_name}/>\n\n",
+    "description": "Insert Sparkline"
+  },
+  "DateRange": {
+    "prefix": "/DateRange",
+    "body": "<DateRange name=${1:name_of_input} data={${2:query_name}} dates=${3:column_name}/>\n\n",
+    "description": "Insert date range input"
+  },
+  "Grid": {
+    "prefix": "/Grid",
+    "body": [
+      "<Grid cols=2>\n\t${1:Grid Content}\n</Grid>\n\n"
+    ],
+    "description": "Insert Grid"
+  },
+  "LineBreak": {
+    "prefix": "/LineBreak",
+    "body": "<LineBreak lines=1/>\n\n",
+    "description": "Insert empty line(s) on page"
+  },
+  "PageBreak": {
+    "prefix": "/PageBreak",
+    "body": "<PageBreak/>\n\n",
+    "description": "Insert page break for PDF and printing"
+  },
+  "PrintGroup": {
+    "prefix": "/PrintGroup",
+    "body": [
+      "<PrintGroup hidden=false>\n\t${1:PrintGroup Content}\n</PrintGroup>\n\n"
+    ],    
+    "description": "Insert print group to keep content together, or hide it, during printing"
+  },
+  "DimensionGrid": {
+    "prefix": "/DimensionGrid",
+    "body": "<DimensionGrid data={${1:query_name}}/>\n\n",
+    "description": "Insert dimension grid component"
   },
 }
 
