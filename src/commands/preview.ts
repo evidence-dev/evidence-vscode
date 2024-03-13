@@ -117,6 +117,6 @@ async function openPageView(pageUri: Uri) {
       viewColumn: previewType === 'internal' ? ViewColumn.Active : ViewColumn.Two,
       preserveFocus: true
     });  
-    telemetryService.sendEvent('openSimpleBrowser');
+    telemetryService?.sendEvent('openSimpleBrowser');
   }
 }

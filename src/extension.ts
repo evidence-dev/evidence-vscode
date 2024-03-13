@@ -126,7 +126,7 @@ export async function activate(context: ExtensionContext) {
 
     try {
 
-      telemetryService.sendEvent('preActivate');
+      telemetryService?.sendEvent('preActivate');
 
       // set up file watcher for .profile.json
       const workspaceFolder = workspace.workspaceFolders?.[0];
@@ -163,11 +163,11 @@ export async function activate(context: ExtensionContext) {
             } catch (err) {
               if (err instanceof Error) {
                 telemetryService.clearProfileDetails();
-                telemetryService.sendEvent('telemetryError', { location: 'updateProfileDetailsFromJson', error: err.message });
+                telemetryService?.sendEvent('telemetryError', { location: 'updateProfileDetailsFromJson', error: err.message });
               } else {
                 telemetryService.clearProfileDetails();
                 // Send a generic error message if the error type is unknown
-                telemetryService.sendEvent('telemetryError', { location: 'updateProfileDetailsFromJson', error: 'Unknown error' });
+                telemetryService?.sendEvent('telemetryError', { location: 'updateProfileDetailsFromJson', error: 'Unknown error' });
               }
             }
           };
@@ -188,7 +188,7 @@ export async function activate(context: ExtensionContext) {
           oldProfileWatcher.onDidChange(handleProfileChange);
           oldProfileWatcher.onDidCreate(() => {
             handleProfileChange();
-            telemetryService.sendEvent('profileCreated');
+            telemetryService?.sendEvent('profileCreated');
           });
           oldProfileWatcher.onDidDelete(handleProfileChange);
           context.subscriptions.push(oldProfileWatcher);
@@ -199,7 +199,7 @@ export async function activate(context: ExtensionContext) {
             console.log('create event fired')
             handleProfileChange();
             console.log('profile change done')
-            telemetryService.sendEvent('profileCreated');
+            telemetryService?.sendEvent('profileCreated');
             console.log('telem event post fire')
           });
           newProfileWatcher.onDidDelete(handleProfileChange);
@@ -245,7 +245,7 @@ export async function activate(context: ExtensionContext) {
         try {
           decorate(openEditor);
         } catch (e) {
-          telemetryService.sendEvent('decorationError');
+          telemetryService?.sendEvent('decorationError');
         }
       }
 
@@ -256,7 +256,7 @@ export async function activate(context: ExtensionContext) {
             try {
               decorate(openEditor);
             } catch (e) {
-              telemetryService.sendEvent('decorationError');
+              telemetryService?.sendEvent('decorationError');
             }
           }
         }
@@ -270,7 +270,7 @@ export async function activate(context: ExtensionContext) {
             try {
               decorate(openEditor);
             } catch (e) {
-              telemetryService.sendEvent('decorationError');
+              telemetryService?.sendEvent('decorationError');
             }
           }
         }
@@ -296,7 +296,7 @@ export async function activate(context: ExtensionContext) {
             const annotations = (text.match(/<\w*Reference\w*[\s\S]*?(<\/\w*Reference\w*>|\/>)/g) || []).length;
 
 
-            telemetryService.sendEvent('saveMarkdown', {
+            telemetryService?.sendEvent('saveMarkdown', {
               templated: isTemplated.toString(),
               linesInFile: document.lineCount.toString(),
               charactersInFile: text.length.toString(),
@@ -314,7 +314,7 @@ export async function activate(context: ExtensionContext) {
             });
           }
         } catch (e) {
-          telemetryService.sendEvent('telemetryError', { location: 'saveMarkdown' });
+          telemetryService?.sendEvent('telemetryError', { location: 'saveMarkdown' });
         }
       });
 
@@ -323,7 +323,7 @@ export async function activate(context: ExtensionContext) {
         event.files.forEach(file => {
           if (file.path.endsWith('.md') && file.path.includes('/pages/')) {
             const isTemplated = /\[.+\]/.test(file.path);
-            telemetryService.sendEvent('createMarkdownFile', { templated: isTemplated.toString() });
+            telemetryService?.sendEvent('createMarkdownFile', { templated: isTemplated.toString() });
           }
         });
       });
@@ -334,10 +334,10 @@ export async function activate(context: ExtensionContext) {
           const isInPagesDirectory = file.path.includes('/pages/');
 
           if (file.path.endsWith('.md') && isInPagesDirectory) {
-            telemetryService.sendEvent('deleteMarkdownFile', { templated: isTemplated.toString() });
+            telemetryService?.sendEvent('deleteMarkdownFile', { templated: isTemplated.toString() });
           } else if (isInPagesDirectory) {
             // Assuming it's a directory within 'pages'
-            telemetryService.sendEvent('deleteDirectory', { templated: isTemplated.toString() });
+            telemetryService?.sendEvent('deleteDirectory', { templated: isTemplated.toString() });
           }
         });
       });
@@ -347,11 +347,11 @@ export async function activate(context: ExtensionContext) {
           event.files.forEach(file => {
             if (fs.lstatSync(file.path).isDirectory() && file.path.includes('/pages/')) {
               const isTemplated = /\[.+\]/.test(file.path);
-              telemetryService.sendEvent('createDirectory', { templated: isTemplated.toString() });
+              telemetryService?.sendEvent('createDirectory', { templated: isTemplated.toString() });
             }
           });
         } catch (e) {
-          telemetryService.sendEvent('telemetryError', { location: 'createDirectory' });
+          telemetryService?.sendEvent('telemetryError', { location: 'createDirectory' });
         }
       });
 
@@ -385,7 +385,7 @@ export async function activate(context: ExtensionContext) {
         evidenceFolderAtRoot = fs.existsSync(path.join(workspaceFolder?.uri.fsPath, packageJsonFolder ?? '','.evidence'));
       }
 
-      telemetryService.sendEvent('activate', {
+      telemetryService?.sendEvent('activate', {
         evidenceVersion: evidenceVersion,
         markdownFiles: `${markdownFilesCount}`,
         templatedPages: `${templatedPagesCount}`,
@@ -395,7 +395,7 @@ export async function activate(context: ExtensionContext) {
       });
 
     } catch (e) {
-      telemetryService.sendEvent('telemetryError', { location: 'activate' });
+      telemetryService?.sendEvent('telemetryError', { location: 'activate' });
     }
 
     // set Evidence project context

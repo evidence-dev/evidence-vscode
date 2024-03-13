@@ -21,5 +21,5 @@ export async function clearCache() {
   else {
     window.showInformationMessage('Cache is already empty.');
   }
-  telemetryService.sendEvent('clearCache');
+  telemetryService?.sendEvent('clearCache');
 }

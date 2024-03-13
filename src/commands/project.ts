@@ -60,7 +60,7 @@ const templateProjectUrlSetting = 'https://github.com/evidence-dev/template';
  * @param {string} projectUrl Optional template project url to copy the project from. If not provided, the template project will be used.
  */
 export async function createNewProject(projectFolder?: Uri, projectUrl?: string) {
-  telemetryService.sendEvent('createNewProjectStart');
+  telemetryService?.sendEvent('createNewProjectStart');
 
   if (!projectFolder) {
     const selectedFolders: Uri[] | undefined = await showSelectFolderDialog();
@@ -149,7 +149,7 @@ export async function createNewProject(projectFolder?: Uri, projectUrl?: string)
     showInvalidTemplateProjectUrlErrorMessage(projectTemplateUrl);
     outputChannel.appendLine(`✗ Invalid Template Project Folder: ${projectTemplateUrl}`);
   }
-  telemetryService.sendEvent('createNewProjectComplete');
+  telemetryService?.sendEvent('createNewProjectComplete');
 }
 
 /**
@@ -165,9 +165,9 @@ export async function copyProject(){
   if(!projectUrl) {
     return;
   };
-  telemetryService.sendEvent('copyProject');
+  telemetryService?.sendEvent('copyProject');
   createNewProject(undefined, projectUrl);
-  telemetryService.sendEvent('copyProject');
+  telemetryService?.sendEvent('copyProject');
 }
 
 /**
@@ -212,13 +212,13 @@ export async function openIndex() {
     await commands.executeCommand('vscode.open', fileUri, 1);
     await commands.executeCommand('vscode.open', fileUri, 2);
     openWalkthrough();
-    telemetryService.sendEvent('openIndex');
+    telemetryService?.sendEvent('openIndex');
   }
 }
 
 export async function openWalkthrough(){
   await commands.executeCommand(Commands.OpenWalkthrough, `Evidence.evidence-vscode#getStarted`, false);
-  telemetryService.sendEvent('openWalkthrough');
+  telemetryService?.sendEvent('openWalkthrough');
 }
 
 
@@ -243,7 +243,7 @@ export async function migrateProjectToUSQL() {
     return;
   }
 
-    telemetryService.sendEvent('migrateProjectToUSQL');
+    telemetryService?.sendEvent('migrateProjectToUSQL');
     const packageJsonFolder = await getPackageJsonFolder();
     if(packageJsonFolder !== ''){
       window.showErrorMessage('Migration command should only be run from within the Evidence folder workspace. You will need to use VS Code to open the Evidence folder as the current workspace.', {modal: true});
@@ -327,7 +327,7 @@ export async function migrateProjectToUSQL() {
                       progress.report({ message: "Migrating queries to USQL..." });
                       await migrateQueriesToUSQL(dataSourceFolderName);
 
-                      telemetryService.sendEvent('migrateProjectToUSQL_success');
+                      telemetryService?.sendEvent('migrateProjectToUSQL_success');
 
                       const readmePath = path.join(workspaceRoot, 'README.md');
                       const readmeUri = Uri.file(readmePath);
