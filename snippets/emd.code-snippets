@@ -420,5 +420,12 @@
     "body": "<DimensionGrid data={${1:query_name}}/>\n\n",
     "description": "Insert dimension grid component"
   },
+  "Delta": {
+    "prefix": "/Delta",
+    "body": [
+      "<Delta data={${1:query_name}} column=${2:column_name} fmt=${3:usd}/>"
+    ],
+    "description": "Delta Component"
+  },
 }
 
