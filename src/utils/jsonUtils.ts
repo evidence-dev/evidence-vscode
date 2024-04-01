@@ -33,7 +33,6 @@ export async function loadPackageJson(): Promise<any | undefined> {
 
 export async function getPackageJsonFolder(): Promise<string | undefined> {
   const packageJsonFiles = await workspace.findFiles('**/package.json', '**/node_modules/**');
-  
   if (packageJsonFiles.length > 0) {
       // Get the workspace folder path
       const workspaceFolderPath = workspace.workspaceFolders
@@ -108,7 +107,7 @@ function validateManifest(x: any): x is Manifest {
 }
 
 export async function getManifestUri(): Promise<Uri> {
-  const [manifestUri] = await workspace.findFiles('**/.evidence/template/static/data/manifest.json', null, 1);
+  const [manifestUri] = await workspace.findFiles('**/.evidence/template/static/data/manifest.json', '**/node_modules/**', 1);
   return manifestUri;
 }
 
@@ -122,7 +121,7 @@ export async function getManifest(uri: Uri): Promise<Manifest | null> {
 }
 
 export async function hasManifest() {
-  const manifest = await workspace.findFiles('**/.evidence/template/static/data/manifest.json');
+  const manifest = await workspace.findFiles('**/.evidence/template/static/data/manifest.json', '**/node_modules/**');
   return manifest.length > 0;
 }
 
@@ -133,7 +132,9 @@ export async function hasManifest() {
 
 export async function isUSQL(): Promise<boolean> {
   const workspaceRoot = workspace.workspaceFolders![0].uri.fsPath;
-  const pluginsFilePath = path.join(workspaceRoot, 'evidence.plugins.yaml');
+  const packageJsonFolder = await getPackageJsonFolder(); 
+  const baseEvidenceFolder = path.join(workspaceRoot,  packageJsonFolder ?? '');
+  const pluginsFilePath = path.join(baseEvidenceFolder, 'evidence.plugins.yaml');
 
   try {
       const fileContent = await fs.promises.readFile(pluginsFilePath, 'utf-8');

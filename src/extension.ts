@@ -118,7 +118,7 @@ export async function activate(context: ExtensionContext) {
   const workspacePackageJson = await loadPackageJson();
 
   // get all evidence files in workspace
-  const evidenceFiles = await workspace.findFiles('**/.evidence/**/*.*');
+  const evidenceFiles = await workspace.findFiles('**/.evidence/**/*.*', '**/node_modules/**');
 
   // check for evidence app files and dependencies in the loaded package.json
   if (workspace.workspaceFolders && evidenceFiles.length > 0 &&
@@ -209,7 +209,7 @@ export async function activate(context: ExtensionContext) {
           handleProfileChange();
         
         // Git watcher
-        const gitPath = path.join(workspaceFolder.uri.fsPath, packageJsonFolder ?? '', '.git');
+        const gitPath = path.join(workspaceFolder.uri.fsPath, '.git');
         const gitWatcher = workspace.createFileSystemWatcher(gitPath);
 
         const updateGitCheck = () => {
