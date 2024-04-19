@@ -43,10 +43,14 @@ export const enum Context {
 export let telemetryService: TelemetryService; // Global instance
 
 async function initializeTelemetryService() {
-  const packageJsonFolder = await getPackageJsonFolder() ?? '';
-  const iK = '99ec224c-3fe8-4635-96ef-24c9aa5a354f';
-  telemetryService = new TelemetryService(iK); // Assign to global instance
-  telemetryService.loadCommonProperties(packageJsonFolder);
+  try {
+      const iK = '99ec224c-3fe8-4635-96ef-24c9aa5a354f'; // example key
+      telemetryService = new TelemetryService(iK);
+      telemetryService?.loadCommonProperties(await getPackageJsonFolder() ?? '');
+      // Any other telemetry initialization logic
+  } catch (error) {
+      console.error("Failed to initialize telemetry: ", error);
+  }
 }
 
 const decorationType = window.createTextEditorDecorationType({
@@ -107,7 +111,9 @@ export async function activate(context: ExtensionContext) {
   await initializeTelemetryService();
 
   // Ensure it gets properly disposed. Upon disposal, the events will be flushed
-  context.subscriptions.push(telemetryService);
+  if(telemetryService){
+    context.subscriptions.push(telemetryService);
+  }
 
   // register markdown symbol provider
   const markdownLanguage = { language: 'emd', scheme: 'file' };
@@ -159,13 +165,13 @@ export async function activate(context: ExtensionContext) {
               if (!profile.anonymousId || !profile.traits || !profile.traits.projectCreated) {
                 throw new Error("Required profile fields are missing");
               }
-              telemetryService.updateProfileDetails(profile.anonymousId, profile.traits.projectCreated);
+              telemetryService?.updateProfileDetails(profile.anonymousId, profile.traits.projectCreated);
             } catch (err) {
               if (err instanceof Error) {
-                telemetryService.clearProfileDetails();
+                telemetryService?.clearProfileDetails();
                 telemetryService?.sendEvent('telemetryError', { location: 'updateProfileDetailsFromJson', error: err.message });
               } else {
-                telemetryService.clearProfileDetails();
+                telemetryService?.clearProfileDetails();
                 // Send a generic error message if the error type is unknown
                 telemetryService?.sendEvent('telemetryError', { location: 'updateProfileDetailsFromJson', error: 'Unknown error' });
               }
@@ -180,7 +186,7 @@ export async function activate(context: ExtensionContext) {
               updateProfileDetails(oldProfilePath);
             } else {
               console.log('could not find directory')
-              telemetryService.clearProfileDetails();
+              telemetryService?.clearProfileDetails();
             }
           };
 
@@ -215,15 +221,15 @@ export async function activate(context: ExtensionContext) {
         const updateGitCheck = () => {
           try {
             const gitCheck = isGitRepository(workspaceFolder.uri.fsPath).toString();
-            telemetryService.updateGitCheck(gitCheck);
+            telemetryService?.updateGitCheck(gitCheck);
           } catch (err) {
-            telemetryService.clearGitCheck();
+            telemetryService?.clearGitCheck();
           }
         };
 
         gitWatcher.onDidChange(updateGitCheck);
         gitWatcher.onDidCreate(updateGitCheck);
-        gitWatcher.onDidDelete(() => telemetryService.clearGitCheck());
+        gitWatcher.onDidDelete(() => telemetryService?.clearGitCheck());
 
         context.subscriptions.push(gitWatcher);
 
